@@ -7,19 +7,19 @@ public class GeoPointService {
 
     private GeoPointRepository repoGeo;
 
-    public void AddGeoPoint(GeoPoint point){
-        if(this.Exists(point))
+    public void addGeoPoint(GeoPoint point){
+        if(this.exists(point))
             throw new UnsupportedOperationException("Il punto esiste già");
         this.repoGeo.save(point);
     }
 
-    public void RemoveGeoPoint(GeoPoint point){
-        if(!this.Exists(point))
+    public void removeGeoPoint(GeoPoint point){
+        if(!this.exists(point))
             throw new UnsupportedOperationException("Il punto non esiste");
         this.repoGeo.delete(point);
     }
 
-    private boolean Exists(GeoPoint point){
+    private boolean exists(GeoPoint point){
         if(this.repoGeo.existsByNameAndMunicipality(point.getName(), point.getMunicipality()))
             return true;
         else

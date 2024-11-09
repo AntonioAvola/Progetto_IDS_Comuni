@@ -9,22 +9,22 @@ public class ContestService {
 
 
     public void addContest(Contest contest){
-        if(this.Exists(contest)){
+        if(this.exists(contest)){
             throw new UnsupportedOperationException("Il contest già esiste");
         }
         this.repoContest.save(contest);
     }
 
     public void removeContest(Contest contest){
-        if(!this.Exists(contest)){
+        if(!this.exists(contest)){
             throw new UnsupportedOperationException("Il contest non esiste");
         }
         this.repoContest.delete(contest);
     }
 
 
-    private boolean Exists(Contest contest){
-        if(this.repoContest.findByTitleAndMunicipality(contest.getTitle(), contest.getMunicipality())){
+    private boolean exists(Contest contest){
+        if(this.repoContest.existsByTitleAndMunicipality(contest.getTitle(), contest.getMunicipality())){
             return true;
         }else{
             return false;

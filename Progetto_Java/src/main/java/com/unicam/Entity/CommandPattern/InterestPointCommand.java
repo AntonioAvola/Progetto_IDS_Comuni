@@ -8,7 +8,6 @@ import com.unicam.Entity.User;
 import com.unicam.Service.Content.InterestPointService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class InterestPointCommand implements Command{
 
@@ -37,6 +36,6 @@ public class InterestPointCommand implements Command{
 
     @Override
     public void execute() {
-        this.interestPointService.AddInterestPoint(interestPoint);
+        this.interestPointService.addInterestPoint(interestPoint);
     }
 }

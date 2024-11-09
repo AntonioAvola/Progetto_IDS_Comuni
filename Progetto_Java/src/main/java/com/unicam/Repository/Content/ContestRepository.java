@@ -1,7 +1,5 @@
 package com.unicam.Repository.Content;
 
-import com.unicam.Entity.Content.Contest;
-
 public interface ContestRepository {
-    boolean findByTitleAndMunicipality(String title, String municipality);
+    boolean existsByTitleAndMunicipality(String title, String municipality);
 }

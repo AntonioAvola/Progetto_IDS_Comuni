@@ -41,7 +41,7 @@ public class InterestPointBuilder implements Builder {
 
     public void buildReference(String name, List<Double> coordinates){
         GeoPoint reference = new GeoPoint(name, this.interestPoint.getMunicipality(), coordinates.get(0), coordinates.get(1));
-        this.geoPointService.AddGeoPoint(reference);
+        this.geoPointService.addGeoPoint(reference);
         this.interestPoint.setReference(reference);
     }
 

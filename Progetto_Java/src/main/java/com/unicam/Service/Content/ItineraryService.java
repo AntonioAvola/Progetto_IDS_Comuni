@@ -7,22 +7,30 @@ public class ItineraryService {
 
     private ItineraryRepository repoItinerary;
 
-    public void AddItineray(Itinerary itinerary){
-        if(this.Exists(itinerary))
+    public void addItineray(Itinerary itinerary){
+        if(this.exists(itinerary))
             throw new UnsupportedOperationException("L'itinerario è già presente");
         this.repoItinerary.save(itinerary);
     }
 
-    public void RemoveItinerary(Itinerary itinerary){
-        if(!this.Exists(itinerary))
+    public void removeItinerary(Itinerary itinerary){
+        if(!this.exists(itinerary))
             throw new UnsupportedOperationException("L'itinerario non è presente");
         this.repoItinerary.delete(itinerary);
     }
 
-    private boolean Exists(Itinerary itinerary) {
-        if(this.repoItinerary.findByPath(itinerary.getPath()))
+    private boolean exists(Itinerary itinerary) {
+        if(this.repoItinerary.existsByPath(itinerary.getPath()))
             return true;
         else
             return false;
+    }
+
+    public void addFavorite(long idItnerary, long idUser){
+        Itinerary itinerary = this.repoItinerary.findById(idItnerary);
+        if(itinerary.getIdUserFavorites().contains(idUser))
+            throw new IllegalArgumentException("L'itinerario è già presente tra i preferiti");
+        itinerary.getIdUserFavorites().add(idUser);
+        this.repoItinerary.save(itinerary);
     }
 }

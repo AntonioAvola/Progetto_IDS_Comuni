@@ -31,7 +31,7 @@ public class ItineraryCommand implements Command{
 
     @Override
     public void execute(){
-        this.itineraryService.AddItineray(this.itinerary);
+        this.itineraryService.addItineray(this.itinerary);
     }
 
 }
