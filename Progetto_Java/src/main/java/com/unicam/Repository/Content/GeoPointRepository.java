@@ -1,5 +1,9 @@
 package com.unicam.Repository.Content;
 
+import com.unicam.Entity.Content.GeoPoint;
+
 public interface GeoPointRepository {
-    boolean findByNameAndMunicipality(String name, String municipality);
+    boolean existsByNameAndMunicipality(String name, String municipality);
+
+    GeoPoint findByNameAndMunicipality(String reference, String municipality);
 }

@@ -26,4 +26,8 @@ public class InterestPoint extends Content{
     public void setIdUserFavorites(List<Long> idUserFavorites) {
         this.idUserFavorites = idUserFavorites;
     }
+
+    public void setReference(GeoPoint reference) {
+        this.reference = reference;
+    }
 }

@@ -11,6 +11,7 @@ public class Contest extends Content{
     private Time duration;
     private List<String> participants = new ArrayList<>();
     private String winnerName;
+    private String reward;
 
     public Contest(){
         super();
@@ -39,5 +40,13 @@ public class Contest extends Content{
 
     public void setWinnerName(String winnerName) {
         this.winnerName = winnerName;
+    }
+
+    public String getReward() {
+        return reward;
+    }
+
+    public void setReward(String reward) {
+        this.reward = reward;
     }
 }

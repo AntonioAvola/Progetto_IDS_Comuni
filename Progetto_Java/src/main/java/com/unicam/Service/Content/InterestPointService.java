@@ -3,6 +3,9 @@ package com.unicam.Service.Content;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Repository.Content.InterestPointRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InterestPointService {
 
     private InterestPointRepository repoInterest;
@@ -20,7 +23,6 @@ public class InterestPointService {
         if(!this.Exists(point))
             throw new UnsupportedOperationException("Il punto di interesse non è presente");
         //TODO prima di eliminare il GeoPoint associato controllo che non ci siano eventi collegati a tale punto, altrimenti:
-            //TODO 1. viene mandato un messaggio di errore se l'evento associato a punto è già stato approvato "Impossibile rimuovere il punto"
             //TODO 2. eliminare l'evento indipendentemente se approvato o in attesa
         //TODO elimino il punto di interesse stesso dal path dell'itinerario.
             //TODO se l'itinerio ha lunghezza 2 prima della rimozione, eliminare direttamente l'itinerario
@@ -33,5 +35,15 @@ public class InterestPointService {
             return true;
         else
             return false;
+    }
+
+    public List<InterestPoint> getList(List<String> path, String municipality) {
+        List<InterestPoint> points = new ArrayList<>();
+        for(InterestPoint point : this.repoInterest.findByMunicipality(municipality)){
+            if(path.contains(point.getReference().getName())){
+                points.add(point);
+            }
+        }
+        return points;
     }
 }

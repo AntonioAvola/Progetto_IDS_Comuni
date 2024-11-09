@@ -20,9 +20,17 @@ public class GeoPointService {
     }
 
     private boolean Exists(GeoPoint point){
-        if(this.repoGeo.findByNameAndMunicipality(point.getName(), point.getMunicipality()))
+        if(this.repoGeo.existsByNameAndMunicipality(point.getName(), point.getMunicipality()))
             return true;
         else
             return false;
+    }
+
+    public GeoPoint getPoint(String reference, String municipality) {
+        GeoPoint point = this.repoGeo.findByNameAndMunicipality(reference, municipality);
+        if(point == null){
+            throw new NullPointerException("Il punto non esiste");
+        }
+        return point;
     }
 }

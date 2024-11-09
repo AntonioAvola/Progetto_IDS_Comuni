@@ -51,4 +51,12 @@ public abstract class Content {
     public void setMunicipality(String municipality) {
         this.municipality = municipality;
     }
+
+    public void setTitle(String title){
+        this.title = title;
+    }
+
+    public void setDescription(String description){
+        this.description = description;
+    }
 }
