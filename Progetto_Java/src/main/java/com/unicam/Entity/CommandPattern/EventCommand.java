@@ -1,10 +1,9 @@
 package com.unicam.Entity.CommandPattern;
 
-import com.unicam.DTO.EventRequest;
+import com.unicam.DTO.Request.EventRequest;
 import com.unicam.Entity.BuilderPattern.EventBuilder;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.Event;
-import com.unicam.Entity.Time;
 import com.unicam.Entity.User;
 import com.unicam.Service.Content.EventService;
 import com.unicam.Service.Content.GeoPointService;

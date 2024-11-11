@@ -1,13 +1,19 @@
 package com.unicam.Entity.Content;
 
 import com.unicam.Entity.Time;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "event")
 public class Event extends Content{
 
+    @Embedded
     private Time duration;
+    @ManyToOne
+    @JoinColumn(name = "position_Id")
     private GeoPoint reference;
     private List<Long> idUserFavorites = new ArrayList<>();
 

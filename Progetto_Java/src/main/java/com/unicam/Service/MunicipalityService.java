@@ -2,9 +2,13 @@ package com.unicam.Service;
 
 import com.unicam.Entity.Municipality;
 import com.unicam.Repository.MunicipalityRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MunicipalityService {
 
+    @Autowired
     private MunicipalityRepository repoMunicipality;
 
     public void addMunicipality(Municipality municipality){

@@ -1,14 +1,18 @@
 package com.unicam.Entity.Content;
 
 import com.unicam.Entity.User;
+import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@MappedSuperclass
 public abstract class Content {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "author_Id", nullable = false)
     private User author;
     private ContentStatus status;
     private String municipality;

@@ -1,6 +1,6 @@
 package com.unicam.Entity.CommandPattern;
 
-import com.unicam.DTO.ContestRequest;
+import com.unicam.DTO.Request.ContestRequest;
 import com.unicam.Entity.BuilderPattern.ContestBuilder;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.Contest;

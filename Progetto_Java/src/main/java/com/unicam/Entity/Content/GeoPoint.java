@@ -1,6 +1,13 @@
 package com.unicam.Entity.Content;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "geo_point")
 public class GeoPoint {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String municipality;

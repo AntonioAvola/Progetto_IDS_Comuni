@@ -2,12 +2,18 @@ package com.unicam.Entity.Content;
 
 import com.unicam.Entity.Time;
 import com.unicam.Entity.User;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "contest")
 public class Contest extends Content{
 
+    @Embedded
     private Time duration;
     private List<String> participants = new ArrayList<>();
     private String winnerName;

@@ -1,10 +1,17 @@
 package com.unicam.Service.Content;
 
+import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Itinerary;
 import com.unicam.Repository.Content.ItineraryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public class ItineraryService {
 
+    @Autowired
     private ItineraryRepository repoItinerary;
 
     public void addItineray(Itinerary itinerary){
@@ -20,10 +27,14 @@ public class ItineraryService {
     }
 
     private boolean exists(Itinerary itinerary) {
-        if(this.repoItinerary.existsByPath(itinerary.getPath()))
-            return true;
-        else
-            return false;
+        List<Itinerary> itineraries = this.repoItinerary.findByMunicipality(itinerary.getMunicipality());
+        for(Itinerary itineraryFound : itineraries){
+            if(itineraryFound.getPath().size() == itinerary.getPath().size()){
+                if(itineraryFound.getPath().containsAll(itinerary.getPath()))
+                    return true;
+            }
+        }
+        return false;
     }
 
     public void addFavorite(long idItnerary, long idUser){

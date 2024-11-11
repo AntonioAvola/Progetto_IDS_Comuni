@@ -2,13 +2,19 @@ package com.unicam.Entity;
 
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.GeoPoint;
+import jakarta.persistence.*;
 
 import javax.swing.text.html.MinimalHTMLWriter;
 
+@Entity
+@Table
 public class Municipality {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+    @OneToOne
     private GeoPoint reference;
     private ContentStatus status;
 

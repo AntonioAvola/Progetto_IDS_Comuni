@@ -1,6 +1,6 @@
 package com.unicam.Entity.CommandPattern;
 
-import com.unicam.DTO.InterestPointRequest;
+import com.unicam.DTO.Request.InterestPointRequest;
 import com.unicam.Entity.BuilderPattern.InterestPointBuilder;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.InterestPoint;

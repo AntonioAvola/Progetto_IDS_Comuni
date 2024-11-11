@@ -1,16 +1,19 @@
 package com.unicam.Entity;
 
+import jakarta.persistence.Embeddable;
+
 import java.time.LocalDateTime;
 
+@Embeddable
 public class Time {
 
     private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDateTime finish;
 
     public Time(LocalDateTime start,
-                LocalDateTime end){
+                LocalDateTime finish){
         this.start = start;
-        this.end = end;
+        this.finish = finish;
     }
 
     public LocalDateTime getStart() {
@@ -21,11 +24,11 @@ public class Time {
         this.start = start;
     }
 
-    public LocalDateTime getEnd() {
-        return end;
+    public LocalDateTime getFinish() {
+        return finish;
     }
 
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
+    public void setFinish(LocalDateTime finish) {
+        this.finish = finish;
     }
 }

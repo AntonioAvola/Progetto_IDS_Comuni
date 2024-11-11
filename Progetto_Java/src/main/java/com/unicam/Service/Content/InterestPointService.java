@@ -2,15 +2,22 @@ package com.unicam.Service.Content;
 
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Repository.Content.InterestPointRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class InterestPointService {
 
+    @Autowired
     private InterestPointRepository repoInterest;
+    @Autowired
     private GeoPointService serviceGeo;
+    @Autowired
     private ItineraryService serviceItinerary;
+    @Autowired
     private EventService serviceEvent;
 
     public void addInterestPoint(InterestPoint point){

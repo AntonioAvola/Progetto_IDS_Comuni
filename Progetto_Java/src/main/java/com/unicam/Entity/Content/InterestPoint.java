@@ -1,12 +1,20 @@
 package com.unicam.Entity.Content;
 
 import com.unicam.Entity.User;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "interest_point")
 public class InterestPoint extends Content{
 
+    @ManyToOne
+    @JoinColumn(name = "position_Id")
     private GeoPoint reference;
     private List<Long> idUserFavorites = new ArrayList<>();
     //TODO aggiungere i file multimediali
