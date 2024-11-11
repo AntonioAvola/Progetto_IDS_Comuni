@@ -2,6 +2,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+!**/src/main/java/application.properties/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
@@ -20,7 +21,6 @@ target/
 .settings
 .springBeans
 .sts4-cache
-src/main/resources/application.properties
 
 ### NetBeans ###
 /nbproject/private/
