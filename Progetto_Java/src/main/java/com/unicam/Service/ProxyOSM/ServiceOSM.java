@@ -1,4 +1,4 @@
-package com.unicam.Service.proxyOSM;
+package com.unicam.Service.ProxyOSM;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,9 +1,12 @@
 package com.unicam.Service.Content;
 
 import com.unicam.Entity.Content.Event;
+import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Repository.Content.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EventService {
@@ -40,5 +43,12 @@ public class EventService {
             throw new IllegalArgumentException("Evento già presente tra i preferiti");
         event.getIdUserFavorites().add(idUser);
         this.repoEvent.save(event);
+    }
+
+    public void checkEvent(GeoPoint reference) {
+        List<Event> events = this.repoEvent.findByReference(reference);
+        if(!events.isEmpty()){
+            this.repoEvent.deleteAll(events);
+        }
     }
 }

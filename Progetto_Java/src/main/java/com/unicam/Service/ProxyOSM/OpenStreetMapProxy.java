@@ -1,4 +1,4 @@
-package com.unicam.Service.proxyOSM;
+package com.unicam.Service.ProxyOSM;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.unicam.Service.proxyOSM;
+package com.unicam.Service.ProxyOSM;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

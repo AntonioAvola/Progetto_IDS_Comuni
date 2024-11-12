@@ -29,10 +29,8 @@ public class InterestPointService {
     public void removeInterestPoint(InterestPoint point){
         if(!this.exists(point))
             throw new UnsupportedOperationException("Il punto di interesse non è presente");
-        //TODO prima di eliminare il GeoPoint associato controllo che non ci siano eventi collegati a tale punto, altrimenti:
-            //TODO 2. eliminare l'evento indipendentemente se approvato o in attesa
-        //TODO elimino il punto di interesse stesso dal path dell'itinerario.
-            //TODO se l'itinerio ha lunghezza 2 prima della rimozione, eliminare direttamente l'itinerario
+        this.serviceEvent.checkEvent(point.getReference());
+        this.serviceItinerary.checkItinerary(point);
         this.serviceGeo.removeGeoPoint(point.getReference());
         this.repoInterest.delete(point);
     }

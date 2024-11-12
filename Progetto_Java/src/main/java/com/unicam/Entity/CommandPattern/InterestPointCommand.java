@@ -6,28 +6,25 @@ import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.User;
 import com.unicam.Service.Content.InterestPointService;
-
-import java.util.ArrayList;
+import java.util.List;
 
 public class InterestPointCommand implements Command{
 
     private InterestPoint interestPoint;
 
-    private InterestPointService interestPointService;
+    private InterestPointService interestPointService = new InterestPointService();
 
-    //TODO aggiungi proxyOSM
 
     private InterestPointBuilder Builder;
 
 
-    public InterestPointCommand(InterestPointRequest interestPointRequest, User author, ContentStatus status){
+    public InterestPointCommand(InterestPointRequest interestPointRequest, User author, ContentStatus status, List<Double> coordinates){
         this.Builder = new InterestPointBuilder();
         this.Builder.buildAuthor(author);
         this.Builder.buildStatus(status);
         this.Builder.buildDescription(interestPointRequest.getDescription());
         this.Builder.buildMunicipality(author.getMunicipality());
-        //TODO chiamata al proxyOSM
-        this.Builder.buildReference(interestPointRequest.getReference(), new ArrayList<Double>());
+        this.Builder.buildReference(interestPointRequest.getReference(), coordinates);
         this.Builder.buildTitle(interestPointRequest.getTitle());
         this.interestPoint = this.Builder.result();
     }

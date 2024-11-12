@@ -44,4 +44,18 @@ public class ItineraryService {
         itinerary.getIdUserFavorites().add(idUser);
         this.repoItinerary.save(itinerary);
     }
+
+    public void checkItinerary(InterestPoint point) {
+        List<Itinerary> allItineraries = this.repoItinerary.findByMunicipality(point.getMunicipality());
+        for(Itinerary itinerary : allItineraries){
+            if(itinerary.getPath().contains(point)){
+                if(itinerary.getPath().size() == 2){
+                    this.repoItinerary.delete(itinerary);
+                }else{
+                    itinerary.getPath().remove(point);
+                    this.repoItinerary.save(itinerary);
+                }
+            }
+        }
+    }
 }
