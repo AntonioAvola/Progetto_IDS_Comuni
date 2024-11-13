@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ContestRepository extends JpaRepository<Contest, Long> {
     boolean existsByTitleAndMunicipality(String title, String municipality);
+
+    Contest findByTitle(String title);
 }

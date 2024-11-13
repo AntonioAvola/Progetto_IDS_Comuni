@@ -1,6 +1,6 @@
 package com.unicam.Entity.CommandPattern;
 
-import com.unicam.DTO.ItineraryRequest;
+import com.unicam.DTO.Request.ItineraryRequest;
 import com.unicam.Entity.BuilderPattern.ItineraryBuilder;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.Itinerary;

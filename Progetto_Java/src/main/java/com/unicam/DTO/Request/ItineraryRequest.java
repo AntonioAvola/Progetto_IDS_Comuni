@@ -1,6 +1,7 @@
-package com.unicam.DTO;
+package com.unicam.DTO.Request;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ItineraryRequest {
 
@@ -10,7 +11,7 @@ public class ItineraryRequest {
 
 
     public ItineraryRequest(String title, String description, List<String> path) {
-        this.title = title;
+        this.title = title.toUpperCase(Locale.ROOT);
         this.description = description;
         this.path = path;
     }

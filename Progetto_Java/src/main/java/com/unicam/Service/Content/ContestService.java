@@ -35,4 +35,11 @@ public class ContestService {
             return false;
         }
     }
+
+    public Contest getContest(String title, long userId) {
+        Contest contest = this.repoContest.findByTitle(title);
+        if(contest.getAuthor().getId() != userId)
+            throw new IllegalArgumentException("Non puoi eliminare questa attività. Non è tra quelle da te inserite");
+        return contest;
+    }
 }

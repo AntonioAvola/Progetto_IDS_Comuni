@@ -51,4 +51,11 @@ public class EventService {
             this.repoEvent.deleteAll(events);
         }
     }
+
+    public Event getEvent(String title, long userId) {
+        Event event = this.repoEvent.findByTitle(title);
+        if(event.getAuthor().getId() != userId)
+            throw new IllegalArgumentException("Non puoi eliminare questa attività. Non è tra quelle da te inserite");
+        return event;
+    }
 }
