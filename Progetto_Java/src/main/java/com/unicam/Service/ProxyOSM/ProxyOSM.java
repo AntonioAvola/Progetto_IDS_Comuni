@@ -13,6 +13,17 @@ public class ProxyOSM implements OpenStreetMapProxy {
     @Autowired
     private ServiceOSM servizioMappa;
     private Map<String, List<Double>> cache = new HashMap<String, List<Double>>();
+
+    /**
+     * TODO se il proxy viene usato dal Rappresentante del Comune, allora dal json
+     * devono essere salvate le informazioni inerenti ai tag:
+     * boundingbox (latitudine e longitudine maggiori e minori)
+     * address:country
+     * address:state
+     * address:postcode
+     * population
+     */
+
     @Override
     public List<Double> getCoordinates(String address) throws IOException {
         if (cache.containsKey(address)) {
