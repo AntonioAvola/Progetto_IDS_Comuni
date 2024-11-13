@@ -12,4 +12,6 @@ public interface InterestPointRepository extends JpaRepository<InterestPoint, Lo
     InterestPoint[] findByMunicipality(String municipality);
 
     InterestPoint findById(long idInterestPoint);
+
+    InterestPoint findByTitle(String title);
 }

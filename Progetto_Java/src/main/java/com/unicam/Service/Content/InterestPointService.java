@@ -1,5 +1,6 @@
 package com.unicam.Service.Content;
 
+import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Repository.Content.InterestPointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,11 @@ public class InterestPointService {
         this.serviceItinerary.checkItinerary(point);
         this.serviceGeo.removeGeoPoint(point.getReference());
         this.repoInterest.delete(point);
+    }
+
+    public InterestPoint getInterestPoint(String title){
+
+        return this.repoInterest.findByTitle(title);
     }
 
     private boolean exists(InterestPoint point) {

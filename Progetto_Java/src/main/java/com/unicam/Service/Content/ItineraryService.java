@@ -58,4 +58,8 @@ public class ItineraryService {
             }
         }
     }
+
+    public Itinerary getItinerary(String title) {
+        return this.repoItinerary.findByTitle(title);
+    }
 }
