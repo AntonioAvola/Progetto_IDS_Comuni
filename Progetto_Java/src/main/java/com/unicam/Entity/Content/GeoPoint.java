@@ -11,16 +11,16 @@ public class GeoPoint {
     private long id;
     private String name;
     private String municipality;
-    private double logitude;
+    private double longitude;
     private double latitude;
 
     public GeoPoint(String name,
                     String municipality,
-                    double logitude,
+                    double longitude,
                     double latitude){
         this.name = name;
         this.municipality = municipality;
-        this.logitude = logitude;
+        this.longitude = longitude;
         this.latitude = latitude;
     }
 
@@ -28,8 +28,8 @@ public class GeoPoint {
         return name;
     }
 
-    public double getLogitude() {
-        return logitude;
+    public double getLongitude() {
+        return longitude;
     }
 
     public double getLatitude() {
