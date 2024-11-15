@@ -8,8 +8,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class GeoPointService {
 
-    @Autowired
-    private GeoPointRepository repoGeo;
+
+    private final GeoPointRepository repoGeo;
+
+    public GeoPointService(GeoPointRepository repoGeo) {
+        this.repoGeo = repoGeo;
+    }
 
     public void addGeoPoint(GeoPoint point){
         if(this.exists(point))

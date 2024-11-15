@@ -12,14 +12,18 @@ import java.util.List;
 @Service
 public class InterestPointService {
 
+
+    private final InterestPointRepository repoInterest;
     @Autowired
-    private InterestPointRepository repoInterest;
-    @Autowired
-    private GeoPointService serviceGeo;
+    private  GeoPointService serviceGeo;
     @Autowired
     private ItineraryService serviceItinerary;
     @Autowired
     private EventService serviceEvent;
+
+    public InterestPointService(InterestPointRepository repoInterest) {
+        this.repoInterest = repoInterest;
+    }
 
     public void addInterestPoint(InterestPoint point){
         if(this.exists(point))

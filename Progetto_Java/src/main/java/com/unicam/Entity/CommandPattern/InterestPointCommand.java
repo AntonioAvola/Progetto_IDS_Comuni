@@ -5,6 +5,7 @@ import com.unicam.Entity.BuilderPattern.InterestPointBuilder;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.User;
+import com.unicam.Service.Content.GeoPointService;
 import com.unicam.Service.Content.InterestPointService;
 import java.util.List;
 
@@ -12,14 +13,16 @@ public class InterestPointCommand implements Command{
 
     private InterestPoint interestPoint;
 
-    private InterestPointService interestPointService = new InterestPointService();
+    private InterestPointService interestPointService;
 
+    private GeoPointService geoPointService;
 
     private InterestPointBuilder Builder;
 
 
-    public InterestPointCommand(InterestPointRequest interestPointRequest, User author, ContentStatus status, List<Double> coordinates){
-        this.Builder = new InterestPointBuilder();
+    public InterestPointCommand(InterestPointRequest interestPointRequest, User author, InterestPointService interestPointService, ContentStatus status, List<Double> coordinates){
+        this.interestPointService = interestPointService;
+        this.Builder = new InterestPointBuilder(geoPointService);
         this.Builder.buildAuthor(author);
         this.Builder.buildStatus(status);
         this.Builder.buildDescription(interestPointRequest.getDescription());

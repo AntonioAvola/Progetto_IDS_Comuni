@@ -37,13 +37,13 @@ public class ContributorController {
     public void AddInterestPoint(InterestPointRequest request) throws IOException {
         //TODO controlla autorizzazioni
         String address = request.getTitle();
-        String currentMunicipality = URLEncoder.encode("castelfidardo", StandardCharsets.UTF_8.toString());
+        String currentMunicipality = URLEncoder.encode("Roma", StandardCharsets.UTF_8.toString());
         address = URLEncoder.encode(address, StandardCharsets.UTF_8.toString());
         List<Double> coordinates = proxy.getCoordinates(address + "," + currentMunicipality);
         User user = new User ("Sofia", "sofia", "Tolentino", "sofia@gmail.com", "IDS" );
 
         //TODO controlla ruolo
-        InterestPointCommand InterestPoint = new InterestPointCommand(request, user, ContentStatus.PENDING, coordinates);
+        InterestPointCommand InterestPoint = new InterestPointCommand(request, user, interestPointService, ContentStatus.PENDING, coordinates);
         InterestPoint.execute();
     }
 
