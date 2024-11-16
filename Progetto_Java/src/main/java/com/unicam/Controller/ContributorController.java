@@ -9,9 +9,11 @@ import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Itinerary;
 import com.unicam.Entity.User;
+import com.unicam.Service.Content.GeoPointService;
 import com.unicam.Service.Content.InterestPointService;
 import com.unicam.Service.Content.ItineraryService;
 import com.unicam.Service.ProxyOSM.ProxyOSM;
+import com.unicam.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +31,11 @@ public class ContributorController {
     @Autowired
     private InterestPointService interestPointService;
     @Autowired
+    private GeoPointService geoPointService;
+    @Autowired
     private ItineraryService itineraryService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private ProxyOSM proxy;
 
@@ -41,21 +47,23 @@ public class ContributorController {
         address = URLEncoder.encode(address, StandardCharsets.UTF_8.toString());
         List<Double> coordinates = proxy.getCoordinates(address + "," + currentMunicipality);
         User user = new User ("Sofia", "sofia", "Tolentino", "sofia@gmail.com", "IDS" );
+        this.userService.addAccount(user);
 
         //TODO controlla ruolo
-        InterestPointCommand InterestPoint = new InterestPointCommand(request, user, interestPointService, ContentStatus.PENDING, coordinates);
+        InterestPointCommand InterestPoint = new InterestPointCommand(request, user, interestPointService, geoPointService, ContentStatus.PENDING, coordinates);
         InterestPoint.execute();
     }
 
     @PostMapping("Api/Contributor/addItinerary")
     public void AddItinerary(ItineraryRequest request) {
         //TODO controlla autorizzazioni
-        User user = new User ("Sofia", "sofia", "Tolentino", "sofia@gmail.com", "IDS" );
+        User user = new User ("Emma", "emma", "Tolentino", "emma@gmail.com", "IDS" );
+        this.userService.addAccount(user);
 
         //TODO controlla lunghezza lista punti di interesse
         //TODO controlla presenza titolo
         //TODO controlla ruolo
-        ItineraryCommand Itinerary = new ItineraryCommand(request, user, ContentStatus.PENDING);
+        ItineraryCommand Itinerary = new ItineraryCommand(request, itineraryService, interestPointService, user, ContentStatus.PENDING);
         Itinerary.execute();
     }
 

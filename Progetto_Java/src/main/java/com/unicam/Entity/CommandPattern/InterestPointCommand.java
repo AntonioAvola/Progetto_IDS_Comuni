@@ -15,12 +15,10 @@ public class InterestPointCommand implements Command{
 
     private InterestPointService interestPointService;
 
-    private GeoPointService geoPointService;
-
     private InterestPointBuilder Builder;
 
 
-    public InterestPointCommand(InterestPointRequest interestPointRequest, User author, InterestPointService interestPointService, ContentStatus status, List<Double> coordinates){
+    public InterestPointCommand(InterestPointRequest interestPointRequest, User author, InterestPointService interestPointService, GeoPointService geoPointService, ContentStatus status, List<Double> coordinates){
         this.interestPointService = interestPointService;
         this.Builder = new InterestPointBuilder(geoPointService);
         this.Builder.buildAuthor(author);

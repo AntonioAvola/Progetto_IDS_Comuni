@@ -10,6 +10,7 @@ public class Time {
     private LocalDateTime start;
     private LocalDateTime finish;
 
+    public Time(){}
     public Time(LocalDateTime start,
                 LocalDateTime finish){
         this.start = start;

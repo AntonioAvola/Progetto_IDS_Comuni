@@ -4,6 +4,7 @@ import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.User;
+import com.unicam.Repository.Content.GeoPointRepository;
 import com.unicam.Service.Content.GeoPointService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,6 +13,8 @@ import java.util.List;
 public class InterestPointBuilder implements Builder {
 
     private InterestPoint interestPoint = new InterestPoint();
+
+    private GeoPointRepository geoPointRepository;
 
     private GeoPointService geoPointService;
 

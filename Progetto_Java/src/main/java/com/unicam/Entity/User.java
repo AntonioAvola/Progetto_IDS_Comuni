@@ -25,6 +25,7 @@ public class User {
     private String password;
     protected Role role;
 
+    public User(){}
     public User(String name,
                 String username,
                 String municipality,

@@ -18,13 +18,15 @@ public class ItineraryCommand implements Command{
 
     private ItineraryService itineraryService;
 
-    public ItineraryCommand(ItineraryRequest itineraryRequest, User author, ContentStatus status) {
+    public ItineraryCommand(ItineraryRequest itineraryRequest, ItineraryService itineraryService, InterestPointService interestPointService, User author, ContentStatus status) {
+        this.itineraryService = itineraryService;
+        this.interestPointService = interestPointService;
         this.Builder = new ItineraryBuilder();
         this.Builder.buildAuthor(author);
         this.Builder.buildDescription(itineraryRequest.getDescription());
         this.Builder.buildMunicipality(author.getMunicipality());
         this.Builder.buildTitle(itineraryRequest.getTitle());
-        this.Builder.buildPath(interestPointService.getList(itineraryRequest.getPath(), author.getMunicipality()));
+        this.Builder.buildPath(this.interestPointService.getList(itineraryRequest.getPath(), author.getMunicipality()));
         this.Builder.buildStatus(status);
         this.itinerary = this.Builder.result();
     }

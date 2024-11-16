@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class GeoPointService {
 
-
     private final GeoPointRepository repoGeo;
 
     public GeoPointService(GeoPointRepository repoGeo) {

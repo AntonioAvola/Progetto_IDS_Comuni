@@ -11,17 +11,18 @@ public class GeoPoint {
     private long id;
     private String name;
     private String municipality;
-    private double longitude;
     private double latitude;
+    private double longitude;
 
+    public GeoPoint(){}
     public GeoPoint(String name,
                     String municipality,
-                    double longitude,
-                    double latitude){
+                    double latitude,
+                    double longitude){
         this.name = name;
         this.municipality = municipality;
-        this.longitude = longitude;
         this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getName() {

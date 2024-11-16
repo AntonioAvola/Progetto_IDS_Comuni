@@ -7,6 +7,7 @@ import com.unicam.Entity.Content.Event;
 import com.unicam.Entity.User;
 import com.unicam.Service.Content.EventService;
 import com.unicam.Service.Content.GeoPointService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class EventCommand implements Command{
 
@@ -18,7 +19,9 @@ public class EventCommand implements Command{
 
     private EventBuilder Builder;
 
-    public EventCommand(EventRequest eventRequest, User author){
+    public EventCommand(EventRequest eventRequest, EventService eventService, GeoPointService geoPointService, User author){
+        this.eventService = eventService;
+        this.geoPointService = geoPointService;
         this.Builder = new EventBuilder();
         this.Builder.buildAuthor(author);
         this.Builder.buildDescription(eventRequest.getDescription());

@@ -15,7 +15,8 @@ public class ContestCommand implements Command{
 
     private ContestBuilder Builder;
 
-    public ContestCommand(ContestRequest contestRequest, User author) {
+    public ContestCommand(ContestRequest contestRequest, ContestService contestService, User author) {
+        this.contestService = contestService;
         this.Builder = new ContestBuilder();
         this.Builder.buildAuthor(author);
         this.Builder.buildDescription(contestRequest.getDescription());
