@@ -13,5 +13,5 @@ public interface InterestPointRepository extends JpaRepository<InterestPoint, Lo
 
     InterestPoint findById(long idInterestPoint);
 
-    InterestPoint findByTitle(String title);
+    InterestPoint findByTitleIgnoreCase(String title);
 }

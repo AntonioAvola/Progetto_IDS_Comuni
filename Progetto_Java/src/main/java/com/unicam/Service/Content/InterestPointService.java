@@ -12,7 +12,6 @@ import java.util.List;
 @Service
 public class InterestPointService {
 
-
     private final InterestPointRepository repoInterest;
     @Autowired
     private  GeoPointService serviceGeo;
@@ -41,8 +40,10 @@ public class InterestPointService {
     }
 
     public InterestPoint getInterestPoint(String title){
-
-        return this.repoInterest.findByTitle(title);
+        System.out.println("ricerca titolo: " + title);
+        InterestPoint point = this.repoInterest.findByTitleIgnoreCase(title);
+        System.out.println("Risultato ricerca: " + point);
+        return point;
     }
 
     private boolean exists(InterestPoint point) {
