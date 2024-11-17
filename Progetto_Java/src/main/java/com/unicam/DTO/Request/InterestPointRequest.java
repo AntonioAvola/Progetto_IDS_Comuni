@@ -1,5 +1,7 @@
 package com.unicam.DTO.Request;
 
+import java.util.Locale;
+
 public class InterestPointRequest {
 
     private String title;
@@ -7,9 +9,9 @@ public class InterestPointRequest {
     private String reference;
 
     public InterestPointRequest(String title, String description, String reference) {
-        this.title = title;
+        this.title = title.toUpperCase(Locale.ROOT);
         this.description = description;
-        this.reference = reference;
+        this.reference = reference.toUpperCase(Locale.ROOT);
     }
 
     public String getTitle() {

@@ -1,6 +1,7 @@
 package com.unicam.DTO.Request;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 public class ContestRequest {
 
@@ -11,7 +12,7 @@ public class ContestRequest {
     private LocalDateTime end;
 
     public ContestRequest(String title, String description, String reward, LocalDateTime start, LocalDateTime end) {
-        this.title = title;
+        this.title = title.toUpperCase(Locale.ROOT);
         this.description = description;
         this.reward = reward;
         this.start = start;

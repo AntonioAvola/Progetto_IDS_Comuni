@@ -11,7 +11,8 @@ public abstract class Content {
     private long id;
     private String title;
     private String description;
-    @ManyToOne
+    //@ManyToOne
+    @OneToOne
     @JoinColumn(name = "author_Id", nullable = false)
     private User author;
     private ContentStatus status;

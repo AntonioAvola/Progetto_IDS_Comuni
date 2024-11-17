@@ -35,8 +35,8 @@ public class InterestPointService {
             throw new UnsupportedOperationException("Il punto di interesse non è presente");
         this.serviceEvent.checkEvent(point.getReference());
         this.serviceItinerary.checkItinerary(point);
-        this.serviceGeo.removeGeoPoint(point.getReference());
         this.repoInterest.delete(point);
+        this.serviceGeo.removeGeoPoint(point.getReference());
     }
 
     public InterestPoint getInterestPoint(String title){
@@ -54,6 +54,7 @@ public class InterestPointService {
     }
 
     public List<InterestPoint> getList(List<String> path, String municipality) {
+
         List<InterestPoint> points = new ArrayList<>();
         for(InterestPoint point : this.repoInterest.findByMunicipality(municipality)){
             if(path.contains(point.getReference().getName())){

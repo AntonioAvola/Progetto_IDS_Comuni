@@ -3,8 +3,9 @@ package com.unicam.DTO;
 import java.util.Locale;
 
 public class ContentDelete {
-    private String title;
+
     private String type;
+    private String title;
     public ContentDelete(String title, String type) {
         this.title = title.toUpperCase(Locale.ROOT);
         this.type = type.toLowerCase(Locale.ROOT);

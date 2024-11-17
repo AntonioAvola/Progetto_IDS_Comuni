@@ -10,7 +10,8 @@ import java.util.List;
 @Table(name = "interest_point")
 public class InterestPoint extends Content{
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    //@ManyToOne(cascade = CascadeType.REMOVE)
+    @OneToOne
     @JoinColumn(name = "position_Id", nullable = false)
     private GeoPoint reference;
     private List<Long> idUserFavorites = new ArrayList<>();
