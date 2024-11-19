@@ -1,6 +1,7 @@
 package com.unicam.Entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "user_platform")
@@ -81,6 +82,11 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void HashPassword(){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(this.password);
     }
 
     public Role getRole() {

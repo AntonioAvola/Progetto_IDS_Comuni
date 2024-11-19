@@ -2,6 +2,7 @@ package com.unicam.Repository.Content;
 
 import com.unicam.Entity.Content.Event;
 import com.unicam.Entity.Content.GeoPoint;
+import com.unicam.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +17,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findByReference(GeoPoint reference);
 
     Event findByTitle(String title);
+
+    List<Event> findAllByAuthor(User user);
 }

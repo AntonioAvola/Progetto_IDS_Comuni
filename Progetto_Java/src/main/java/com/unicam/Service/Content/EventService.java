@@ -2,6 +2,7 @@ package com.unicam.Service.Content;
 
 import com.unicam.Entity.Content.Event;
 import com.unicam.Entity.Content.GeoPoint;
+import com.unicam.Entity.User;
 import com.unicam.Repository.Content.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,5 +58,10 @@ public class EventService {
         if(event.getAuthor().getId() != userId)
             throw new IllegalArgumentException("Non puoi eliminare questa attività. Non è tra quelle da te inserite");
         return event;
+    }
+
+    public void removeEventUser(User user) {
+        List<Event> event = this.repoEvent.findAllByAuthor(user);
+        this.repoEvent.deleteAll(event);
     }
 }

@@ -2,6 +2,7 @@ package com.unicam.Service.Content;
 
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Itinerary;
+import com.unicam.Entity.User;
 import com.unicam.Repository.Content.ItineraryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,5 +62,10 @@ public class ItineraryService {
 
     public Itinerary getItinerary(String title) {
         return this.repoItinerary.findByTitle(title);
+    }
+
+    public void removeItineraryUser(User user) {
+        List<Itinerary> itineraries = this.repoItinerary.findAllByAuthor(user);
+        this.repoItinerary.deleteAll(itineraries);
     }
 }

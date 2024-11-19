@@ -2,6 +2,7 @@ package com.unicam.Service.Content;
 
 import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.Content.InterestPoint;
+import com.unicam.Entity.User;
 import com.unicam.Repository.Content.InterestPointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,5 +72,12 @@ public class InterestPointService {
         point.getIdUserFavorites().add(idUser);
         this.repoInterest.save(point);
 
+    }
+
+    public void removeInterestPointUser(User user) {
+        List<InterestPoint> interestPoints = this.repoInterest.findAllByAuthor(user);
+        for(InterestPoint interestPoint : interestPoints){
+            this.removeInterestPoint(interestPoint);
+        }
     }
 }
