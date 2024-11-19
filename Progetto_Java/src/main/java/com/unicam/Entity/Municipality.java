@@ -4,8 +4,6 @@ import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.GeoPoint;
 import jakarta.persistence.*;
 
-import javax.swing.text.html.MinimalHTMLWriter;
-
 @Entity
 @Table
 public class Municipality {
@@ -14,15 +12,28 @@ public class Municipality {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+
+    //TODO provare a cambiare da tue attributi distinti a una Map<String, Double>
     @OneToOne
-    private GeoPoint reference;
+    private GeoPoint referenceMax;
+    @OneToOne
+    private GeoPoint referenceMin;
     private ContentStatus status;
+    private long population;
+    private String description;
+    private String province;
+    private String region;
+    private String postCode;
+
+    //TODO aggiungere file multimediali
 
     public Municipality(){}
     public Municipality(String name,
-                        GeoPoint reference){
+                        GeoPoint referenceMax,
+                        GeoPoint referenceMin){
         this.name = name;
-        this.reference = reference;
+        this.referenceMax = referenceMax;
+        this.referenceMin = referenceMin;
     }
 
     public long getId() {
@@ -37,12 +48,12 @@ public class Municipality {
         this.name = name;
     }
 
-    public GeoPoint getReference() {
-        return reference;
+    public GeoPoint getReferenceMax() {
+        return referenceMax;
     }
 
-    public void setReference(GeoPoint reference) {
-        this.reference = reference;
+    public void setReferenceMax(GeoPoint referenceMax) {
+        this.referenceMax = referenceMax;
     }
 
     public ContentStatus getStatus() {
@@ -51,5 +62,9 @@ public class Municipality {
 
     public void setStatus(ContentStatus status) {
         this.status = status;
+    }
+
+    public GeoPoint getReferenceMin() {
+        return referenceMin;
     }
 }

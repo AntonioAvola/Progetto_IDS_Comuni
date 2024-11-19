@@ -19,11 +19,14 @@ public class MunicipalityCommand implements Command{
 
     //TODO aggiunta proxyOSM
 
-    public MunicipalityCommand(String nameMunicipality, User author){
+    public MunicipalityCommand(MunicipalityService serviceMunicipality, GeoPointService serviceGeo,String nameMunicipality, User author){
+        this.serviceMunicipality = serviceMunicipality;
+        this.serviceGeo = serviceGeo;
         List<Double> coordinates = new ArrayList<>();
         //TODO usare proxyOSM
         this.reference = new GeoPoint(nameMunicipality, nameMunicipality, coordinates.get(0), coordinates.get(1));
-        this.municipality = new Municipality(nameMunicipality, reference);
+        //TODO da modificare
+        // this.municipality = new Municipality(nameMunicipality, reference);
         this.municipality.setStatus(ContentStatus.PENDING);
     }
     @Override

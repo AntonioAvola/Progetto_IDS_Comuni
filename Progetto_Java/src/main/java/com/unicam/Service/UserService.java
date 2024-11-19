@@ -78,11 +78,11 @@ public class UserService {
         User utenteLogin = repoUser.findByUsername(username);
         if(utenteLogin == null)
             throw new NullPointerException("Non esiste alcun utente con l'username passato");
-        if(!CheckPassword(password, utenteLogin.getUsername()))
+        if(!checkPassword(password, utenteLogin.getUsername()))
             throw new IllegalArgumentException("Password errata");
     }
 
-    private boolean CheckPassword(String password, String username){
+    private boolean checkPassword(String password, String username){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.matches(password, this.repoUser.findByUsername(username).getPassword());
     }
