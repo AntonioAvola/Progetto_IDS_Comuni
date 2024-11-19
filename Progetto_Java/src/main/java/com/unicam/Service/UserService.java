@@ -19,13 +19,16 @@ public class UserService {
     @Autowired
     private ContestService contestService;
 
+    @Autowired
     private EventService eventService;
 
+    @Autowired
     private InterestPointService interestPointService;
 
+    @Autowired
     private ItineraryService itineraryService;
 
-    private ReviewService reviewService;
+    //TODO inserire reviews
 
     public void login(String username, String password){
         checkCredentialsDB(username, password);
