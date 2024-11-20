@@ -3,6 +3,7 @@ package com.unicam.Service;
 import com.unicam.DTO.Request.SingInDTO;
 import com.unicam.Entity.User;
 import com.unicam.Repository.UserRepository;
+import com.unicam.Security.JwtTokenProvider;
 import com.unicam.Service.Content.*;
 import com.unicam.Validators.EmailValidator;
 import com.unicam.Validators.PasswordValidator;
@@ -28,25 +29,29 @@ public class UserService {
     @Autowired
     private ItineraryService itineraryService;
 
+    private JwtTokenProvider tokenProvider = new JwtTokenProvider();
+
     //TODO inserire reviews
 
-    public void login(String username, String password){
-        checkCredentialsDB(username, password);
+    public String login(String username, String password){
+        try {
+            checkCredentialsDB(username, password);
 
-        User user = repoUser.findByUsername(username);
-        user.setVisitedMunicipality(user.getMunicipality());
-        this.repoUser.save(user);
-        //TODO implementare logica token
-        return tokenProvider.createToken(user);
+            User user = repoUser.findByUsername(username);
+            user.setVisitedMunicipality(user.getMunicipality());
+            this.repoUser.save(user);
+            return tokenProvider.createToken(user);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid credentials", e);
+        }
     }
 
-    public void singIn(SingInDTO singInDTO){
+    public String singIn(SingInDTO singInDTO){
         User user = singInDTO.toEntity();
         checkUserFields(user);
         nameEmailAlreadyExists(user);
         user.HashPassword();
         this.repoUser.save(user);
-        //TODO implementare la logica
         return tokenProvider.createToken(user);
     }
 
