@@ -9,12 +9,16 @@ import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Itinerary;
 import com.unicam.Entity.User;
+import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.GeoPointService;
 import com.unicam.Service.Content.InterestPointService;
 import com.unicam.Service.Content.ItineraryService;
 import com.unicam.Service.ProxyOSM.ProxyOSM;
 import com.unicam.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,8 +44,20 @@ public class ContributorController {
     private ProxyOSM proxy;
 
     @PostMapping("Api/Contributor/addInterestPoint")
-    public void AddInterestPoint(InterestPointRequest request) throws IOException {
+    public ResponseEntity<String> AddInterestPoint(InterestPointRequest request) throws IOException {
         //TODO controlla autorizzazioni
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+
         String address = request.getTitle();
         String currentMunicipality = URLEncoder.encode("Roma", StandardCharsets.UTF_8.toString());
         address = URLEncoder.encode(address, StandardCharsets.UTF_8.toString());
@@ -50,12 +66,14 @@ public class ContributorController {
         this.userService.addAccount(user);
 
         //TODO controlla se esiste già il punto geolocalizzato, se esiste, lancia l'eccezione
-        if(this.geoPointService.checkGeoPointAlreadyExists(request.getReference()))
-            throw new UnsupportedOperationException("Esiste già un punto di interesse per questo determinato punto geolocalizzato");
+//        if(this.geoPointService.checkGeoPointAlreadyExists(request.getReference()))
+//            throw new UnsupportedOperationException("Esiste già un punto di interesse per questo determinato punto geolocalizzato");
 
         //TODO controlla ruolo
         InterestPointCommand InterestPoint = new InterestPointCommand(request, user, interestPointService, geoPointService, ContentStatus.PENDING, coordinates);
         InterestPoint.execute();
+
+        return ResponseEntity.ok("Punto di interesse aggiunto con successo");
     }
 
     @PostMapping("Api/Contributor/addItinerary")
@@ -65,11 +83,11 @@ public class ContributorController {
         this.userService.addAccount(user);
 
         //TODO controlla lunghezza lista punti di interesse, se non ha lunghezza minima 2 o ci sono punti di interesse ripetuti (true), lancia l'eccezione
-        if(this.itineraryService.checkPathLength(request.getPath()))
-            throw new IllegalArgumentException("Nella lista di punti di interesse sono presenti punti duplicati o meno di due punti di interesse");
-        //TODO controlla presenza titolo, se il titolo è già presente (true), lancia l'eccezione
-        if(this.itineraryService.checkTitle(request.getTitle() /*aggiungere anche il comune*/))
-            throw new IllegalArgumentException("Esiste già un itinerario con questo titolo. Inserire un titolo differente");
+//        if(this.itineraryService.checkPathLength(request.getPath()))
+//            throw new IllegalArgumentException("Nella lista di punti di interesse sono presenti punti duplicati o meno di due punti di interesse");
+//        //TODO controlla presenza titolo, se il titolo è già presente (true), lancia l'eccezione
+//        if(this.itineraryService.checkTitle(request.getTitle() /*aggiungere anche il comune*/))
+//            throw new IllegalArgumentException("Esiste già un itinerario con questo titolo. Inserire un titolo differente");
 
         //TODO controlla ruolo
 

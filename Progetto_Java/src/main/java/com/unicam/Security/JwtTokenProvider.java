@@ -25,7 +25,8 @@ public class JwtTokenProvider {
         claims.put("username", user.getUsername());
         claims.put("email", user.getEmail());
         claims.put("role", user.getRole());
-        claims.put("comune", user.getMunicipality());
+        claims.put("municipality", user.getMunicipality());
+        claims.put("visitedMunicipality", user.getVisitedMunicipality());
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_TIME);
@@ -90,7 +91,7 @@ public class JwtTokenProvider {
     }
 
 
-    public String resolveToken(HttpServletRequest request) {
+    public static String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7); // Rimuove "Bearer " e restituisce il token
