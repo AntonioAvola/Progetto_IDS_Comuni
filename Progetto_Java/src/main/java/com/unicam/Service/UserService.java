@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserService {
 
@@ -40,6 +42,9 @@ public class UserService {
             User user = repoUser.findByUsername(username);
             user.setVisitedMunicipality(user.getMunicipality());
             this.repoUser.save(user);
+            LocalDateTime now = LocalDateTime.now();
+            this.eventService.updateActivityStatus(now);
+            this.contestService.updateActivityStatus(now);
             return tokenProvider.createToken(user);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid credentials", e);
@@ -52,6 +57,9 @@ public class UserService {
         nameEmailAlreadyExists(user);
         user.HashPassword();
         this.repoUser.save(user);
+        LocalDateTime now = LocalDateTime.now();
+        this.eventService.updateActivityStatus(now);
+        this.contestService.updateActivityStatus(now);
         return tokenProvider.createToken(user);
     }
 

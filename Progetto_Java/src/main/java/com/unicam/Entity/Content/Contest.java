@@ -18,6 +18,7 @@ public class Contest extends Content{
     private List<String> participants = new ArrayList<>();
     private String winnerName;
     private String reward;
+    private ActivityStatus activityStatus;
 
     public Contest(){
         super();
@@ -54,5 +55,13 @@ public class Contest extends Content{
 
     public void setReward(String reward) {
         this.reward = reward;
+    }
+
+    public ActivityStatus getActivityStatus() {
+        return activityStatus;
+    }
+
+    public void setActivityStatus(ActivityStatus activityStatus) {
+        this.activityStatus = activityStatus;
     }
 }

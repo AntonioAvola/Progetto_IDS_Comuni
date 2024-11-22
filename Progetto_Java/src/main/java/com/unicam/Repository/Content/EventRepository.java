@@ -1,5 +1,6 @@
 package com.unicam.Repository.Content;
 
+import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.Event;
 import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.User;
@@ -19,4 +20,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Event findByTitle(String title);
 
     List<Event> findAllByAuthor(User user);
+
+    List<Event> findByStatus(ContentStatus approved);
 }

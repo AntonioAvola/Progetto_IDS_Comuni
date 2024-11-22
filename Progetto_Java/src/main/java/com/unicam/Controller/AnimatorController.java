@@ -53,16 +53,19 @@ public class AnimatorController {
         // se comune visitato è lo stesso del proprio comune allora proseguire;
         // altrimenti eccezione
 
-        //TODO controllo presenza GeoPoint
+        //TODO controllo ruolo
+
+        //controllo presenza GeoPoint
         if(!this.geoPointService.checkGeoPointAlreadyExists(request.getReference(),municipality))
             throw new IllegalArgumentException("Il punto di riferimento non esiste");
 
-        //TODO controllo presenza title
+        //controllo presenza title
         if(this.eventService.checkTitle(request.getTitle(), municipality))
             throw new IllegalArgumentException("Il titolo è già utilizzato");
 
-        //TODO controllo su inizio e fine
+        //controllo su inizio e fine
         LocalDateTime now = LocalDateTime.now();
+        //TODO controllare anche che non sullo stesso punto non ci sia un evento già approvato con cui si andrebbero ad accavallare quello proposto
         if(!this.eventService.checkDuration(request.getStart(), request.getEnd(), now))
             throw new IllegalArgumentException("Inizio e Fine non conformi");
 
@@ -74,7 +77,7 @@ public class AnimatorController {
 
     @PostMapping("Api/Animator/AddContest")
     public void AddContest(ContestRequest request){
-        //TODO controllo autorizzazioni
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
@@ -90,10 +93,19 @@ public class AnimatorController {
         // se comune visitato è lo stesso del proprio comune allora proseguire;
         // altrimenti eccezione
 
+        //TODO controllo ruolo
+
         User user = this.userService.getUser(idUser);
 
-        //TODO controllo su inizio e fine
-        //TODO controllo presenza title
+        //controllo presenza title
+        if(this.contestService.checkTitle(request.getTitle(), municipality))
+            throw new IllegalArgumentException("Il titolo è già utilizzato");
+
+        //controllo su inizio e fine
+        LocalDateTime now = LocalDateTime.now();
+        if(!this.contestService.checkDuration(request.getStart(), request.getEnd(), now))
+            throw new IllegalArgumentException("Inizio e Fine non conformi");
+
         ContestCommand contest = new ContestCommand(request, contestService, user);
         contest.execute();
     }
@@ -115,6 +127,8 @@ public class AnimatorController {
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
         // altrimenti eccezione
+
+        //TODO controllo ruolo
 
         User user = this.userService.getUser(idUser);
 

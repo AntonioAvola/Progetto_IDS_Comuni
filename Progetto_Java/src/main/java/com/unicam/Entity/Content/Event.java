@@ -15,6 +15,7 @@ public class Event extends Content{
     @ManyToOne
     @JoinColumn(name = "position_Id")
     private GeoPoint reference;
+    private ActivityStatus activityStatus;
     private List<Long> idUserFavorites = new ArrayList<>();
 
     public Event(){
@@ -43,5 +44,13 @@ public class Event extends Content{
 
     public void setIdUserFavorites(List<Long> idUserFavorites) {
         this.idUserFavorites = idUserFavorites;
+    }
+
+    public ActivityStatus getActivityStatus() {
+        return activityStatus;
+    }
+
+    public void setActivityStatus(ActivityStatus activityStatus) {
+        this.activityStatus = activityStatus;
     }
 }

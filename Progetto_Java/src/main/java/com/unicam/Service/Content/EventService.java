@@ -1,5 +1,7 @@
 package com.unicam.Service.Content;
 
+import com.unicam.Entity.Content.ActivityStatus;
+import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.Event;
 import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.User;
@@ -71,9 +73,27 @@ public class EventService {
     }
 
     public boolean checkDuration(LocalDateTime start, LocalDateTime end, LocalDateTime now) {
-        if(start.isBefore(end) && start.isAfter(now)){
+        if(start.isAfter(now) && start.isBefore(end)){
             return true;
         }
         return false;
+    }
+
+    public void updateActivityStatus(LocalDateTime now) {
+        List<Event> events = this.repoEvent.findByStatus(ContentStatus.APPROVED);
+        for(Event event : events){
+            if(event.getActivityStatus().equals(ActivityStatus.WAITING)){
+                if(event.getDuration().getStart().isBefore(now)) {
+                    event.setActivityStatus(ActivityStatus.STARTED);
+                    this.repoEvent.save(event);
+                }
+            }
+            else if(event.getActivityStatus().equals(ActivityStatus.STARTED)){
+                if(event.getDuration().getFinish().isBefore(now)) {
+                    event.setActivityStatus(ActivityStatus.FINISHED);
+                    this.repoEvent.save(event);
+                }
+            }
+        }
     }
 }

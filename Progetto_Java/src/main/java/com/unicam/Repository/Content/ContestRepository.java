@@ -1,5 +1,6 @@
 package com.unicam.Repository.Content;
 
+import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.Contest;
 import com.unicam.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface ContestRepository extends JpaRepository<Contest, Long> {
     Contest findByTitle(String title);
 
     List<Contest> findAllByAuthor(User user);
+
+    List<Contest> findByStatus(ContentStatus approved);
 }
