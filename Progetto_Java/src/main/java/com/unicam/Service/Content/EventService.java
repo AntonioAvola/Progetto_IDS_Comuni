@@ -7,6 +7,7 @@ import com.unicam.Repository.Content.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -63,5 +64,16 @@ public class EventService {
     public void removeEventUser(User user) {
         List<Event> event = this.repoEvent.findAllByAuthor(user);
         this.repoEvent.deleteAll(event);
+    }
+
+    public boolean checkTitle(String title, String municipality) {
+        return this.repoEvent.existsByTitleAndMunicipality(title, municipality);
+    }
+
+    public boolean checkDuration(LocalDateTime start, LocalDateTime end, LocalDateTime now) {
+        if(start.isBefore(end) && start.isAfter(now)){
+            return true;
+        }
+        return false;
     }
 }
