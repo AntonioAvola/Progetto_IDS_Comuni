@@ -12,11 +12,13 @@ import java.util.List;
 public interface InterestPointRepository extends JpaRepository<InterestPoint, Long> {
     boolean existsByReference(GeoPoint reference);
 
-    InterestPoint[] findByMunicipality(String municipality);
+    List<InterestPoint> findByMunicipality(String municipality);
 
     InterestPoint findById(long idInterestPoint);
 
     InterestPoint findByTitleIgnoreCase(String title);
 
     List<InterestPoint> findAllByAuthor(User user);
+
+    boolean existsByTitle(String title);
 }

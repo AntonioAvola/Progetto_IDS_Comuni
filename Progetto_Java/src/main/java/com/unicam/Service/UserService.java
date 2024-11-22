@@ -111,4 +111,8 @@ public class UserService {
             throw new IllegalArgumentException("La password non rispetta i requisiti richiesti: lunghezza 5, almeno una maiuscola, " +
                     "almeno una minuscola, almeno un numero, almeno un simbolo speciale, niente spazi vuoti");
     }
+
+    public User getUser(long id) {
+        return this.repoUser.findUserById(id);
+    }
 }

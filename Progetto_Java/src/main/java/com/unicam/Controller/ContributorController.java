@@ -45,7 +45,6 @@ public class ContributorController {
 
     @PostMapping("Api/Contributor/addInterestPoint")
     public ResponseEntity<String> AddInterestPoint(InterestPointRequest request) throws IOException {
-        //TODO controlla autorizzazioni
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -53,53 +52,80 @@ public class ContributorController {
 
         String username = userDetails.getUsername();
         String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
 
-        String address = request.getTitle();
-        String currentMunicipality = URLEncoder.encode("Roma", StandardCharsets.UTF_8.toString());
+        ContentStatus status = ContentStatus.PENDING;
+        //TODO controllo ruolo:
+        // se CONTRIBUTOR allora status = PENDING;
+        // se CONTRIBUTOR AUTORIZZATO allora status = APPROVED;
+        // se qualsiasi altri ruolo, allora eccezione
+
+        String address = request.getReference();
+        String currentMunicipality = URLEncoder.encode(municipality, StandardCharsets.UTF_8.toString());
         address = URLEncoder.encode(address, StandardCharsets.UTF_8.toString());
         List<Double> coordinates = proxy.getCoordinates(address + "," + currentMunicipality);
-        User user = new User ("Sofia", "sofia", "Tolentino", "sofia@gmail.com", "IDS" );
-        this.userService.addAccount(user);
 
         //TODO controlla se esiste già il punto geolocalizzato, se esiste, lancia l'eccezione
-//        if(this.geoPointService.checkGeoPointAlreadyExists(request.getReference()))
-//            throw new UnsupportedOperationException("Esiste già un punto di interesse per questo determinato punto geolocalizzato");
+        if(this.geoPointService.checkGeoPointAlreadyExists(request.getReference(), municipality))
+            throw new UnsupportedOperationException("Esiste già un punto di interesse per questo determinato punto geolocalizzato");
 
-        //TODO controlla ruolo
-        InterestPointCommand InterestPoint = new InterestPointCommand(request, user, interestPointService, geoPointService, ContentStatus.PENDING, coordinates);
+        User user = this.userService.getUser(idUser);
+
+        InterestPointCommand InterestPoint = new InterestPointCommand(request, user, interestPointService, geoPointService, status, coordinates);
         InterestPoint.execute();
 
         return ResponseEntity.ok("Punto di interesse aggiunto con successo");
     }
 
     @PostMapping("Api/Contributor/addItinerary")
-    public void AddItinerary(ItineraryRequest request) {
-        //TODO controlla autorizzazioni
-        User user = new User ("Emma", "emma", "Tolentino", "emma@gmail.com", "IDS" );
-        this.userService.addAccount(user);
+    public ResponseEntity<String> AddItinerary(ItineraryRequest request) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        ContentStatus status = ContentStatus.PENDING;
+        //TODO controllo ruolo:
+        // se CONTRIBUTOR allora status = PENDING;
+        // se CONTRIBUTOR AUTORIZZATO allora status = APPROVED;
+        // se qualsiasi altri ruolo, allora eccezione
 
         //TODO controlla lunghezza lista punti di interesse, se non ha lunghezza minima 2 o ci sono punti di interesse ripetuti (true), lancia l'eccezione
-//        if(this.itineraryService.checkPathLength(request.getPath()))
-//            throw new IllegalArgumentException("Nella lista di punti di interesse sono presenti punti duplicati o meno di due punti di interesse");
-//        //TODO controlla presenza titolo, se il titolo è già presente (true), lancia l'eccezione
-//        if(this.itineraryService.checkTitle(request.getTitle() /*aggiungere anche il comune*/))
-//            throw new IllegalArgumentException("Esiste già un itinerario con questo titolo. Inserire un titolo differente");
+        if(!this.itineraryService.checkPathLength(request.getPath()))
+            throw new IllegalArgumentException("Nella lista di punti di interesse sono presenti punti duplicati o meno di due punti di interesse");
+        //TODO controlla presenza titolo, se il titolo è già presente (true), lancia l'eccezione
+        if(this.itineraryService.checkTitle(request.getTitle(), municipality))
+            throw new IllegalArgumentException("Esiste già un itinerario con questo titolo. Inserire un titolo differente");
 
-        //TODO controlla ruolo
+        User user = this.userService.getUser(idUser);
 
         ItineraryCommand Itinerary = new ItineraryCommand(request, itineraryService, interestPointService, user, ContentStatus.PENDING);
         Itinerary.execute();
+
+        return ResponseEntity.ok("Itinerario aggiunto con successo");
     }
 
     @DeleteMapping ("Api/Contributor/DeleteContent")
     public void DeleteContent(ContentDelete request) {
         //TODO controlla autorizzazioni
-
-        User user = new User ("Sofia", "sofia", "Tolentino", "sofia@gmail.com", "IDS" );
 
         if (request.getType().equals("interest point")){
             InterestPoint Point = this.interestPointService.getInterestPoint(request.getTitle() /*passare anche l'id dell'utente che richiede l'eliminazione del contenuto*/);

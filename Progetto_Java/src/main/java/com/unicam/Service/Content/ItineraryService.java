@@ -7,6 +7,7 @@ import com.unicam.Repository.Content.ItineraryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -67,5 +68,22 @@ public class ItineraryService {
     public void removeItineraryUser(User user) {
         List<Itinerary> itineraries = this.repoItinerary.findAllByAuthor(user);
         this.repoItinerary.deleteAll(itineraries);
+    }
+
+    public boolean checkPathLength(List<String> path) {
+        if(path.size()>=2)
+            return this.checkNoDuplicatedPoints(path);
+        return false;
+    }
+
+    private boolean checkNoDuplicatedPoints(List<String> path) {
+        //l'hashset contiene tutti elementi univoci
+        HashSet<String> set = new HashSet<>(path);
+        //se il path ha la stessa lunghezza dell'hashset, allora non sono presenti punti di interesse duplicati
+        return path.size() == set.size();
+    }
+
+    public boolean checkTitle(String title, String municipality) {
+        return this.repoItinerary.existsByTitleAndMunicipality(title, municipality);
     }
 }

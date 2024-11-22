@@ -41,7 +41,7 @@ public class GeoPointService {
         return point;
     }
 
-//    public boolean checkGeoPointAlreadyExists(String reference) {
-//        return this.repoGeo.existsByNameAndMunicipality(reference);
-//    }
+    public boolean checkGeoPointAlreadyExists(String reference, String municipality) {
+        return this.repoGeo.existsByNameAndMunicipality(reference, municipality);
+    }
 }

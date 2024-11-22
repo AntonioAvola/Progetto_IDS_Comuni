@@ -26,8 +26,10 @@ public class InterestPointService {
     }
 
     public void addInterestPoint(InterestPoint point){
-        if(this.exists(point))
-            throw new UnsupportedOperationException("Il punto di interesse è già presente");
+        if(this.exists(point)) {
+            this.serviceGeo.removeGeoPoint(point.getReference());
+            throw new UnsupportedOperationException("Il punto di interesse è già presente o il titolo è già utilizzato. Provare con un altro titolo");
+        }
         this.repoInterest.save(point);
     }
 
@@ -50,18 +52,21 @@ public class InterestPointService {
     private boolean exists(InterestPoint point) {
         if(this.repoInterest.existsByReference(point.getReference()))
             return true;
-        else
-            return false;
+        else if(this.repoInterest.existsByTitle(point.getTitle()))
+            return true;
+        return false;
     }
 
     public List<InterestPoint> getList(List<String> path, String municipality) {
-
         List<InterestPoint> points = new ArrayList<>();
-        for(InterestPoint point : this.repoInterest.findByMunicipality(municipality)){
+        List<InterestPoint> pointsDB = this.repoInterest.findByMunicipality(municipality);
+        for(InterestPoint point : pointsDB){
             if(path.contains(point.getReference().getName())){
                 points.add(point);
             }
         }
+        if(path.size() != points.size())
+            throw new IllegalArgumentException("Sono stati inseriti nomi di punti di interesse inesistenti");
         return points;
     }
 
