@@ -126,4 +126,8 @@ public class ItineraryService {
         this.repoItinerary.save(itinerary);
         return true;
     }
+
+    public boolean checkMunicipality(long idContent, String municipality) {
+        return this.repoItinerary.existsByIdAndMunicipality(idContent, municipality);
+    }
 }

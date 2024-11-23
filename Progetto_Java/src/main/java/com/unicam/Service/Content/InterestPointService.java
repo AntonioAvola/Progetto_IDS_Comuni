@@ -103,4 +103,8 @@ public class InterestPointService {
         this.repoInterest.save(point);
         return true;
     }
+
+    public boolean checkMunicipality(long idContent, String municipality) {
+        return this.repoInterest.existsByIdAndMunicipality(idContent, municipality);
+    }
 }

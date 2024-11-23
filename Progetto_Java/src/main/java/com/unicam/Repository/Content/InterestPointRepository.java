@@ -21,4 +21,6 @@ public interface InterestPointRepository extends JpaRepository<InterestPoint, Lo
     List<InterestPoint> findByMunicipalityAndStatus(String municipality, ContentStatus pending);
 
     boolean existsByIdAndAuthor(long idPoint, User author);
+
+    boolean existsByIdAndMunicipality(long idContent, String municipality);
 }

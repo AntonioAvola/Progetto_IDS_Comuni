@@ -22,4 +22,6 @@ public interface ItineraryRepository extends JpaRepository<Itinerary, Long> {
     List<Itinerary> findByMunicipalityAndStatus(String municipality, ContentStatus pending);
 
     boolean existsByIdAndAuthor(long idItinerary, User author);
+
+    boolean existsByIdAndMunicipality(long idContent, String municipality);
 }
