@@ -17,9 +17,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findByReference(GeoPoint reference);
 
-    Event findByTitle(String title);
+    Event findByTitleAndAuthor(String title, User author);
 
     List<Event> findAllByAuthor(User user);
 
     List<Event> findByStatus(ContentStatus approved);
+
+    boolean existsByTitleAndAuthor(String title, User author);
 }

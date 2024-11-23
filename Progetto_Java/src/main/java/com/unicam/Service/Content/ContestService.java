@@ -41,11 +41,12 @@ public class ContestService {
         }
     }
 
-    public Contest getContest(String title, long userId) {
-        Contest contest = this.repoContest.findByTitle(title);
-        if(contest.getAuthor().getId() != userId)
-            throw new IllegalArgumentException("Non puoi eliminare questa attività. Non è tra quelle da te inserite");
-        return contest;
+    public boolean getAndRemoveContest(String title, User author) {
+        if(!this.repoContest.existsByTitleAndAuthor(title, author))
+            return false;
+        Contest contest = this.repoContest.findByTitleAndAuthor(title, author);
+        this.removeContest(contest);
+        return true;
     }
 
     public void removeContestUser(User user){

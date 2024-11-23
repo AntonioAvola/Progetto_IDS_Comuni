@@ -5,8 +5,6 @@ import com.unicam.DTO.Request.ContestRequest;
 import com.unicam.DTO.Request.EventRequest;
 import com.unicam.Entity.CommandPattern.ContestCommand;
 import com.unicam.Entity.CommandPattern.EventCommand;
-import com.unicam.Entity.Content.Contest;
-import com.unicam.Entity.Content.Event;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.ContestService;
@@ -133,12 +131,12 @@ public class AnimatorController {
         User user = this.userService.getUser(idUser);
 
         if(request.getType().equals("event")){
-            Event event = this.eventService.getEvent(request.getTitle(), user.getId());
-            this.eventService.removeEvent(event);
+            if(!this.eventService.getAndRemoveEvent(request.getTitle(), user))
+                throw new IllegalArgumentException("L'evento non rientra tra le proprie attività");
         }
         else if(request.getType().equals("contest")){
-            Contest contest = this.contestService.getContest(request.getTitle(), user.getId());
-            this.contestService.removeContest(contest);
+           if(!this.contestService.getAndRemoveContest(request.getTitle(), user))
+               throw new IllegalArgumentException("Il contest non rientra tra le proprie attività");
         }
         else
             throw new IllegalArgumentException("Azione non supportata. Assicurati di aver inserito bene la tipologia di attività da eliminare");
