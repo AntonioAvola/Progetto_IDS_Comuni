@@ -1,12 +1,11 @@
 package com.unicam.Controller;
 
-import com.unicam.DTO.ContentDelete;
+import com.unicam.DTO.Request.ContentDelete;
 import com.unicam.DTO.Request.ItineraryRequest;
 import com.unicam.DTO.Request.InterestPointRequest;
 import com.unicam.Entity.CommandPattern.InterestPointCommand;
 import com.unicam.Entity.CommandPattern.ItineraryCommand;
 import com.unicam.Entity.Content.ContentStatus;
-import com.unicam.Entity.Content.Itinerary;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.GeoPointService;
@@ -110,9 +109,6 @@ public class ContributorController {
         //TODO controlla lunghezza lista punti di interesse, se non ha lunghezza minima 2 o ci sono punti di interesse ripetuti (true), lancia l'eccezione
         if(!this.itineraryService.checkPathLength(request.getPath()))
             throw new IllegalArgumentException("Nella lista di punti di interesse sono presenti punti duplicati o meno di due punti di interesse");
-        //TODO controlla presenza titolo, se il titolo è già presente (true), lancia l'eccezione
-        if(this.itineraryService.checkTitle(request.getTitle(), municipality))
-            throw new IllegalArgumentException("Esiste già un itinerario con questo titolo. Inserire un titolo differente");
 
         User user = this.userService.getUser(idUser);
 

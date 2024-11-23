@@ -1,4 +1,4 @@
-package com.unicam.DTO;
+package com.unicam.DTO.Request;
 
 import java.util.Locale;
 

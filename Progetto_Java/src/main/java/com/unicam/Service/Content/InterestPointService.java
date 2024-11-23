@@ -1,5 +1,7 @@
 package com.unicam.Service.Content;
 
+import com.unicam.DTO.Response.InterestPointResponse;
+import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.InterestPointRepository;
@@ -25,16 +27,11 @@ public class InterestPointService {
     }
 
     public void addInterestPoint(InterestPoint point){
-        if(this.exists(point)) {
-            this.serviceGeo.removeGeoPoint(point.getReference());
-            throw new UnsupportedOperationException("Il punto di interesse è già presente o il titolo è già utilizzato. Provare con un altro titolo");
-        }
         this.repoInterest.save(point);
     }
 
+    //TODO vedere se metodo funzionante
     public void removeInterestPoint(InterestPoint point){
-        if(!this.exists(point))
-            throw new UnsupportedOperationException("Il punto di interesse non è presente");
         this.serviceEvent.checkEvent(point.getReference());
         this.serviceItinerary.checkItinerary(point);
         this.repoInterest.delete(point);
@@ -48,14 +45,6 @@ public class InterestPointService {
         InterestPoint point = this.repoInterest.findByTitleAndAuthor(title, author);
         this.removeInterestPoint(point);
         return true;
-    }
-
-    private boolean exists(InterestPoint point) {
-        if(this.repoInterest.existsByReference(point.getReference()))
-            return true;
-        else if(this.repoInterest.existsByTitle(point.getTitle()))
-            return true;
-        return false;
     }
 
     public List<InterestPoint> getList(List<String> path, String municipality) {
@@ -85,5 +74,20 @@ public class InterestPointService {
         for(InterestPoint interestPoint : interestPoints){
             this.removeInterestPoint(interestPoint);
         }
+    }
+
+    public List<InterestPointResponse> getPoint(String municipality, ContentStatus pending) {
+        List<InterestPoint> points = this.repoInterest.findByMunicipalityAndStatus(municipality, pending);
+        return convertResponse(points);
+    }
+
+    private List<InterestPointResponse> convertResponse(List<InterestPoint> points) {
+        List<InterestPointResponse> response = new ArrayList<>();
+        for(InterestPoint point : points){
+            InterestPointResponse pointResponse = new InterestPointResponse(point.getTitle(),
+                    point.getDescription(), point.getReference().getName());
+            response.add(pointResponse);
+        }
+        return response;
     }
 }

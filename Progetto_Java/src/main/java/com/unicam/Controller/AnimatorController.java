@@ -1,6 +1,6 @@
 package com.unicam.Controller;
 
-import com.unicam.DTO.ContentDelete;
+import com.unicam.DTO.Request.ContentDelete;
 import com.unicam.DTO.Request.ContestRequest;
 import com.unicam.DTO.Request.EventRequest;
 import com.unicam.Entity.CommandPattern.ContestCommand;
@@ -36,6 +36,7 @@ public class AnimatorController {
 
     @PostMapping("Api/Animator/AddEvent")
     public void Addevent(EventRequest request){
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
@@ -56,10 +57,6 @@ public class AnimatorController {
         //controllo presenza GeoPoint
         if(!this.geoPointService.checkGeoPointAlreadyExists(request.getReference(),municipality))
             throw new IllegalArgumentException("Il punto di riferimento non esiste");
-
-        //controllo presenza title
-        if(this.eventService.checkTitle(request.getTitle(), municipality))
-            throw new IllegalArgumentException("Il titolo è già utilizzato");
 
         //controllo su inizio e fine
         LocalDateTime now = LocalDateTime.now();
@@ -94,10 +91,6 @@ public class AnimatorController {
         //TODO controllo ruolo
 
         User user = this.userService.getUser(idUser);
-
-        //controllo presenza title
-        if(this.contestService.checkTitle(request.getTitle(), municipality))
-            throw new IllegalArgumentException("Il titolo è già utilizzato");
 
         //controllo su inizio e fine
         LocalDateTime now = LocalDateTime.now();

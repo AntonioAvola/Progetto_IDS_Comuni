@@ -1,5 +1,6 @@
 package com.unicam.Repository.Content;
 
+import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.User;
@@ -23,4 +24,6 @@ public interface InterestPointRepository extends JpaRepository<InterestPoint, Lo
     boolean existsByTitle(String title);
 
     boolean existsByTitleAndAuthor(String title, User author);
+
+    List<InterestPoint> findByMunicipalityAndStatus(String municipality, ContentStatus pending);
 }

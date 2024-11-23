@@ -1,5 +1,7 @@
 package com.unicam.Service.Content;
 
+import com.unicam.DTO.Response.ItineraryResponse;
+import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Itinerary;
 import com.unicam.Entity.User;
@@ -7,6 +9,7 @@ import com.unicam.Repository.Content.ItineraryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -89,5 +92,29 @@ public class ItineraryService {
 
     public boolean checkTitle(String title, String municipality) {
         return this.repoItinerary.existsByTitleAndMunicipality(title, municipality);
+    }
+
+    public List<ItineraryResponse> getItinerary(String municipality, ContentStatus pending) {
+        List<Itinerary> itineraries = this.repoItinerary.findByMunicipalityAndStatus(municipality, pending);
+        return convertResponse(itineraries);
+    }
+
+    private List<ItineraryResponse> convertResponse(List<Itinerary> itineraries) {
+        List<ItineraryResponse> response = new ArrayList<>();
+        for(Itinerary itinerary : itineraries){
+            List<String> path = convertPathInString(itinerary.getPath());
+            ItineraryResponse itineraryResponse = new ItineraryResponse(itinerary.getTitle(),
+                    itinerary.getDescription(), path);
+            response.add(itineraryResponse);
+        }
+        return response;
+    }
+
+    private List<String> convertPathInString(List<InterestPoint> path) {
+        List<String> response = new ArrayList<>();
+        for(InterestPoint point : path){
+            response.add(point.getTitle());
+        }
+        return response;
     }
 }
