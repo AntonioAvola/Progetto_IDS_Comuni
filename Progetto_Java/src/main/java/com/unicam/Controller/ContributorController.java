@@ -6,7 +6,6 @@ import com.unicam.DTO.Request.InterestPointRequest;
 import com.unicam.Entity.CommandPattern.InterestPointCommand;
 import com.unicam.Entity.CommandPattern.ItineraryCommand;
 import com.unicam.Entity.Content.ContentStatus;
-import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Itinerary;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
@@ -123,17 +122,35 @@ public class ContributorController {
         return ResponseEntity.ok("Itinerario aggiunto con successo");
     }
 
+    //TODO @ANTONIO non considerare questa API perchè ho controllato solo per il punto di interesse;
+    // per l'itinerario devo prima fare bene l'aggiunta
     @DeleteMapping ("Api/Contributor/DeleteContent")
     public void DeleteContent(ContentDelete request) {
-        //TODO controlla autorizzazioni
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        User user = this.userService.getUser(idUser);
 
         if (request.getType().equals("interest point")){
-            InterestPoint Point = this.interestPointService.getInterestPoint(request.getTitle() /*passare anche l'id dell'utente che richiede l'eliminazione del contenuto*/);
-            this.interestPointService.removeInterestPoint(Point);
+            if(!this.interestPointService.getAndRemoveInterestPoint(request.getTitle(), user))
+                throw new IllegalArgumentException("Il punto di interesse non rientra tra i tuoi contenuti");
         }
         else if (request.getType().equals("itinerary")) {
-            Itinerary itinerary = this.itineraryService.getItinerary(request.getTitle());
-            this.itineraryService.removeItinerary(itinerary);
+            if(this.itineraryService.getAndRemoveItinerary(request.getTitle(), user))
+                throw new IllegalArgumentException("L'itinerario non rientra tra i tuoi contenuti");
         }
         else
             throw new IllegalArgumentException("Azione non supportata. Assicurati di aver inserito bene la tipologia di contenuto da eliminare");

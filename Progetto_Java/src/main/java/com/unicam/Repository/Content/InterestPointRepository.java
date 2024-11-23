@@ -16,9 +16,11 @@ public interface InterestPointRepository extends JpaRepository<InterestPoint, Lo
 
     InterestPoint findById(long idInterestPoint);
 
-    InterestPoint findByTitleIgnoreCase(String title);
+    InterestPoint findByTitleAndAuthor(String title, User author);
 
     List<InterestPoint> findAllByAuthor(User user);
 
     boolean existsByTitle(String title);
+
+    boolean existsByTitleAndAuthor(String title, User author);
 }

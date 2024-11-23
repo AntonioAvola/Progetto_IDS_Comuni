@@ -1,6 +1,5 @@
 package com.unicam.Repository.Content;
 
-import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Itinerary;
 import com.unicam.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,9 +14,11 @@ public interface ItineraryRepository extends JpaRepository<Itinerary, Long> {
 
     List<Itinerary> findByMunicipality(String municipality);
 
-    Itinerary findByTitle(String title);
+    Itinerary findByTitleAndAuthor(String title, User user);
 
     List<Itinerary> findAllByAuthor(User user);
 
     boolean existsByTitleAndMunicipality(String title, String municipality);
+
+    boolean existsByTitleAndAuthor(String title, User author);
 }

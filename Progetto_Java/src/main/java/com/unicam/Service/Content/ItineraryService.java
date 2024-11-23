@@ -61,8 +61,12 @@ public class ItineraryService {
         }
     }
 
-    public Itinerary getItinerary(String title) {
-        return this.repoItinerary.findByTitle(title);
+    public boolean getAndRemoveItinerary(String title, User author) {
+        if(!this.repoItinerary.existsByTitleAndAuthor(title, author))
+            return false;
+        Itinerary itinerary = this.repoItinerary.findByTitleAndAuthor(title, author);
+        this.removeItinerary(itinerary);
+        return true;
     }
 
     public void removeItineraryUser(User user) {

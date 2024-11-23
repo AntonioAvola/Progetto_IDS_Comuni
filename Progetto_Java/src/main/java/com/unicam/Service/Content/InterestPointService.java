@@ -1,6 +1,5 @@
 package com.unicam.Service.Content;
 
-import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.InterestPointRepository;
@@ -42,11 +41,13 @@ public class InterestPointService {
         this.serviceGeo.removeGeoPoint(point.getReference());
     }
 
-    public InterestPoint getInterestPoint(String title){
-        System.out.println("ricerca titolo: " + title);
-        InterestPoint point = this.repoInterest.findByTitleIgnoreCase(title);
-        System.out.println("Risultato ricerca: " + point);
-        return point;
+    public boolean getAndRemoveInterestPoint(String title, User author){
+        if(!this.repoInterest.existsByTitleAndAuthor(title, author)){
+            return false;
+        }
+        InterestPoint point = this.repoInterest.findByTitleAndAuthor(title, author);
+        this.removeInterestPoint(point);
+        return true;
     }
 
     private boolean exists(InterestPoint point) {
