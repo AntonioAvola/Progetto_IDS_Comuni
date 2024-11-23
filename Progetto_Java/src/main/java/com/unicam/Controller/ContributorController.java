@@ -1,6 +1,5 @@
 package com.unicam.Controller;
 
-import com.unicam.DTO.Request.ContentDelete;
 import com.unicam.DTO.Request.ItineraryRequest;
 import com.unicam.DTO.Request.InterestPointRequest;
 import com.unicam.Entity.CommandPattern.InterestPointCommand;
@@ -13,14 +12,13 @@ import com.unicam.Service.Content.InterestPointService;
 import com.unicam.Service.Content.ItineraryService;
 import com.unicam.Service.ProxyOSM.ProxyOSM;
 import com.unicam.Service.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -121,7 +119,11 @@ public class ContributorController {
     //TODO @ANTONIO non considerare questa API perchè ho controllato solo per il punto di interesse;
     // per l'itinerario devo prima fare bene l'aggiunta
     @DeleteMapping ("Api/Contributor/DeleteContent")
-    public void DeleteContent(ContentDelete request) {
+    public ResponseEntity<String> DeleteContent(
+            @Parameter(description = "Tipo di contenuto",
+                    schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
+            @RequestParam(defaultValue = "INTEREST POINT") String type,
+            @RequestParam long idContent) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -140,15 +142,14 @@ public class ContributorController {
 
         User user = this.userService.getUser(idUser);
 
-        if (request.getType().equals("interest point")){
-            if(!this.interestPointService.getAndRemoveInterestPoint(request.getId(), user))
+        if (type.equals("INTEREST POINT")){
+            if(!this.interestPointService.getAndRemoveInterestPoint(idContent, user))
                 throw new IllegalArgumentException("Il punto di interesse non rientra tra i tuoi contenuti");
         }
-        else if (request.getType().equals("itinerary")) {
-            if(this.itineraryService.getAndRemoveItinerary(request.getId(), user))
+        else {
+            if(this.itineraryService.getAndRemoveItinerary(idContent, user))
                 throw new IllegalArgumentException("L'itinerario non rientra tra i tuoi contenuti");
         }
-        else
-            throw new IllegalArgumentException("Azione non supportata. Assicurati di aver inserito bene la tipologia di contenuto da eliminare");
+        return ResponseEntity.ok("Eliminazione del contenuto eseguita con successo");
     }
 }

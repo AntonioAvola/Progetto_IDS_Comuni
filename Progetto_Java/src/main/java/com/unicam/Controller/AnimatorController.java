@@ -1,6 +1,5 @@
 package com.unicam.Controller;
 
-import com.unicam.DTO.Request.ContentDelete;
 import com.unicam.DTO.Request.ContestRequest;
 import com.unicam.DTO.Request.EventRequest;
 import com.unicam.Entity.CommandPattern.ContestCommand;
@@ -12,13 +11,13 @@ import com.unicam.Service.Content.ContestService;
 import com.unicam.Service.Content.EventService;
 import com.unicam.Service.Content.GeoPointService;
 import com.unicam.Service.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -111,8 +110,12 @@ public class AnimatorController {
     }
 
     @DeleteMapping("Api/Animator/DeleteActivity")
-    public void DeleteActivity(ContentDelete request){
-        //TODO controllo autorizzazioni
+    public ResponseEntity<String> DeleteActivity(
+            @Parameter(description = "Tipo di contenuto",
+                    schema = @Schema(type = "String", allowableValues = {"EVENT", "CONTEST"}))
+            @RequestParam(defaultValue = "EVENT") String type,
+            @RequestParam long idContent){
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
@@ -132,15 +135,14 @@ public class AnimatorController {
 
         User user = this.userService.getUser(idUser);
 
-        if(request.getType().equals("event")){
-            if(!this.eventService.getAndRemoveEvent(request.getId(), user))
+        if(type.equals("EVENT")){
+            if(!this.eventService.getAndRemoveEvent(idContent, user))
                 throw new IllegalArgumentException("L'evento non rientra tra le proprie attività");
         }
-        else if(request.getType().equals("contest")){
-           if(!this.contestService.getAndRemoveContest(request.getId(), user))
+        else{
+           if(!this.contestService.getAndRemoveContest(idContent, user))
                throw new IllegalArgumentException("Il contest non rientra tra le proprie attività");
         }
-        else
-            throw new IllegalArgumentException("Azione non supportata. Assicurati di aver inserito bene la tipologia di attività da eliminare");
+        return ResponseEntity.ok("Eliminazione attività eseguita con successo");
     }
 }

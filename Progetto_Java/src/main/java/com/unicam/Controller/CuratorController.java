@@ -68,7 +68,7 @@ public class CuratorController {
                     schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
             @RequestParam(defaultValue = "INTEREST POINT") String type,
             @RequestParam long idContent,
-            @Parameter(description = "Tipo di contenuto",
+            @Parameter(description = "Operazione da eseguire",
                     schema = @Schema(type = "ContentStatus", allowableValues = {"APPROVED", "REJECTED"}))
             @RequestParam(defaultValue = "APPROVED") ContentStatus status){
 
