@@ -5,6 +5,7 @@ import com.unicam.DTO.Request.ContestRequest;
 import com.unicam.DTO.Request.EventRequest;
 import com.unicam.Entity.CommandPattern.ContestCommand;
 import com.unicam.Entity.CommandPattern.EventCommand;
+import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.ContestService;
@@ -58,11 +59,19 @@ public class AnimatorController {
         if(!this.geoPointService.checkGeoPointAlreadyExists(request.getReference(),municipality))
             throw new IllegalArgumentException("Il punto di riferimento non esiste");
 
+        GeoPoint reference = this.geoPointService.getPoint(request.getReference(), municipality);
+
         //controllo su inizio e fine
         LocalDateTime now = LocalDateTime.now();
-        //TODO controllare anche che non sullo stesso punto non ci sia un evento già approvato con cui si andrebbero ad accavallare quello proposto
         if(!this.eventService.checkDuration(request.getStart(), request.getEnd(), now))
             throw new IllegalArgumentException("Inizio e Fine non conformi");
+
+        /**
+         * controllare anche che sullo stesso punto non ci sia un evento già approvato
+         * con cui si andrebbero ad accavallare quello proposto
+         */
+        if(this.eventService.checkOverlapDuration(request.getStart(), request.getEnd(), reference))
+            throw new IllegalArgumentException("Sovrapposizione durata con un evento già approvato per questo riferimento");
 
         User user = this.userService.getUser(idUser);
 
