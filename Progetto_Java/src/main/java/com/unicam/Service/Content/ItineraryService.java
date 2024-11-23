@@ -64,10 +64,10 @@ public class ItineraryService {
         }
     }
 
-    public boolean getAndRemoveItinerary(String title, User author) {
-        if(!this.repoItinerary.existsByTitleAndAuthor(title, author))
+    public boolean getAndRemoveItinerary(long idItinerary, User author) {
+        if(!this.repoItinerary.existsByIdAndAuthor(idItinerary, author))
             return false;
-        Itinerary itinerary = this.repoItinerary.findByTitleAndAuthor(title, author);
+        Itinerary itinerary = this.repoItinerary.findById(idItinerary);
         this.removeItinerary(itinerary);
         return true;
     }
@@ -88,10 +88,6 @@ public class ItineraryService {
         HashSet<String> set = new HashSet<>(path);
         //se il path ha la stessa lunghezza dell'hashset, allora non sono presenti punti di interesse duplicati
         return path.size() == set.size();
-    }
-
-    public boolean checkTitle(String title, String municipality) {
-        return this.repoItinerary.existsByTitleAndMunicipality(title, municipality);
     }
 
     public List<ItineraryResponse> getItinerary(String municipality, ContentStatus pending) {

@@ -19,9 +19,6 @@ public class ContestService {
 
 
     public void addContest(Contest contest){
-        if(this.exists(contest)){
-            throw new UnsupportedOperationException("Il contest già esiste");
-        }
         this.repoContest.save(contest);
     }
 
@@ -41,10 +38,10 @@ public class ContestService {
         }
     }
 
-    public boolean getAndRemoveContest(String title, User author) {
-        if(!this.repoContest.existsByTitleAndAuthor(title, author))
+    public boolean getAndRemoveContest(long idContest, User author) {
+        if(!this.repoContest.existsByIdAndAuthor(idContest, author))
             return false;
-        Contest contest = this.repoContest.findByTitleAndAuthor(title, author);
+        Contest contest = this.repoContest.findById(idContest);
         this.removeContest(contest);
         return true;
     }
@@ -52,10 +49,6 @@ public class ContestService {
     public void removeContestUser(User user){
         List<Contest> contest = this.repoContest.findAllByAuthor(user);
         this.repoContest.deleteAll(contest);
-    }
-
-    public boolean checkTitle(String title, String municipality) {
-        return this.repoContest.existsByTitleAndMunicipality(title, municipality);
     }
 
     public boolean checkDuration(LocalDateTime start, LocalDateTime end, LocalDateTime now) {

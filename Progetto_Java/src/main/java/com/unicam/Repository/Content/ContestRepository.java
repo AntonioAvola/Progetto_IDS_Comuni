@@ -11,12 +11,9 @@ import java.util.List;
 @Repository
 public interface ContestRepository extends JpaRepository<Contest, Long> {
     boolean existsByTitleAndMunicipality(String title, String municipality);
-
-    Contest findByTitleAndAuthor(String title, User author);
-
     List<Contest> findAllByAuthor(User user);
-
     List<Contest> findByStatus(ContentStatus approved);
+    Contest findById(long id);
 
-    boolean existsByTitleAndAuthor(String title, User author);
+    boolean existsByIdAndAuthor(long idContest, User author);
 }

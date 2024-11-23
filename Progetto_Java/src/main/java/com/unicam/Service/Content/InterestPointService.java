@@ -38,11 +38,11 @@ public class InterestPointService {
         this.serviceGeo.removeGeoPoint(point.getReference());
     }
 
-    public boolean getAndRemoveInterestPoint(String title, User author){
-        if(!this.repoInterest.existsByTitleAndAuthor(title, author)){
+    public boolean getAndRemoveInterestPoint(long idPoint, User author){
+        if(!this.repoInterest.existsByIdAndAuthor(idPoint, author)){
             return false;
         }
-        InterestPoint point = this.repoInterest.findByTitleAndAuthor(title, author);
+        InterestPoint point = this.repoInterest.findById(idPoint);
         this.removeInterestPoint(point);
         return true;
     }

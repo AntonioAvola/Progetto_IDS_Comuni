@@ -141,11 +141,11 @@ public class ContributorController {
         User user = this.userService.getUser(idUser);
 
         if (request.getType().equals("interest point")){
-            if(!this.interestPointService.getAndRemoveInterestPoint(request.getTitle(), user))
+            if(!this.interestPointService.getAndRemoveInterestPoint(request.getId(), user))
                 throw new IllegalArgumentException("Il punto di interesse non rientra tra i tuoi contenuti");
         }
         else if (request.getType().equals("itinerary")) {
-            if(this.itineraryService.getAndRemoveItinerary(request.getTitle(), user))
+            if(this.itineraryService.getAndRemoveItinerary(request.getId(), user))
                 throw new IllegalArgumentException("L'itinerario non rientra tra i tuoi contenuti");
         }
         else

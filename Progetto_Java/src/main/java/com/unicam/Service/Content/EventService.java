@@ -19,9 +19,6 @@ public class EventService {
     private EventRepository repoEvent;
 
     public void addEvent(Event event){
-        if(this.exists(event)){
-            throw new UnsupportedOperationException("l'evento esiste già");
-        }
         this.repoEvent.save(event);
     }
 
@@ -56,10 +53,10 @@ public class EventService {
         }
     }
 
-    public boolean getAndRemoveEvent(String title, User author) {
-        if(!this.repoEvent.existsByTitleAndAuthor(title, author))
+    public boolean getAndRemoveEvent(long idEvent, User author) {
+        if(!this.repoEvent.existsByIdAndAuthor(idEvent, author))
             return false;
-        Event event = this.repoEvent.findByTitleAndAuthor(title, author);
+        Event event = this.repoEvent.findById(idEvent);
         this.removeEvent(event);
         return true;
     }
@@ -67,10 +64,6 @@ public class EventService {
     public void removeEventUser(User user) {
         List<Event> event = this.repoEvent.findAllByAuthor(user);
         this.repoEvent.deleteAll(event);
-    }
-
-    public boolean checkTitle(String title, String municipality) {
-        return this.repoEvent.existsByTitleAndMunicipality(title, municipality);
     }
 
     public boolean checkDuration(LocalDateTime start, LocalDateTime end, LocalDateTime now) {

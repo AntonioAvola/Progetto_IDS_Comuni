@@ -124,11 +124,11 @@ public class AnimatorController {
         User user = this.userService.getUser(idUser);
 
         if(request.getType().equals("event")){
-            if(!this.eventService.getAndRemoveEvent(request.getTitle(), user))
+            if(!this.eventService.getAndRemoveEvent(request.getId(), user))
                 throw new IllegalArgumentException("L'evento non rientra tra le proprie attività");
         }
         else if(request.getType().equals("contest")){
-           if(!this.contestService.getAndRemoveContest(request.getTitle(), user))
+           if(!this.contestService.getAndRemoveContest(request.getId(), user))
                throw new IllegalArgumentException("Il contest non rientra tra le proprie attività");
         }
         else
