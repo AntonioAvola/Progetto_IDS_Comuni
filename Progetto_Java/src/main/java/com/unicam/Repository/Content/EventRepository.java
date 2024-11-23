@@ -23,5 +23,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     boolean existsByIdAndAuthor(long idEvent, User user);
 
-    List<Event> finAllByReferenceAndStatus(GeoPoint reference, ContentStatus approved);
+    List<Event> findAllByReferenceAndStatus(GeoPoint reference, ContentStatus approved);
 }

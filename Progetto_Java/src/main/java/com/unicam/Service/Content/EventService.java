@@ -93,7 +93,7 @@ public class EventService {
 
     //TODO metodo da controllare
     public boolean checkOverlapDuration(LocalDateTime start, LocalDateTime end, GeoPoint reference) {
-        List<Event> events = this.repoEvent.finAllByReferenceAndStatus(reference, ContentStatus.APPROVED);
+        List<Event> events = this.repoEvent.findAllByReferenceAndStatus(reference, ContentStatus.APPROVED);
         for(Event event : events){
             if((start.isAfter(event.getDuration().getStart()) && start.isBefore(event.getDuration().getFinish()))
                     || (end.isAfter(event.getDuration().getStart()) && end.isBefore(event.getDuration().getFinish()))

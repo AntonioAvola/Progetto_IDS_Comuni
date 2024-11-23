@@ -84,10 +84,23 @@ public class InterestPointService {
     private List<InterestPointResponse> convertResponse(List<InterestPoint> points) {
         List<InterestPointResponse> response = new ArrayList<>();
         for(InterestPoint point : points){
-            InterestPointResponse pointResponse = new InterestPointResponse(point.getTitle(),
+            InterestPointResponse pointResponse = new InterestPointResponse(point.getId(), point.getTitle(),
                     point.getDescription(), point.getReference().getName());
             response.add(pointResponse);
         }
         return response;
+    }
+
+    public boolean approveOrRejectPoint(long idContent, ContentStatus approved) {
+        if(!this.repoInterest.existsById(idContent))
+            return false;
+        InterestPoint point = this.repoInterest.findById(idContent);
+        if(approved.equals(ContentStatus.REJECTED)) {
+            this.removeInterestPoint(point);
+            return true;
+        }
+        point.setStatus(approved);
+        this.repoInterest.save(point);
+        return true;
     }
 }

@@ -99,7 +99,7 @@ public class ItineraryService {
         List<ItineraryResponse> response = new ArrayList<>();
         for(Itinerary itinerary : itineraries){
             List<String> path = convertPathInString(itinerary.getPath());
-            ItineraryResponse itineraryResponse = new ItineraryResponse(itinerary.getTitle(),
+            ItineraryResponse itineraryResponse = new ItineraryResponse(itinerary.getId(), itinerary.getTitle(),
                     itinerary.getDescription(), path);
             response.add(itineraryResponse);
         }
@@ -112,5 +112,18 @@ public class ItineraryService {
             response.add(point.getTitle());
         }
         return response;
+    }
+
+    public boolean approveOrRejectItinerary(long idContent, ContentStatus approved) {
+        if(!this.repoItinerary.existsById(idContent))
+            return false;
+        Itinerary itinerary = this.repoItinerary.findById(idContent);
+        if(approved.equals(ContentStatus.REJECTED)){
+            this.removeItinerary(itinerary);
+            return true;
+        }
+        itinerary.setStatus(approved);
+        this.repoItinerary.save(itinerary);
+        return true;
     }
 }

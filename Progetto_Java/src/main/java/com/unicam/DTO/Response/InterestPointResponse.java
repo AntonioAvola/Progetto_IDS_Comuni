@@ -2,13 +2,16 @@ package com.unicam.DTO.Response;
 
 public class InterestPointResponse {
 
+    private long id;
     private String title;
     private String description;
     private String reference;
 
-    public InterestPointResponse(String title,
+    public InterestPointResponse(long id,
+                                 String title,
                                  String description,
                                  String reference){
+        this.id = id;
         this.title = title;
         this.description = description;
         this.reference = reference;
@@ -24,5 +27,9 @@ public class InterestPointResponse {
 
     public String getReference() {
         return reference;
+    }
+
+    public long getId() {
+        return id;
     }
 }

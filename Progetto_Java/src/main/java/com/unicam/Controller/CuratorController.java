@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ public class CuratorController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("api/curator/visualizza/contenuti/pending")
+    @GetMapping("api/curator/view/all/content/pending")
     public ResponseEntity<ContentOrActivityPending> getContentPending(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -55,5 +53,73 @@ public class CuratorController {
         pending.getContents().put("itineray", itineraryPending);
 
         return ResponseEntity.ok(pending);
+    }
+
+    @PutMapping("api/curator/approve/content")
+    public ResponseEntity<String> approveContent(@RequestParam String type, @RequestParam long idContent){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        //TODO controllo ruolo
+
+        if(type.equals("interest point")){
+            if(!this.interestPointService.approveOrRejectPoint(idContent, ContentStatus.APPROVED))
+                throw new UnsupportedOperationException("Punto di interesse non trovato");
+            return ResponseEntity.ok("Punto di interesse approvato con successo");
+        }
+        else if(type.equals("itinerary")){
+            if(!this.itineraryService.approveOrRejectItinerary(idContent, ContentStatus.APPROVED))
+                throw new UnsupportedOperationException("Itinerario non trovato");
+            return ResponseEntity.ok("Itinerario approvato con successo");
+        }
+        else{
+            throw new IllegalArgumentException("Azione non supportata. Assicurati di aver inserito bene la tipologia di contenuto da eliminare");
+        }
+    }
+
+    @DeleteMapping("api/curator/reject/content")
+    public ResponseEntity<String> rejectContent(@RequestParam String type, @RequestParam long idContent) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        //TODO controllo ruolo
+
+        if (type.equals("interest point")) {
+            if (!this.interestPointService.approveOrRejectPoint(idContent, ContentStatus.REJECTED))
+                throw new UnsupportedOperationException("Punto di interesse non trovato");
+            return ResponseEntity.ok("Punto di interesse rifiutato con successo");
+        } else if (type.equals("itinerary")) {
+            if (!this.itineraryService.approveOrRejectItinerary(idContent, ContentStatus.REJECTED))
+                throw new UnsupportedOperationException("Itinerario non trovato");
+            return ResponseEntity.ok("Itinerario rifiutato con successo");
+        } else {
+            throw new IllegalArgumentException("Azione non supportata. Assicurati di aver inserito bene la tipologia di contenuto da eliminare");
+        }
     }
 }
