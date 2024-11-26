@@ -92,8 +92,7 @@ public class CuratorController {
         if(type.equals("INTEREST POINT")){
             if(!this.interestPointService.checkMunicipality(idContent, municipality))
                 throw new IllegalArgumentException("Punto di interesse non appartenente al comune di " + municipality);
-            if(!this.interestPointService.approveOrRejectPoint(idContent, status))
-                throw new UnsupportedOperationException("Punto di interesse non trovato");
+            this.interestPointService.approveOrRejectPoint(idContent, status);
         }
         else {
             if(!this.itineraryService.checkMunicipality(idContent, municipality))

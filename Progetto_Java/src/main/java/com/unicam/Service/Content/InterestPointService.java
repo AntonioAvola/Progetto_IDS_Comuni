@@ -91,17 +91,13 @@ public class InterestPointService {
         return response;
     }
 
-    public boolean approveOrRejectPoint(long idContent, ContentStatus approved) {
-        if(!this.repoInterest.existsById(idContent))
-            return false;
+    public void approveOrRejectPoint(long idContent, ContentStatus approved) {
         InterestPoint point = this.repoInterest.findById(idContent);
         if(approved.equals(ContentStatus.REJECTED)) {
             this.removeInterestPoint(idContent);
-            return true;
         }
         point.setStatus(approved);
         this.repoInterest.save(point);
-        return true;
     }
 
     public boolean checkMunicipality(long idContent, String municipality) {
