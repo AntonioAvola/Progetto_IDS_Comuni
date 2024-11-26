@@ -35,8 +35,7 @@ public class InterestPointService {
         InterestPoint point = this.repoInterest.findById(idPoint);
         this.serviceEvent.checkEvent(point.getReference());
         this.serviceItinerary.checkItinerary(point);
-        this.repoInterest.delete(point);
-        this.serviceGeo.removeGeoPoint(point.getReference());
+        this.removeInterestPointPending(point);
     }
 
     public boolean getAndRemoveInterestPoint(long idPoint, User author){
@@ -94,10 +93,15 @@ public class InterestPointService {
     public void approveOrRejectPoint(long idContent, ContentStatus approved) {
         InterestPoint point = this.repoInterest.findById(idContent);
         if(approved.equals(ContentStatus.REJECTED)) {
-            this.removeInterestPoint(idContent);
+            this.removeInterestPointPending(point);
         }
         point.setStatus(approved);
         this.repoInterest.save(point);
+    }
+
+    private void removeInterestPointPending(InterestPoint point) {
+        this.repoInterest.delete(point);
+        this.serviceGeo.removeGeoPoint(point.getReference());
     }
 
     public boolean checkMunicipality(long idContent, String municipality) {

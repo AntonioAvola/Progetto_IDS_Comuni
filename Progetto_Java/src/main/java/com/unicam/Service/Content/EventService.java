@@ -37,9 +37,7 @@ public class EventService {
 
     public void checkEvent(GeoPoint reference) {
         List<Event> events = this.repoEvent.findByReference(reference);
-        if(!events.isEmpty()){
-            this.repoEvent.deleteAll(events);
-        }
+        this.repoEvent.deleteAll(events);
     }
 
     public boolean getAndRemoveEvent(long idEvent, User author) {
