@@ -97,8 +97,7 @@ public class CuratorController {
         else {
             if(!this.itineraryService.checkMunicipality(idContent, municipality))
                 throw new IllegalArgumentException("Itinerario non appartenente al comune di " + municipality);
-            if(!this.itineraryService.approveOrRejectItinerary(idContent, status))
-                throw new UnsupportedOperationException("Itinerario non trovato");
+            this.itineraryService.approveOrRejectItinerary(idContent, status);
         }
         return ResponseEntity.ok("Operazione eseguita con successo");
     }
