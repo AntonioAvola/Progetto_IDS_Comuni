@@ -22,20 +22,9 @@ public class EventService {
         this.repoEvent.save(event);
     }
 
-    public void removeEvent(Event event){
-        if(!this.exists(event)){
-            throw new UnsupportedOperationException("l'evento non esiste");
-        }
+    public void removeEvent(long idEvent){
+        Event event = this.repoEvent.findById(idEvent);
         this.repoEvent.delete(event);
-    }
-
-
-    private boolean exists(Event event){
-        if(this.repoEvent.existsByTitleAndMunicipality(event.getTitle(), event.getMunicipality())){
-            return true;
-        }else{
-            return false;
-        }
     }
 
     public void addFavorite(long idEvent, long idUser){
@@ -56,8 +45,7 @@ public class EventService {
     public boolean getAndRemoveEvent(long idEvent, User author) {
         if(!this.repoEvent.existsByIdAndAuthor(idEvent, author))
             return false;
-        Event event = this.repoEvent.findById(idEvent);
-        this.removeEvent(event);
+        this.removeEvent(idEvent);
         return true;
     }
 
@@ -91,7 +79,6 @@ public class EventService {
         }
     }
 
-    //TODO metodo da controllare
     public boolean checkOverlapDuration(LocalDateTime start, LocalDateTime end, GeoPoint reference) {
         List<Event> events = this.repoEvent.findAllByReferenceAndStatus(reference, ContentStatus.APPROVED);
         for(Event event : events){

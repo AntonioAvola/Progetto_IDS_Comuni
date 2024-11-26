@@ -20,14 +20,11 @@ public class ItineraryService {
     private ItineraryRepository repoItinerary;
 
     public void addItineray(Itinerary itinerary){
-        if(this.exists(itinerary))
-            throw new UnsupportedOperationException("L'itinerario è già presente");
         this.repoItinerary.save(itinerary);
     }
 
-    public void removeItinerary(Itinerary itinerary){
-        if(!this.exists(itinerary))
-            throw new UnsupportedOperationException("L'itinerario non è presente");
+    public void removeItinerary(long idItinerary){
+        Itinerary itinerary = this.repoItinerary.findById(idItinerary);
         this.repoItinerary.delete(itinerary);
     }
 
@@ -67,8 +64,7 @@ public class ItineraryService {
     public boolean getAndRemoveItinerary(long idItinerary, User author) {
         if(!this.repoItinerary.existsByIdAndAuthor(idItinerary, author))
             return false;
-        Itinerary itinerary = this.repoItinerary.findById(idItinerary);
-        this.removeItinerary(itinerary);
+        this.removeItinerary(idItinerary);
         return true;
     }
 
@@ -119,7 +115,7 @@ public class ItineraryService {
             return false;
         Itinerary itinerary = this.repoItinerary.findById(idContent);
         if(approved.equals(ContentStatus.REJECTED)){
-            this.removeItinerary(itinerary);
+            this.removeItinerary(idContent);
             return true;
         }
         itinerary.setStatus(approved);

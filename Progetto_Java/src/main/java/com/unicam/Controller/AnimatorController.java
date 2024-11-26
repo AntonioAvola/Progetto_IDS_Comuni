@@ -66,7 +66,7 @@ public class AnimatorController {
             throw new IllegalArgumentException("Inizio e Fine non conformi");
 
         /**
-         * controllare anche che sullo stesso punto non ci sia un evento già approvato
+         * controllare che sullo stesso punto non ci sia un evento già approvato
          * con cui si andrebbero ad accavallare quello proposto
          */
         if(this.eventService.checkOverlapDuration(request.getStart(), request.getEnd(), reference))
@@ -98,12 +98,12 @@ public class AnimatorController {
 
         //TODO controllo ruolo
 
-        User user = this.userService.getUser(idUser);
-
         //controllo su inizio e fine
         LocalDateTime now = LocalDateTime.now();
         if(!this.contestService.checkDuration(request.getStart(), request.getEnd(), now))
             throw new IllegalArgumentException("Inizio e Fine non conformi");
+
+        User user = this.userService.getUser(idUser);
 
         ContestCommand contest = new ContestCommand(request, contestService, user);
         contest.execute();

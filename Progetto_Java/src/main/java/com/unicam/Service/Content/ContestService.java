@@ -22,10 +22,8 @@ public class ContestService {
         this.repoContest.save(contest);
     }
 
-    public void removeContest(Contest contest){
-        if(!this.exists(contest)){
-            throw new UnsupportedOperationException("Il contest non esiste");
-        }
+    public void removeContest(long idContest){
+        Contest contest = this.repoContest.findById(idContest);
         this.repoContest.delete(contest);
     }
 
@@ -41,8 +39,7 @@ public class ContestService {
     public boolean getAndRemoveContest(long idContest, User author) {
         if(!this.repoContest.existsByIdAndAuthor(idContest, author))
             return false;
-        Contest contest = this.repoContest.findById(idContest);
-        this.removeContest(contest);
+        this.removeContest(idContest);
         return true;
     }
 

@@ -31,7 +31,8 @@ public class InterestPointService {
     }
 
     //TODO vedere se metodo funzionante
-    public void removeInterestPoint(InterestPoint point){
+    public void removeInterestPoint(long idPoint){
+        InterestPoint point = this.repoInterest.findById(idPoint);
         this.serviceEvent.checkEvent(point.getReference());
         this.serviceItinerary.checkItinerary(point);
         this.repoInterest.delete(point);
@@ -42,8 +43,7 @@ public class InterestPointService {
         if(!this.repoInterest.existsByIdAndAuthor(idPoint, author)){
             return false;
         }
-        InterestPoint point = this.repoInterest.findById(idPoint);
-        this.removeInterestPoint(point);
+        this.removeInterestPoint(idPoint);
         return true;
     }
 
@@ -72,7 +72,7 @@ public class InterestPointService {
     public void removeInterestPointUser(User user) {
         List<InterestPoint> interestPoints = this.repoInterest.findAllByAuthor(user);
         for(InterestPoint interestPoint : interestPoints){
-            this.removeInterestPoint(interestPoint);
+            this.removeInterestPoint(interestPoint.getId());
         }
     }
 
@@ -96,7 +96,7 @@ public class InterestPointService {
             return false;
         InterestPoint point = this.repoInterest.findById(idContent);
         if(approved.equals(ContentStatus.REJECTED)) {
-            this.removeInterestPoint(point);
+            this.removeInterestPoint(idContent);
             return true;
         }
         point.setStatus(approved);
