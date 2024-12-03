@@ -114,7 +114,20 @@ public class EventService {
             Event event = this.repoEvent.findById(idContent);
             event.setStatus(status);
             event.setActivityStatus(ActivityStatus.WAITING);
+            removeEventPendingOverlapping(event);
             this.repoEvent.save(event);
+        }
+    }
+
+    private void removeEventPendingOverlapping(Event event) {
+        List<Event> events = this.repoEvent.findAllByReferenceAndStatus(event.getReference(), ContentStatus.PENDING);
+        for(Event eventFound : events){
+            if(!((eventFound.getDuration().getStart().isBefore(event.getDuration().getStart()) &&
+                    eventFound.getDuration().getFinish().isBefore(event.getDuration().getStart())) ||
+                    (eventFound.getDuration().getStart().isAfter(event.getDuration().getFinish()) &&
+                            eventFound.getDuration().getFinish().isAfter(event.getDuration().getFinish())))){
+                this.repoEvent.delete(eventFound);
+            }
         }
     }
 }
