@@ -116,8 +116,6 @@ public class ContributorController {
         return ResponseEntity.ok("Itinerario aggiunto con successo");
     }
 
-    //TODO @ANTONIO non considerare questa API perchè ho controllato solo per il punto di interesse;
-    // per l'itinerario devo prima fare bene l'aggiunta
     @DeleteMapping ("Api/Contributor/DeleteContent")
     public ResponseEntity<String> DeleteContent(
             @Parameter(description = "Tipo di contenuto",

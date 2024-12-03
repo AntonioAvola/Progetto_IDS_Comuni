@@ -13,13 +13,13 @@ import com.unicam.Service.Content.InterestPointService;
 import com.unicam.Service.Content.ItineraryService;
 import com.unicam.Service.MunicipalityService;
 import com.unicam.Service.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,4 +105,46 @@ public class UserController {
 
     }
 
+
+    //TODO implementare correttamente
+    @DeleteMapping("Api/User/DeleteContent")
+    public ResponseEntity<String> DeleteContent(
+            @Parameter(description = "Tipo di contenuto",
+                    schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY", "EVENT", "CONTEST"}))
+            @RequestParam(defaultValue = "INTEREST POINT") String type,
+            @RequestParam long idContent) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        User user = this.userService.getUser(idUser);
+
+        if (type.equals("INTEREST POINT")){
+            if(!this.interestPointService.getAndRemoveInterestPoint(idContent, user))
+                throw new IllegalArgumentException("Il punto di interesse non rientra tra i tuoi contenuti");
+        }
+        else if(type.equals("ITINERARY")){
+            if(this.itineraryService.getAndRemoveItinerary(idContent, user))
+                throw new IllegalArgumentException("L'itinerario non rientra tra i tuoi contenuti");
+        }
+        else if(type.equals("EVENT")){
+
+        }
+        else{
+
+        }
+        return ResponseEntity.ok("Eliminazione del contenuto eseguita con successo");
+    }
 }
