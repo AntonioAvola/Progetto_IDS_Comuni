@@ -16,4 +16,8 @@ public interface ContestRepository extends JpaRepository<Contest, Long> {
     Contest findById(long id);
 
     boolean existsByIdAndAuthor(long idContest, User author);
+
+    List<Contest> findByMunicipalityAndStatus(String municipality, ContentStatus pending);
+
+    boolean existsByIdAndMunicipality(long idContent, String municipality);
 }

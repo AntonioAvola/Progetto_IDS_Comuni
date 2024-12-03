@@ -1,15 +1,14 @@
 package com.unicam.Service.Content;
 
-import com.unicam.Entity.Content.ActivityStatus;
-import com.unicam.Entity.Content.ContentStatus;
-import com.unicam.Entity.Content.Event;
-import com.unicam.Entity.Content.GeoPoint;
+import com.unicam.DTO.Response.EventResponse;
+import com.unicam.Entity.Content.*;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -86,5 +85,33 @@ public class EventService {
                 return true;
         }
         return false;
+    }
+
+    public List<EventResponse> getEvent(String municipality, ContentStatus pending) {
+        List<Event> events = this.repoEvent.findByMunicipalityAndStatus(municipality, pending);
+        return convertResponse(events);
+    }
+
+    private List<EventResponse> convertResponse(List<Event> events) {
+        List<EventResponse> response = new ArrayList<>();
+        for(Event event : events){
+            EventResponse convert = new EventResponse(event.getId(), event.getTitle(),
+                    event.getDescription(), event.getDuration(), event.getReference().getName());
+            response.add(convert);
+        }
+        return response;
+    }
+
+    public boolean checkMunicipality(long idContent, String municipality) {
+        return this.repoEvent.existsBtIdAndMunicipality(idContent, municipality);
+    }
+
+    public void approveOrRejectPoint(long idContent, ContentStatus status) {
+        if(status.equals(ContentStatus.REJECTED)) {
+            this.removeEvent(idContent);
+        }
+        Event point = this.repoEvent.findById(idContent);
+        point.setStatus(status);
+        this.repoEvent.save(point);
     }
 }

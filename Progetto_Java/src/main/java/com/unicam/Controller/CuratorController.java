@@ -30,7 +30,7 @@ public class CuratorController {
     private UserService userService;
 
     @GetMapping("api/curator/view/all/content/pending")
-    @Operation(summary = "Visualizza contenuti pendenti",
+    @Operation(summary = "Visualizza contenuti in attesa",
             description = "Restituisce una lista di contenuti in attesa con i relativi ID.")
     public ResponseEntity<ContentOrActivityPending> getContentPending(){
 
@@ -61,8 +61,8 @@ public class CuratorController {
     }
 
     @PutMapping("api/curator/approve/or/reject/content")
-    @Operation(summary = "Approva un contenuto",
-            description = "Approva un contenuto in attesa. Usa uno degli ID disponibili da /getContentPending.")
+    @Operation(summary = "Approva o rifiuta un contenuto",
+            description = "Approva o rifiuta un contenuto in attesa. Usa uno degli ID disponibili da /getContentPending.")
     public ResponseEntity<String> approveOrRejectContent(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
