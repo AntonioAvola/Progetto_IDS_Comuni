@@ -111,9 +111,10 @@ public class EventService {
             this.removeEvent(idContent);
         }
         else{
-            Event point = this.repoEvent.findById(idContent);
-            point.setStatus(status);
-            this.repoEvent.save(point);
+            Event event = this.repoEvent.findById(idContent);
+            event.setStatus(status);
+            event.setActivityStatus(ActivityStatus.WAITING);
+            this.repoEvent.save(event);
         }
     }
 }

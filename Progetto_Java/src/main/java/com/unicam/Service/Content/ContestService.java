@@ -99,9 +99,10 @@ public class ContestService {
             this.removeContest(idContent);
         }
         else{
-            Contest point = this.repoContest.findById(idContent);
-            point.setStatus(status);
-            this.repoContest.save(point);
+            Contest contest = this.repoContest.findById(idContent);
+            contest.setStatus(status);
+            contest.setActivityStatus(ActivityStatus.WAITING);
+            this.repoContest.save(contest);
         }
     }
 }
