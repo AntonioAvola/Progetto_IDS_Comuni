@@ -1,8 +1,12 @@
 package com.unicam.Entity;
 
+import com.unicam.DTO.MunicipalityDetails;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.GeoPoint;
 import jakarta.persistence.*;
+
+import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table
@@ -13,27 +17,42 @@ public class Municipality {
     private long id;
     private String name;
 
-    //TODO provare a cambiare da tue attributi distinti a una Map<String, Double>
-    @OneToOne
+    /*@OneToOne
     private GeoPoint referenceMax;
     @OneToOne
-    private GeoPoint referenceMin;
+    private GeoPoint referenceMin;*/
+
+    private double latitudeMin;
+    private double latitudeMax;
+    private double longitudeMin;
+    private double longitudeMax;
+
     private ContentStatus status;
-    private long population;
+    private Long population;
     private String description;
     private String province;
     private String region;
-    private String postCode;
+    private String country;
+    private Long postCode;
 
     //TODO aggiungere file multimediali
 
     public Municipality(){}
-    public Municipality(String name,
-                        GeoPoint referenceMax,
-                        GeoPoint referenceMin){
+
+    public Municipality(String name, String description,
+                        MunicipalityDetails details){
         this.name = name;
-        this.referenceMax = referenceMax;
-        this.referenceMin = referenceMin;
+        this.description = description;
+        this.population = details.getPopulation();
+        this.province = details.getProvince();
+        this.region = details.getRegion();
+        this.country = details.getCountry();
+        this.postCode = details.getPostCode();
+        this.latitudeMin = details.getSurface().get("coordinate minime").get(0);
+        this.latitudeMax = details.getSurface().get("coordinate massime").get(0);
+        this.longitudeMin = details.getSurface().get("coordinate minime").get(1);
+        this.longitudeMax = details.getSurface().get("coordinate massime").get(1);
+        this.status = ContentStatus.PENDING;
     }
 
     public long getId() {
@@ -44,18 +63,6 @@ public class Municipality {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public GeoPoint getReferenceMax() {
-        return referenceMax;
-    }
-
-    public void setReferenceMax(GeoPoint referenceMax) {
-        this.referenceMax = referenceMax;
-    }
-
     public ContentStatus getStatus() {
         return status;
     }
@@ -64,7 +71,43 @@ public class Municipality {
         this.status = status;
     }
 
-    public GeoPoint getReferenceMin() {
-        return referenceMin;
+    public Long getPopulation() {
+        return population;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public Long getPostCode() {
+        return postCode;
+    }
+
+    public double getLatitudeMin() {
+        return latitudeMin;
+    }
+
+    public double getLatitudeMax() {
+        return latitudeMax;
+    }
+
+    public double getLongitudeMin() {
+        return longitudeMin;
+    }
+
+    public double getLongitudeMax() {
+        return longitudeMax;
     }
 }

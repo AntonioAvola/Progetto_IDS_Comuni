@@ -1,5 +1,6 @@
 package com.unicam.Service.ProxyOSM;
 
+import com.unicam.DTO.MunicipalityDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,12 @@ public class ProxyOSM implements OpenStreetMapProxy {
             cache.put(address, coordinates);
         }
         return coordinates;
+    }
+
+    @Override
+    public MunicipalityDetails getDetails(String address) throws IOException {
+        MunicipalityDetails details = servizioMappa.getDetails(address);
+        return details;
     }
 
 }
