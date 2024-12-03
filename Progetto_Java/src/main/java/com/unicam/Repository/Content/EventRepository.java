@@ -27,5 +27,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findByMunicipalityAndStatus(String municipality, ContentStatus pending);
 
-    boolean existsBtIdAndMunicipality(long idContent, String municipality);
+    boolean existsByIdAndMunicipality(long idContent, String municipality);
 }

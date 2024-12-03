@@ -111,12 +111,14 @@ public class ItineraryService {
     }
 
     public void approveOrRejectItinerary(long idContent, ContentStatus approved) {
-        Itinerary itinerary = this.repoItinerary.findById(idContent);
         if(approved.equals(ContentStatus.REJECTED)){
             this.removeItinerary(idContent);
         }
-        itinerary.setStatus(approved);
-        this.repoItinerary.save(itinerary);
+        else{
+            Itinerary itinerary = this.repoItinerary.findById(idContent);
+            itinerary.setStatus(approved);
+            this.repoItinerary.save(itinerary);
+        }
     }
 
     public boolean checkMunicipality(long idContent, String municipality) {

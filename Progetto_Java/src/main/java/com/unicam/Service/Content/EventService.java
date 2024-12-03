@@ -103,15 +103,17 @@ public class EventService {
     }
 
     public boolean checkMunicipality(long idContent, String municipality) {
-        return this.repoEvent.existsBtIdAndMunicipality(idContent, municipality);
+        return this.repoEvent.existsByIdAndMunicipality(idContent, municipality);
     }
 
     public void approveOrRejectPoint(long idContent, ContentStatus status) {
         if(status.equals(ContentStatus.REJECTED)) {
             this.removeEvent(idContent);
         }
-        Event point = this.repoEvent.findById(idContent);
-        point.setStatus(status);
-        this.repoEvent.save(point);
+        else{
+            Event point = this.repoEvent.findById(idContent);
+            point.setStatus(status);
+            this.repoEvent.save(point);
+        }
     }
 }

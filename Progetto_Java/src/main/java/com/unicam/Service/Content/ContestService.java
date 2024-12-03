@@ -98,8 +98,10 @@ public class ContestService {
         if(status.equals(ContentStatus.REJECTED)) {
             this.removeContest(idContent);
         }
-        Contest point = this.repoContest.findById(idContent);
-        point.setStatus(status);
-        this.repoContest.save(point);
+        else{
+            Contest point = this.repoContest.findById(idContent);
+            point.setStatus(status);
+            this.repoContest.save(point);
+        }
     }
 }

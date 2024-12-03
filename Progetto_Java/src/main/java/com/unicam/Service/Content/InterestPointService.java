@@ -95,8 +95,10 @@ public class InterestPointService {
         if(approved.equals(ContentStatus.REJECTED)) {
             this.removeInterestPointPending(point);
         }
-        point.setStatus(approved);
-        this.repoInterest.save(point);
+        else{
+            point.setStatus(approved);
+            this.repoInterest.save(point);
+        }
     }
 
     private void removeInterestPointPending(InterestPoint point) {

@@ -17,11 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.rmi.UnexpectedException;
 import java.util.List;
 
 @RestController
@@ -128,12 +126,12 @@ public class MunicipalityManagerController {
 
         if(type.equals("EVENT")){
             if(!this.eventService.checkMunicipality(idContent, municipality))
-                throw new IllegalArgumentException("Punto di interesse non appartenente al comune di " + municipality);
+                throw new IllegalArgumentException("Evento non appartenente al comune di " + municipality);
             this.eventService.approveOrRejectPoint(idContent, status);
         }
         else {
             if(!this.contestService.checkMunicipality(idContent, municipality))
-                throw new IllegalArgumentException("Itinerario non appartenente al comune di " + municipality);
+                throw new IllegalArgumentException("Contest non appartenente al comune di " + municipality);
             this.contestService.approveOrRejectItinerary(idContent, status);
         }
         return ResponseEntity.ok("Operazione eseguita con successo");
