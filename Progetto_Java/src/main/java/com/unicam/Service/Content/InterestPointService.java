@@ -109,4 +109,8 @@ public class InterestPointService {
     public boolean checkMunicipality(long idContent, String municipality) {
         return this.repoInterest.existsByIdAndMunicipality(idContent, municipality);
     }
+
+    public List<InterestPoint> getByUser(User user) {
+        return this.repoInterest.findAllByAuthor(user);
+    }
 }

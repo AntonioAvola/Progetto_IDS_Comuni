@@ -130,4 +130,8 @@ public class EventService {
             }
         }
     }
+
+    public List<Event> getByUser(User user) {
+        return this.repoEvent.findAllByAuthor(user);
+    }
 }

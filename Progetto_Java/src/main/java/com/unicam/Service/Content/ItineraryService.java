@@ -124,4 +124,8 @@ public class ItineraryService {
     public boolean checkMunicipality(long idContent, String municipality) {
         return this.repoItinerary.existsByIdAndMunicipality(idContent, municipality);
     }
+
+    public List<Itinerary> getByUser(User user) {
+        return this.repoItinerary.findAllByAuthor(user);
+    }
 }

@@ -105,4 +105,9 @@ public class ContestService {
             this.repoContest.save(contest);
         }
     }
+
+    public List<Contest> getByUser(User user) {
+        return this.repoContest.findAllByAuthor(user);
+
+    }
 }

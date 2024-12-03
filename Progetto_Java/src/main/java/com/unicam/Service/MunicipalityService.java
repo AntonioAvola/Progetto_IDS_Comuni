@@ -1,9 +1,13 @@
 package com.unicam.Service;
 
+import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Municipality;
 import com.unicam.Repository.MunicipalityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MunicipalityService {
@@ -23,5 +27,14 @@ public class MunicipalityService {
 
     public boolean exists(String name){
         return this.repoMunicipality.existsByName(name);
+    }
+
+    public List<String> getAllMunicipalities() {
+        List <Municipality> municipalities = this.repoMunicipality.findAllByStatus(ContentStatus.APPROVED);
+        List <String> names = new ArrayList<>();
+        for (Municipality municipality : municipalities) {
+            names.add(municipality.getName());
+        }
+        return names;
     }
 }
