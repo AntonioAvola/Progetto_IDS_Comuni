@@ -43,7 +43,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    @GetMapping("/getAllMunicipalities")
     public ResponseEntity <List<String>> GetMunicipality() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -66,7 +66,7 @@ public class UserController {
         return ResponseEntity.ok(municipalities);
     }
 
-    @GetMapping
+    @GetMapping("/GetOwnContents")
     public ResponseEntity <Map<String,List<?>>> GetOwnContents(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

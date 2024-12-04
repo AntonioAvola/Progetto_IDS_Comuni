@@ -24,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/singIn")
-    public ResponseEntity<?> singIn(SingInDTO request){
+    public ResponseEntity<?> singIn(@RequestBody SingInDTO request){
         String token = userService.singIn(request);
         //viene restituito il token dell'account
         return ResponseEntity.ok(token);
