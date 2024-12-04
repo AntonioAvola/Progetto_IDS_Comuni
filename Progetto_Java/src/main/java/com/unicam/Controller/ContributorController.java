@@ -5,6 +5,7 @@ import com.unicam.DTO.Request.InterestPointRequest;
 import com.unicam.Entity.CommandPattern.InterestPointCommand;
 import com.unicam.Entity.CommandPattern.ItineraryCommand;
 import com.unicam.Entity.Content.ContentStatus;
+import com.unicam.Entity.Content.InterestPointType;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.GeoPointService;
@@ -15,6 +16,7 @@ import com.unicam.Service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -40,7 +43,20 @@ public class ContributorController {
     private ProxyOSM proxy;
 
     @PostMapping("Api/Contributor/addInterestPoint")
-    public ResponseEntity<String> AddInterestPoint(InterestPointRequest request) throws IOException {
+    public ResponseEntity<String> AddInterestPoint(
+            @Parameter(description = "Tipologia di punto di interesse",
+                    schema = @Schema(type = "InterestPointType", allowableValues = {"MUSEUM", "HISTORICAL_MONUMENT",
+                            "RESTAURANT", "HOTEL", "BED_AND_BREAKFAST", "PARK", "STATUE", "SQUARE"}))
+            @RequestParam(defaultValue = "MUSEUM") InterestPointType type,
+            InterestPointRequest request,
+            @Parameter(description = "Ora di inizio")
+            @RequestParam(defaultValue = "00") String openHour,
+            @Parameter(description = "Minuti di inizio")
+            @RequestParam(defaultValue = "00")String openMinute,
+            @Parameter(description = "Ora di fine")
+            @RequestParam(defaultValue = "00")String closeHour,
+            @Parameter(description = "Minuti di fine")
+            @RequestParam(defaultValue = "00")String closeMinute) throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -73,8 +89,17 @@ public class ContributorController {
             throw new UnsupportedOperationException("Esiste già un punto di interesse per questo determinato punto geolocalizzato");
 
         User user = this.userService.getUser(idUser);
-
-        InterestPointCommand InterestPoint = new InterestPointCommand(request, user, interestPointService, geoPointService, status, coordinates);
+        LocalTime open;
+        LocalTime close;
+        if(!openHour.equals("00") && !closeHour.equals("00")) {
+            open = LocalTime.parse(openHour + ":" + openMinute + ":00.000");
+            close = LocalTime.parse(closeHour + ":" + closeMinute + ":00.000");
+        }
+        else{
+            open = null;
+            close = null;
+        }
+        InterestPointCommand InterestPoint = new InterestPointCommand(request, user, open, close, type, interestPointService, geoPointService, status, coordinates);
         InterestPoint.execute();
 
         return ResponseEntity.ok("Punto di interesse aggiunto con successo");
