@@ -14,4 +14,6 @@ public interface MunicipalityRepository extends JpaRepository<Municipality, Long
     boolean existsByName(String name);
 
     List<Municipality> findAllByStatus(ContentStatus contentStatus);
+
+    Municipality findById(long id);
 }

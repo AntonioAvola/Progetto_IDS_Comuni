@@ -1,5 +1,6 @@
 package com.unicam.Service;
 
+import com.unicam.DTO.Response.MunicipalityResponse;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Municipality;
 import com.unicam.Repository.MunicipalityRepository;
@@ -36,5 +37,29 @@ public class MunicipalityService {
             names.add(municipality.getName());
         }
         return names;
+    }
+
+    public List<MunicipalityResponse> getMunicipalityRequests() {
+        List<Municipality> municipalities = this.repoMunicipality.findAllByStatus(ContentStatus.PENDING);
+        return ConvertResponse(municipalities);
+    }
+
+
+    private List<MunicipalityResponse> ConvertResponse(List<Municipality> municipalities) {
+        List<MunicipalityResponse> municipalityResponses = new ArrayList<>();
+        for(Municipality municipality : municipalities){
+            municipalityResponses.add(new MunicipalityResponse(municipality.getId(), municipality.getName()));
+        }
+        return municipalityResponses;
+    }
+
+    public void approveOrRejectMunicipalityRequest(long idMunicipality, ContentStatus status) {
+        if(status.equals(ContentStatus.REJECTED)){
+            this.repoMunicipality.deleteById(idMunicipality);
+        }else{
+            Municipality municipality = this.repoMunicipality.findById(idMunicipality);
+            municipality.setStatus(status);
+            this.repoMunicipality.save(municipality);
+        }
     }
 }
