@@ -131,7 +131,12 @@ public class EventService {
         }
     }
 
-    public List<Event> getByUser(User user) {
+    /*public List<Event> getByUser(User user) {
         return this.repoEvent.findAllByAuthor(user);
+    }*/
+
+    public List<EventResponse> getByUser(User user) {
+        List<Event> events = this.repoEvent.findAllByAuthor(user);
+        return convertResponse(events);
     }
 }

@@ -110,7 +110,12 @@ public class InterestPointService {
         return this.repoInterest.existsByIdAndMunicipality(idContent, municipality);
     }
 
-    public List<InterestPoint> getByUser(User user) {
+    /*public List<InterestPoint> getByUser(User user) {
         return this.repoInterest.findAllByAuthor(user);
+    }*/
+
+    public List<InterestPointResponse> getByUser(User user) {
+        List<InterestPoint> pois = this.repoInterest.findAllByAuthor(user);
+        return convertResponse(pois);
     }
 }

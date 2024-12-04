@@ -143,9 +143,11 @@ public class MunicipalityManagerController {
         return ResponseEntity.ok("Operazione eseguita con successo");
     }
 
-    @PostMapping("/approveOrRejectPromotion")
-    public ResponseEntity<String> approveOrRejectPromotion(@RequestParam long idPromotion, @Parameter(description = "Operazione da eseguire",
-            schema = @Schema(type = "ContentStatus", allowableValues = {"APPROVED", "REJECTED"}))
+    @PutMapping("/approveOrRejectPromotion")
+    public ResponseEntity<String> approveOrRejectPromotion(
+            @RequestParam long idPromotion,
+            @Parameter(description = "Operazione da eseguire",
+                    schema = @Schema(type = "ContentStatus", allowableValues = {"APPROVED", "REJECTED"}))
             @RequestParam(defaultValue = "APPROVED") ContentStatus status){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -162,9 +164,7 @@ public class MunicipalityManagerController {
         if(status.equals(ContentStatus.APPROVED)){
             this.userService.updateRole(idPromotion);
         }
-
         this.promotionService.removePromotionRequest(idPromotion);
-
         return ResponseEntity.ok("Operazione eseguita con successo!");
     }
 

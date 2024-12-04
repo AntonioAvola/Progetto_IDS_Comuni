@@ -106,8 +106,12 @@ public class ContestService {
         }
     }
 
-    public List<Contest> getByUser(User user) {
+    /*public List<Contest> getByUser(User user) {
         return this.repoContest.findAllByAuthor(user);
+    }*/
 
+    public List<ContestResponse> getByUser(User user) {
+        List<Contest> contests = this.repoContest.findAllByAuthor(user);
+        return convertResponse(contests);
     }
 }

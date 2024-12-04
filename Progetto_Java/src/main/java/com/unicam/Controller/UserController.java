@@ -1,5 +1,9 @@
 package com.unicam.Controller;
 
+import com.unicam.DTO.Response.ContestResponse;
+import com.unicam.DTO.Response.EventResponse;
+import com.unicam.DTO.Response.InterestPointResponse;
+import com.unicam.DTO.Response.ItineraryResponse;
 import com.unicam.Entity.Content.Contest;
 import com.unicam.Entity.Content.Event;
 import com.unicam.Entity.Content.InterestPoint;
@@ -90,20 +94,27 @@ public class UserController {
         //TODO controllo ruolo
         User user = this.userService.getUser(idUser);
         Map<String, List<?>> contents = new HashMap<>();
-        if (role.equals(Role.CONTRIBUTOR.name()) || role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())) {
-            List <InterestPoint> OwnPOI = this.interestPointService.getByUser(user);
+
+        if (!municipality.equals(visitedMunicipality)){
+            //TODO chiamata al service delle recensioni
+        }
+        else {
+            /*List <InterestPoint> OwnPOI = this.interestPointService.getByUser(user);
             List <Itinerary> OwnItinerary = this.itineraryService.getByUser(user);
             contents.put("interestPoint", OwnPOI);
             contents.put("itinerary", OwnItinerary);
-        }
-        else if (role.equals(Role.ANIMATOR.name())){
             List <Event> OwnEvent = this.eventService.getByUser(user);
             List <Contest> OwnContest = this.contestService.getByUser(user);
             contents.put("event", OwnEvent);
+            contents.put("contest", OwnContest);*/
+            List <InterestPointResponse> OwnPOI = this.interestPointService.getByUser(user);
+            List <ItineraryResponse> OwnItinerary = this.itineraryService.getByUser(user);
+            contents.put("interestPoint", OwnPOI);
+            contents.put("itinerary", OwnItinerary);
+            List <EventResponse> OwnEvent = this.eventService.getByUser(user);
+            List <ContestResponse> OwnContest = this.contestService.getByUser(user);
+            contents.put("event", OwnEvent);
             contents.put("contest", OwnContest);
-        }
-        else if (!municipality.equals(visitedMunicipality)){
-            //TODO chiamata al service delle recensioni
         }
         return ResponseEntity.ok(contents);
 

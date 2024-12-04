@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,9 +38,12 @@ public class AdminController {
         return ResponseEntity.ok(responses);
     }
 
-    public ResponseEntity<String> approveOrRejectMunicipalityRequest(@RequestParam long idMunicipality, @Parameter(description = "Operazione da eseguire",
-            schema = @Schema(type = "ContentStatus", allowableValues = {"APPROVED", "REJECTED"}))
-    @RequestParam(defaultValue = "APPROVED") ContentStatus status){
+    @PostMapping("api/appprove/or/reject/municipalityRequest")
+    public ResponseEntity<String> approveOrRejectMunicipalityRequest(
+            @RequestParam long idMunicipality,
+            @Parameter(description = "Operazione da eseguire",
+                    schema = @Schema(type = "ContentStatus", allowableValues = {"APPROVED", "REJECTED"}))
+            @RequestParam(defaultValue = "APPROVED") ContentStatus status){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

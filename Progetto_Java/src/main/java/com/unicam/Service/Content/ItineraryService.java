@@ -125,7 +125,12 @@ public class ItineraryService {
         return this.repoItinerary.existsByIdAndMunicipality(idContent, municipality);
     }
 
-    public List<Itinerary> getByUser(User user) {
+    /*public List<Itinerary> getByUser(User user) {
         return this.repoItinerary.findAllByAuthor(user);
+    }*/
+
+    public List<ItineraryResponse> getByUser(User user) {
+        List<Itinerary> itineraries = this.repoItinerary.findAllByAuthor(user);
+        return convertResponse(itineraries);
     }
 }

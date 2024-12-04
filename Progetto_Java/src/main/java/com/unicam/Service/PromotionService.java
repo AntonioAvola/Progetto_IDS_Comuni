@@ -32,7 +32,8 @@ public class PromotionService {
     }
 
     public void removePromotionRequest(long idPromotion) {
-        this.promotionRepository.deleteById(idPromotion);
+        RolePromotion promotion = this.promotionRepository.findById(idPromotion);
+        this.promotionRepository.delete(promotion);
     }
 
     public List<PromotionResponse> getAllPromotionRequests(String municipality) {
