@@ -9,7 +9,9 @@ import com.unicam.Service.Content.ContestService;
 import com.unicam.Service.Content.EventService;
 import com.unicam.Service.Content.GeoPointService;
 import com.unicam.Service.MunicipalityService;
+import com.unicam.Service.PromotionService;
 import com.unicam.Service.ProxyOSM.ProxyOSM;
+import com.unicam.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,6 +36,10 @@ public class MunicipalityManagerController {
     private EventService eventService;
     @Autowired
     private ContestService contestService;
+    @Autowired
+    private PromotionService promotionService;
+    @Autowired
+    private UserService userService;
 
 
     @PostMapping("api/addMunicipality")
@@ -135,5 +141,48 @@ public class MunicipalityManagerController {
             this.contestService.approveOrRejectItinerary(idContent, status);
         }
         return ResponseEntity.ok("Operazione eseguita con successo");
+    }
+
+    @PostMapping("/approveOrRejectPromotion")
+    public ResponseEntity<String> approveOrRejectPromotion(@RequestParam long idPromotion, @Parameter(description = "Operazione da eseguire",
+            schema = @Schema(type = "ContentStatus", allowableValues = {"APPROVED", "REJECTED"}))
+            @RequestParam(defaultValue = "APPROVED") ContentStatus status){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        if(status.equals(ContentStatus.APPROVED)){
+            this.userService.updateRole(idPromotion);
+        }
+
+        this.promotionService.removePromotionRequest(idPromotion);
+
+        return ResponseEntity.ok("Operazione eseguita con successo!");
+    }
+
+    @GetMapping("/getPromotionRequests")
+    public ResponseEntity<List<PromotionResponse>> getPromotionRequests(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        List<PromotionResponse> responses = this.promotionService.getAllPromotionRequests(municipality);
+
+        return ResponseEntity.ok(responses);
     }
 }

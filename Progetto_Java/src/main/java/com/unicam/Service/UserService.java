@@ -1,6 +1,7 @@
 package com.unicam.Service;
 
 import com.unicam.DTO.Request.SingInDTO;
+import com.unicam.Entity.RolePromotion;
 import com.unicam.Entity.User;
 import com.unicam.Repository.UserRepository;
 import com.unicam.Security.JwtTokenProvider;
@@ -30,6 +31,9 @@ public class UserService {
 
     @Autowired
     private ItineraryService itineraryService;
+
+    @Autowired
+    private PromotionService promotionService;
 
     private JwtTokenProvider tokenProvider = new JwtTokenProvider();
 
@@ -122,5 +126,12 @@ public class UserService {
 
     public User getUser(long id) {
         return this.repoUser.findUserById(id);
+    }
+
+    public void updateRole(long idPromotion) {
+        RolePromotion promotion = this.promotionService.getPromotion(idPromotion);
+        User user = this.repoUser.findUserById(promotion.getUser().getId());
+        user.setRole(promotion.getPromotion());
+        this.repoUser.save(user);
     }
 }

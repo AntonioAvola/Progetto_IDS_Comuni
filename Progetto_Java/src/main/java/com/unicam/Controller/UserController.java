@@ -5,6 +5,7 @@ import com.unicam.Entity.Content.Event;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Itinerary;
 import com.unicam.Entity.Role;
+import com.unicam.Entity.RolePromotion;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.ContestService;
@@ -12,6 +13,7 @@ import com.unicam.Service.Content.EventService;
 import com.unicam.Service.Content.InterestPointService;
 import com.unicam.Service.Content.ItineraryService;
 import com.unicam.Service.MunicipalityService;
+import com.unicam.Service.PromotionService;
 import com.unicam.Service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,6 +44,8 @@ public class UserController {
     private ContestService contestService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private PromotionService promotionService;
 
     @GetMapping("/getAllMunicipalities")
     public ResponseEntity <List<String>> GetMunicipality() {
@@ -146,5 +150,30 @@ public class UserController {
 
         }
         return ResponseEntity.ok("Eliminazione del contenuto eseguita con successo");
+    }
+
+    @PostMapping("/PromotionRequest")
+    public ResponseEntity<String> PromotionRequest(@Parameter(description = "Ruolo",
+            schema = @Schema(type = "Role", allowableValues = {"CURATOR","CONTRIBUTOR", "AUTHORIZED_CONTRIBUTOR", "ANIMATOR", "MUNICIPALITY_MANAGER"}))
+                                                       @RequestParam(defaultValue = "CONTRIBUTOR") Role newRole){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        User user = this.userService.getUser(idUser);
+        if(this.promotionService.checkPromotion(user)){
+            throw new IllegalArgumentException("La tua richiesta di promozione è ancora in attesa di validazione!");
+        }
+        RolePromotion promotion = new RolePromotion(user, newRole, municipality);
+        this.promotionService.addPromotion(promotion);
+
+        return ResponseEntity.ok("Richiesta di promozione inviata");
     }
 }
