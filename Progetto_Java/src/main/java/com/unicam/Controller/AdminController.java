@@ -20,7 +20,7 @@ public class AdminController {
     @Autowired
     private MunicipalityService municipalityService;
 
-    @GetMapping("/getAllMunicipalityRequests")
+    @GetMapping("api/admin/get/all/municipality/requests")
     public ResponseEntity<List<MunicipalityResponse>> getAllMunicipalityRequests(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -38,7 +38,7 @@ public class AdminController {
         return ResponseEntity.ok(responses);
     }
 
-    @PostMapping("api/appprove/or/reject/municipalityRequest")
+    @PostMapping("api/admin/appprove/or/reject/municipality/request")
     public ResponseEntity<String> approveOrRejectMunicipalityRequest(
             @RequestParam long idMunicipality,
             @Parameter(description = "Operazione da eseguire",

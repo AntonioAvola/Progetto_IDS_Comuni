@@ -145,17 +145,11 @@ public class ContestService {
         return partecipants;
     }
 
-    public boolean assignWinner(long idContest, long idPartecipant) {
+    public boolean assignWinner(long idContest, User winner) {
         Contest contest = this.repoContest.findById(idContest);
-        if(!contest.getParticipants().contains(idPartecipant))
+        if(!contest.getParticipants().contains(winner))
             return false;
-        List<User> partecipant = contest.getParticipants();
-        for(User user : partecipant){
-            if(user.getId() == idPartecipant){
-                contest.setWinnerName(user.getUsername());
-                break;
-            }
-        }
+        contest.setWinnerName(winner.getUsername());
         this.repoContest.save(contest);
         return true;
     }
@@ -178,5 +172,19 @@ public class ContestService {
             }
         }
         return progresses;
+    }
+
+    public boolean partecipateContest(long idContest, User partecipant) {
+        Contest contest = this.repoContest.findById(idContest);
+        if(contest.getParticipants().contains(partecipant))
+            return false;
+        contest.getParticipants().add(partecipant);
+        this.repoContest.save(contest);
+        return true;
+    }
+
+    public List<ContestResponse> getContestAvailable(String municipality) {
+        List<Contest> contests = this.repoContest.findByMunicipalityAndActivityStatus(municipality, ActivityStatus.WAITING);
+        return convertResponse(contests);
     }
 }

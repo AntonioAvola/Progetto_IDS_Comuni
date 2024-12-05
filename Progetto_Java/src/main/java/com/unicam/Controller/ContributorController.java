@@ -42,7 +42,7 @@ public class ContributorController {
     @Autowired
     private ProxyOSM proxy;
 
-    @PostMapping("Api/Contributor/addInterestPoint")
+    @PostMapping("api/contributor/add/interestPoint")
     public ResponseEntity<String> AddInterestPoint(
             @Parameter(description = "Tipologia di punto di interesse",
                     schema = @Schema(type = "InterestPointType", allowableValues = {"MUSEUM", "HISTORICAL_MONUMENT",
@@ -105,7 +105,7 @@ public class ContributorController {
         return ResponseEntity.ok("Punto di interesse aggiunto con successo");
     }
 
-    @PostMapping("Api/Contributor/addItinerary")
+    @PostMapping("api/contributor/add/itinerary")
     public ResponseEntity<String> AddItinerary(ItineraryRequest request) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

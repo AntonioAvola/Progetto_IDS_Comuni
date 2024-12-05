@@ -38,7 +38,7 @@ public class AnimatorController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("Api/Animator/AddEvent")
+    @PostMapping("api/animator/add/event")
     public void Addevent(EventRequest request){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -82,7 +82,7 @@ public class AnimatorController {
         event.execute();
     }
 
-    @PostMapping("Api/Animator/AddContest")
+    @PostMapping("api/animator/add/contest")
     public void AddContest(ContestRequest request){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -136,7 +136,7 @@ public class AnimatorController {
         return ResponseEntity.ok(closed);
     }
 
-    @GetMapping("api/animator/partecipants/of/a/contest")
+    @GetMapping("api/animator/partecipants/of/contest")
     public ResponseEntity<ContestPartecipants> getPartecipantContest(@RequestParam long idContest){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -181,7 +181,9 @@ public class AnimatorController {
 
         //TODO controllo ruolo
 
-        if(!this.contestService.assignWinner(idContest, idPartecipant))
+        User winner = this.userService.getUser(idPartecipant);
+
+        if(!this.contestService.assignWinner(idContest, winner))
             throw new UnsupportedOperationException("L'utente non ha partecipato a questo contest");
 
         return ResponseEntity.ok("Vincitore assegnato con successo");

@@ -27,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +52,7 @@ public class UserController {
     @Autowired
     private PromotionService promotionService;
 
-    @GetMapping("/getAllMunicipalities")
+    @GetMapping("api/user/get/all/municipalities")
     public ResponseEntity <List<String>> GetMunicipality() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -74,7 +75,7 @@ public class UserController {
         return ResponseEntity.ok(municipalities);
     }
 
-    @GetMapping("/GetOwnContents")
+    @GetMapping("api/user/get/own/contents")
     public ResponseEntity <Map<String,List<?>>> GetOwnContents(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -114,7 +115,7 @@ public class UserController {
 
 
     //TODO implementare correttamente
-    @DeleteMapping("Api/User/DeleteContent")
+    @DeleteMapping("api/user/delete/own/content")
     public ResponseEntity<String> DeleteContent(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY", "EVENT", "CONTEST"}))
@@ -135,6 +136,8 @@ public class UserController {
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
         // altrimenti eccezione
+
+        //TODO controllo ruolo
 
         User user = this.userService.getUser(idUser);
 
@@ -157,10 +160,13 @@ public class UserController {
         return ResponseEntity.ok("Eliminazione del contenuto eseguita con successo");
     }
 
-    @PostMapping("/PromotionRequest")
-    public ResponseEntity<String> PromotionRequest(@Parameter(description = "Ruolo",
-            schema = @Schema(type = "Role", allowableValues = {"CURATOR","CONTRIBUTOR", "AUTHORIZED_CONTRIBUTOR", "ANIMATOR", "MUNICIPALITY_MANAGER"}))
-                                                       @RequestParam(defaultValue = "CONTRIBUTOR") Role newRole){
+    @PostMapping("api/user/role/promotion/request")
+    public ResponseEntity<String> PromotionRequest(
+            @Parameter(description = "Ruolo",
+                    schema = @Schema(type = "Role", allowableValues = {"CURATOR","CONTRIBUTOR",
+                            "AUTHORIZED_CONTRIBUTOR", "ANIMATOR", "MUNICIPALITY_MANAGER"}))
+            @RequestParam(defaultValue = "CONTRIBUTOR") Role newRole){
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
@@ -180,5 +186,65 @@ public class UserController {
         this.promotionService.addPromotion(promotion);
 
         return ResponseEntity.ok("Richiesta di promozione inviata");
+    }
+
+    @GetMapping("api/user/contest/available")
+    public ResponseEntity<List<ContestResponse>> getAllContestAvailable(){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        //TODO controllo ruolo
+
+        this.contestService.updateActivityStatus(LocalDateTime.now());
+
+        List<ContestResponse> contestsAvailable = this.contestService.getContestAvailable(municipality);
+
+        return ResponseEntity.ok(contestsAvailable);
+    }
+
+    @PutMapping("api/user/partecipate/contest")
+    public ResponseEntity<String> partecipateContest(@RequestParam long idContest){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        //TODO controllo ruolo
+
+        User partecipant = this.userService.getUser(idUser);
+        if(!this.contestService.partecipateContest(idContest, partecipant)){
+            throw new UnsupportedOperationException("Sei già presente come partecipante");
+        }
+        return ResponseEntity.ok("Partecipazione aggiunta con successo");
+    }
+
+
+    @DeleteMapping("api/user/delete/account")
+    public void deleteAccount(){
+        //TODO chiamare il metodo del servizio dell'utente e passare l'id dell'utente
     }
 }

@@ -42,7 +42,7 @@ public class MunicipalityManagerController {
     private UserService userService;
 
 
-    @PostMapping("api/addMunicipality")
+    @PostMapping("api/municipalityManager/addMunicipality")
     public void addMunicipality(@RequestParam String description) throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -143,7 +143,7 @@ public class MunicipalityManagerController {
         return ResponseEntity.ok("Operazione eseguita con successo");
     }
 
-    @PutMapping("/approveOrRejectPromotion")
+    @PutMapping("api/municipalityManager/approve/or/reject/promotion")
     public ResponseEntity<String> approveOrRejectPromotion(
             @RequestParam long idPromotion,
             @Parameter(description = "Operazione da eseguire",

@@ -30,9 +30,4 @@ public class AuthController {
         return ResponseEntity.ok(token);
         //TODO implementare la visualizzazione di tutti i contenuti del proprio comune, quindi approvati
     }
-
-    @DeleteMapping("api/deleteAccount")
-    public void deleteAccount(){
-        //TODO chiamare il metodo del servizio dell'utente e passare l'id dell'utente
-    }
 }
