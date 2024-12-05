@@ -141,7 +141,7 @@ public class ContributorController {
         return ResponseEntity.ok("Itinerario aggiunto con successo");
     }
 
-    @DeleteMapping ("Api/Contributor/DeleteContent")
+    /*@DeleteMapping ("Api/Contributor/DeleteContent")
     public ResponseEntity<String> DeleteContent(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
@@ -174,5 +174,5 @@ public class ContributorController {
                 throw new IllegalArgumentException("L'itinerario non rientra tra i tuoi contenuti");
         }
         return ResponseEntity.ok("Eliminazione del contenuto eseguita con successo");
-    }
+    }*/
 }

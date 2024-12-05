@@ -99,14 +99,6 @@ public class UserController {
             //TODO chiamata al service delle recensioni
         }
         else {
-            /*List <InterestPoint> OwnPOI = this.interestPointService.getByUser(user);
-            List <Itinerary> OwnItinerary = this.itineraryService.getByUser(user);
-            contents.put("interestPoint", OwnPOI);
-            contents.put("itinerary", OwnItinerary);
-            List <Event> OwnEvent = this.eventService.getByUser(user);
-            List <Contest> OwnContest = this.contestService.getByUser(user);
-            contents.put("event", OwnEvent);
-            contents.put("contest", OwnContest);*/
             List <InterestPointResponse> OwnPOI = this.interestPointService.getByUser(user);
             List <ItineraryResponse> OwnItinerary = this.itineraryService.getByUser(user);
             contents.put("interestPoint", OwnPOI);
@@ -155,10 +147,12 @@ public class UserController {
                 throw new IllegalArgumentException("L'itinerario non rientra tra i tuoi contenuti");
         }
         else if(type.equals("EVENT")){
-
+            if(!this.eventService.getAndRemoveEvent(idContent, user))
+                throw new IllegalArgumentException("L'evento non rientra tra le proprie attività");
         }
         else{
-
+            if(!this.contestService.getAndRemoveContest(idContent, user))
+                throw new IllegalArgumentException("Il contest non rientra tra le proprie attività");
         }
         return ResponseEntity.ok("Eliminazione del contenuto eseguita con successo");
     }

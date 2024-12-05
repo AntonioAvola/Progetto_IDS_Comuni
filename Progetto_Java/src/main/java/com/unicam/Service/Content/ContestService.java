@@ -1,12 +1,14 @@
 package com.unicam.Service.Content;
 
+import com.unicam.DTO.Response.ContestClosedResponse;
 import com.unicam.DTO.Response.ContestResponse;
+import com.unicam.DTO.Response.Partecipants;
 import com.unicam.Entity.Content.ActivityStatus;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.Contest;
-import com.unicam.Entity.Content.Event;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.ContestRepository;
+import com.unicam.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ public class ContestService {
 
     @Autowired
     private ContestRepository repoContest;
+    @Autowired
+    private UserService userService;
+
 
 
     public void addContest(Contest contest){
@@ -113,5 +118,45 @@ public class ContestService {
     public List<ContestResponse> getByUser(User user) {
         List<Contest> contests = this.repoContest.findAllByAuthor(user);
         return convertResponse(contests);
+    }
+
+    public List<ContestClosedResponse> getContestNoWinner(String municipality, ActivityStatus finished) {
+        List<Contest> contestsMunicipalityClosed = this.repoContest.findByMunicipalityAndActivityStatus(municipality, finished);
+        List<Contest> noWinner = new ArrayList<>();
+        for(Contest contest : contestsMunicipalityClosed){
+            if(contest.getWinnerName().equals("")){
+                noWinner.add(contest);
+            }
+        }
+        return convertClosedResponse(noWinner);
+    }
+
+    private List<ContestClosedResponse> convertClosedResponse(List<Contest> contests) {
+        List<ContestClosedResponse> response = new ArrayList<>();
+        for(Contest contest : contests){
+            response.add(new ContestClosedResponse(contest.getId(), contest.getTitle(), contest.getDuration().getFinish()));
+        }
+        return response;
+    }
+
+    public List<Partecipants> getPartecipants(long idContest) {
+        Contest contest = this.repoContest.findById(idContest);
+        List<Partecipants> partecipants = new ArrayList<>();
+        List<Long> idPartecipants = contest.getParticipants();
+        for(Long idPartecipant : idPartecipants){
+            User user = this.userService.getUser(idPartecipant);
+            partecipants.add(new Partecipants(user.getId(), user.getUsername()));
+        }
+        return partecipants;
+    }
+
+    public boolean assignWinner(long idContest, long idPartecipant) {
+        Contest contest = this.repoContest.findById(idContest);
+        if(!contest.getParticipants().contains(idPartecipant))
+            return false;
+        User partecipant = this.userService.getUser(idPartecipant);
+        contest.setWinnerName(partecipant.getUsername());
+        this.repoContest.save(contest);
+        return true;
     }
 }

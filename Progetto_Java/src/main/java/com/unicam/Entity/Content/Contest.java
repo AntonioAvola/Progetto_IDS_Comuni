@@ -15,7 +15,7 @@ public class Contest extends Content{
 
     @Embedded
     private Time duration;
-    private List<String> participants = new ArrayList<>();
+    private List<Long> participants = new ArrayList<>();
     private String winnerName;
     private String reward;
     private ActivityStatus activityStatus;
@@ -33,11 +33,11 @@ public class Contest extends Content{
         this.duration = duration;
     }
 
-    public List<String> getParticipants() {
+    public List<Long> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<String> participants) {
+    public void setParticipants(List<Long> participants) {
         this.participants = participants;
     }
 

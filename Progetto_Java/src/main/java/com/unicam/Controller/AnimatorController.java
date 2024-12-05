@@ -2,8 +2,12 @@ package com.unicam.Controller;
 
 import com.unicam.DTO.Request.ContestRequest;
 import com.unicam.DTO.Request.EventRequest;
+import com.unicam.DTO.Response.ContestClosedResponse;
+import com.unicam.DTO.Response.ContestPartecipants;
+import com.unicam.DTO.Response.Partecipants;
 import com.unicam.Entity.CommandPattern.ContestCommand;
 import com.unicam.Entity.CommandPattern.EventCommand;
+import com.unicam.Entity.Content.ActivityStatus;
 import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
@@ -11,8 +15,6 @@ import com.unicam.Service.Content.ContestService;
 import com.unicam.Service.Content.EventService;
 import com.unicam.Service.Content.GeoPointService;
 import com.unicam.Service.UserService;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping(name = "Api/Animator")
@@ -109,7 +112,82 @@ public class AnimatorController {
         contest.execute();
     }
 
-    @DeleteMapping("Api/Animator/DeleteActivity")
+    @GetMapping("api/animator/contest/closed")
+    public ResponseEntity<List<ContestClosedResponse>> getContestClosed(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        //TODO controllo ruolo
+
+        List<ContestClosedResponse> closed = this.contestService.getContestNoWinner(municipality, ActivityStatus.FINISHED);
+        return ResponseEntity.ok(closed);
+    }
+
+    @GetMapping("api/animator/partecipants/of/a/contest")
+    public ResponseEntity<ContestPartecipants> getPartecipantContest(@RequestParam long idContest){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        //TODO controllo ruolo
+
+        List<Partecipants> partecipants = this.contestService.getPartecipants(idContest);
+        ContestPartecipants partecipantsContest = new ContestPartecipants(idContest, partecipants);
+        return ResponseEntity.ok(partecipantsContest);
+    }
+
+    @PutMapping("api/animator/assign/winner")
+    public ResponseEntity<String> assignWinner(@RequestParam long idContest, @RequestParam long idPartecipant){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        //TODO controllo ruolo
+
+        if(!this.contestService.assignWinner(idContest, idPartecipant))
+            throw new UnsupportedOperationException("L'utente non ha partecipato a questo contest");
+
+        return ResponseEntity.ok("Vincitore assegnato con successo");
+    }
+
+
+    /*@DeleteMapping("Api/Animator/DeleteActivity")
     public ResponseEntity<String> DeleteActivity(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"EVENT", "CONTEST"}))
@@ -144,5 +222,5 @@ public class AnimatorController {
                throw new IllegalArgumentException("Il contest non rientra tra le proprie attività");
         }
         return ResponseEntity.ok("Eliminazione attività eseguita con successo");
-    }
+    }*/
 }
