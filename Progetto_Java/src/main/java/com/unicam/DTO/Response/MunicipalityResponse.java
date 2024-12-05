@@ -4,10 +4,12 @@ public class MunicipalityResponse {
 
     private long id;
     private String nameOfMunicipality;
+    private String description;
 
-    public MunicipalityResponse(long id, String nameOfMunicipality) {
+    public MunicipalityResponse(long id, String nameOfMunicipality, String description) {
         this.id = id;
         this.nameOfMunicipality = nameOfMunicipality;
+        this.description = description;
     }
 
     public long getId() {
@@ -16,5 +18,9 @@ public class MunicipalityResponse {
 
     public String getNameOfMunicipality() {
         return nameOfMunicipality;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

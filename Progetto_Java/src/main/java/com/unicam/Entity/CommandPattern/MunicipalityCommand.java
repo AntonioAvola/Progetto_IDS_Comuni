@@ -1,5 +1,6 @@
 package com.unicam.Entity.CommandPattern;
 
+import com.unicam.DTO.MunicipalityDetails;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.Municipality;
@@ -13,25 +14,14 @@ import java.util.List;
 public class MunicipalityCommand implements Command{
 
     private Municipality municipality;
-    private GeoPoint reference;
-    private GeoPointService serviceGeo;
     private MunicipalityService serviceMunicipality;
 
-    //TODO aggiunta proxyOSM
-
-    public MunicipalityCommand(MunicipalityService serviceMunicipality, GeoPointService serviceGeo,String nameMunicipality, User author){
+    public MunicipalityCommand(MunicipalityService serviceMunicipality, String nameMunicipality, String description, MunicipalityDetails detalis){
         this.serviceMunicipality = serviceMunicipality;
-        this.serviceGeo = serviceGeo;
-        List<Double> coordinates = new ArrayList<>();
-        //TODO usare proxyOSM
-        this.reference = new GeoPoint(nameMunicipality, nameMunicipality, coordinates.get(0), coordinates.get(1));
-        //TODO da modificare
-        // this.municipality = new Municipality(nameMunicipality, reference);
-        this.municipality.setStatus(ContentStatus.PENDING);
+        this.municipality = new Municipality(nameMunicipality, description, detalis);
     }
     @Override
     public void execute() {
-        this.serviceGeo.addGeoPoint(this.reference);
         this.serviceMunicipality.addMunicipality(this.municipality);
     }
 }

@@ -2,6 +2,7 @@ package com.unicam.Controller;
 
 import com.unicam.DTO.MunicipalityDetails;
 import com.unicam.DTO.Response.*;
+import com.unicam.Entity.CommandPattern.MunicipalityCommand;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Municipality;
 import com.unicam.Security.UserCustomDetails;
@@ -66,8 +67,8 @@ public class MunicipalityManagerController {
             throw new UnsupportedOperationException("Il comune è già presente o è già stata inviata una richiesta");
 
         MunicipalityDetails details = proxyOSM.getDetails(municipality);
-        Municipality municipalityToBeAdd = new Municipality(municipality, description, details);
-        this.municipalityService.addMunicipality(municipalityToBeAdd);
+        MunicipalityCommand municipalityAdd = new MunicipalityCommand(municipalityService, municipality, description, details);
+        municipalityAdd.execute();
     }
 
     @GetMapping("api/municipalityManager/view/all/activity/pending")

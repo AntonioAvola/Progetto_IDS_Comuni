@@ -48,7 +48,7 @@ public class MunicipalityService {
     private List<MunicipalityResponse> ConvertResponse(List<Municipality> municipalities) {
         List<MunicipalityResponse> municipalityResponses = new ArrayList<>();
         for(Municipality municipality : municipalities){
-            municipalityResponses.add(new MunicipalityResponse(municipality.getId(), municipality.getName()));
+            municipalityResponses.add(new MunicipalityResponse(municipality.getId(), municipality.getName(), municipality.getDescription()));
         }
         return municipalityResponses;
     }
