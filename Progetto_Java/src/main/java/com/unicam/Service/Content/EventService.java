@@ -106,7 +106,7 @@ public class EventService {
         return this.repoEvent.existsByIdAndMunicipality(idContent, municipality);
     }
 
-    public void approveOrRejectPoint(long idContent, ContentStatus status) {
+    public void validateEvent(long idContent, ContentStatus status) {
         if(status.equals(ContentStatus.REJECTED)) {
             this.removeEvent(idContent);
         }

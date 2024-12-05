@@ -4,11 +4,9 @@ import com.unicam.DTO.MunicipalityDetails;
 import com.unicam.DTO.Response.*;
 import com.unicam.Entity.CommandPattern.MunicipalityCommand;
 import com.unicam.Entity.Content.ContentStatus;
-import com.unicam.Entity.Municipality;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.ContestService;
 import com.unicam.Service.Content.EventService;
-import com.unicam.Service.Content.GeoPointService;
 import com.unicam.Service.MunicipalityService;
 import com.unicam.Service.PromotionService;
 import com.unicam.Service.ProxyOSM.ProxyOSM;
@@ -105,11 +103,11 @@ public class MunicipalityManagerController {
     @PutMapping("api/municipalityManager/approve/or/reject/activity")
     @Operation(summary = "Approva o rifiuta un'attività",
             description = "Approva o rifiuta un'attività in attesa. Usa uno degli ID disponibili da /getActivityPending.")
-    public ResponseEntity<String> approveOrRejectContent(
+    public ResponseEntity<String> approveOrRejectActivity(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"EVENT", "CONTEST"}))
             @RequestParam(defaultValue = "EVENT") String type,
-            @RequestParam long idContent,
+            @RequestParam long idActivity,
             @Parameter(description = "Operazione da eseguire",
                     schema = @Schema(type = "ContentStatus", allowableValues = {"APPROVED", "REJECTED"}))
             @RequestParam(defaultValue = "APPROVED") ContentStatus status){
@@ -132,14 +130,10 @@ public class MunicipalityManagerController {
         //TODO controllo ruolo
 
         if(type.equals("EVENT")){
-            if(!this.eventService.checkMunicipality(idContent, municipality))
-                throw new IllegalArgumentException("Evento non appartenente al comune di " + municipality);
-            this.eventService.approveOrRejectPoint(idContent, status);
+            this.eventService.validateEvent(idActivity, status);
         }
         else {
-            if(!this.contestService.checkMunicipality(idContent, municipality))
-                throw new IllegalArgumentException("Contest non appartenente al comune di " + municipality);
-            this.contestService.approveOrRejectItinerary(idContent, status);
+            this.contestService.validateContest(idActivity, status);
         }
         return ResponseEntity.ok("Operazione eseguita con successo");
     }

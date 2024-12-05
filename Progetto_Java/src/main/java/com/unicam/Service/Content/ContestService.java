@@ -6,7 +6,6 @@ import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.Contest;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.ContestRepository;
-import com.unicam.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,7 +94,7 @@ public class ContestService {
         return this.repoContest.existsByIdAndMunicipality(idContent, municipality);
     }
 
-    public void approveOrRejectItinerary(long idContent, ContentStatus status) {
+    public void validateContest(long idContent, ContentStatus status) {
         if(status.equals(ContentStatus.REJECTED)) {
             this.removeContest(idContent);
         }

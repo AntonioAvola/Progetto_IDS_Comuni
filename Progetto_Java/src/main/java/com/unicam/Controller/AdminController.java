@@ -20,7 +20,7 @@ public class AdminController {
     @Autowired
     private MunicipalityService municipalityService;
 
-    @GetMapping("api/admin/get/all/municipality/requests")
+    @GetMapping("/get/all/municipality/requests")
     public ResponseEntity<List<MunicipalityResponse>> getAllMunicipalityRequests(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -38,8 +38,8 @@ public class AdminController {
         return ResponseEntity.ok(responses);
     }
 
-    @PostMapping("api/admin/appprove/or/reject/municipality/request")
-    public ResponseEntity<String> approveOrRejectMunicipalityRequest(
+    @PostMapping("/appprove/or/reject/municipality/request")
+    public ResponseEntity<String> validateMunicipalityRequest(
             @RequestParam long idMunicipality,
             @Parameter(description = "Operazione da eseguire",
                     schema = @Schema(type = "ContentStatus", allowableValues = {"APPROVED", "REJECTED"}))
@@ -56,7 +56,7 @@ public class AdminController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
-        this.municipalityService.approveOrRejectMunicipalityRequest(idMunicipality, status);
+        this.municipalityService.validateMunicipality(idMunicipality, status);
 
         return ResponseEntity.ok("Operazione eseguita con successo");
     }

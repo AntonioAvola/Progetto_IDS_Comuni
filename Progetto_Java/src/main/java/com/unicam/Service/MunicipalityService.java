@@ -53,7 +53,7 @@ public class MunicipalityService {
         return municipalityResponses;
     }
 
-    public void approveOrRejectMunicipalityRequest(long idMunicipality, ContentStatus status) {
+    public void validateMunicipality(long idMunicipality, ContentStatus status) {
         if(status.equals(ContentStatus.REJECTED)){
             this.repoMunicipality.deleteById(idMunicipality);
         }else{
