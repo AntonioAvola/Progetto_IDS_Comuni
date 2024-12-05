@@ -19,8 +19,6 @@ public class ContestService {
 
     @Autowired
     private ContestRepository repoContest;
-    @Autowired
-    private UserService userService;
 
 
 
@@ -140,9 +138,8 @@ public class ContestService {
     public List<Partecipants> getPartecipants(long idContest) {
         Contest contest = this.repoContest.findById(idContest);
         List<Partecipants> partecipants = new ArrayList<>();
-        List<Long> idPartecipants = contest.getParticipants();
-        for(Long idPartecipant : idPartecipants){
-            User user = this.userService.getUser(idPartecipant);
+        List<User> idPartecipants = contest.getParticipants();
+        for(User user : idPartecipants){
             partecipants.add(new Partecipants(user.getId(), user.getUsername()));
         }
         return partecipants;
@@ -152,8 +149,13 @@ public class ContestService {
         Contest contest = this.repoContest.findById(idContest);
         if(!contest.getParticipants().contains(idPartecipant))
             return false;
-        User partecipant = this.userService.getUser(idPartecipant);
-        contest.setWinnerName(partecipant.getUsername());
+        List<User> partecipant = contest.getParticipants();
+        for(User user : partecipant){
+            if(user.getId() == idPartecipant){
+                contest.setWinnerName(user.getUsername());
+                break;
+            }
+        }
         this.repoContest.save(contest);
         return true;
     }

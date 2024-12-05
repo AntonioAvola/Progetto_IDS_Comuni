@@ -2,9 +2,7 @@ package com.unicam.Entity.Content;
 
 import com.unicam.Entity.Time;
 import com.unicam.Entity.User;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +13,14 @@ public class Contest extends Content{
 
     @Embedded
     private Time duration;
-    private List<Long> participants = new ArrayList<>();
+
+    @OneToMany
+    @JoinTable(
+            name = "contest_partecipants",
+            joinColumns = @JoinColumn(name = "contest_Id"),
+            inverseJoinColumns = @JoinColumn(name = "partecipant_Id")
+    )
+    private List<User> participants = new ArrayList<>();
     private String winnerName;
     private String reward;
     private ActivityStatus activityStatus;
@@ -33,11 +38,11 @@ public class Contest extends Content{
         this.duration = duration;
     }
 
-    public List<Long> getParticipants() {
+    public List<User> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<Long> participants) {
+    public void setParticipants(List<User> participants) {
         this.participants = participants;
     }
 
