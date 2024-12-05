@@ -1,8 +1,6 @@
 package com.unicam.Service.Content;
 
-import com.unicam.DTO.Response.ContestClosedResponse;
-import com.unicam.DTO.Response.ContestResponse;
-import com.unicam.DTO.Response.Partecipants;
+import com.unicam.DTO.Response.*;
 import com.unicam.Entity.Content.ActivityStatus;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.Contest;
@@ -158,5 +156,25 @@ public class ContestService {
         contest.setWinnerName(partecipant.getUsername());
         this.repoContest.save(contest);
         return true;
+    }
+
+    public List<ContestProgress> getContestProgress(String municipality) {
+        List<Contest> list = this.repoContest.findByMunicipalityAndStatus(municipality, ContentStatus.APPROVED);
+        List<ContestProgress> progresses = new ArrayList<>();
+        for(Contest contest : list){
+            if(contest.getActivityStatus().equals(ActivityStatus.WAITING)) {
+                progresses.add(new ContestProgress(contest.getId(), contest.getTitle(), "--- Non iniziato ---"));
+            }
+            else if(contest.getActivityStatus().equals(ActivityStatus.STARTED)){
+                progresses.add(new ContestProgress(contest.getId(), contest.getTitle(), "--- In corso ---"));
+            }
+            else if (contest.getActivityStatus().equals(ActivityStatus.FINISHED) && contest.getWinnerName().equals("")){
+                progresses.add(new ContestFinished(contest.getId(), contest.getTitle(), "--- Terminato ---", "--- Vincitore non assegnato ---"));
+            }
+            else{
+                progresses.add(new ContestFinished(contest.getId(), contest.getTitle(), "--- Terminato ---", contest.getWinnerName()));
+            }
+        }
+        return progresses;
     }
 }

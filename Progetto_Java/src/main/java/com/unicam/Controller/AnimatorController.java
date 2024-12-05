@@ -4,6 +4,7 @@ import com.unicam.DTO.Request.ContestRequest;
 import com.unicam.DTO.Request.EventRequest;
 import com.unicam.DTO.Response.ContestClosedResponse;
 import com.unicam.DTO.Response.ContestPartecipants;
+import com.unicam.DTO.Response.ContestProgress;
 import com.unicam.DTO.Response.Partecipants;
 import com.unicam.Entity.CommandPattern.ContestCommand;
 import com.unicam.Entity.CommandPattern.EventCommand;
@@ -186,7 +187,29 @@ public class AnimatorController {
         return ResponseEntity.ok("Vincitore assegnato con successo");
     }
 
+    @GetMapping("api/animator/contests/progress")
+    public ResponseEntity<List<ContestProgress>> getContestsProgress(){
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo comune:
+        // se comune visitato è lo stesso del proprio comune allora proseguire;
+        // altrimenti eccezione
+
+        //TODO controllo ruolo
+        List<ContestProgress> contestProgresses = this.contestService.getContestProgress(municipality);
+
+        return ResponseEntity.ok(contestProgresses);
+    }
     /*@DeleteMapping("Api/Animator/DeleteActivity")
     public ResponseEntity<String> DeleteActivity(
             @Parameter(description = "Tipo di contenuto",

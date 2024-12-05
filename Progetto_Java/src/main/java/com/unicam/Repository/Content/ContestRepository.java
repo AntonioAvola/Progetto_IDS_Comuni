@@ -23,4 +23,6 @@ public interface ContestRepository extends JpaRepository<Contest, Long> {
     boolean existsByIdAndMunicipality(long idContent, String municipality);
 
     List<Contest> findByMunicipalityAndActivityStatus(String municipality, ActivityStatus finished);
+
+    List<Contest> findByMunicipality(String municipality);
 }
