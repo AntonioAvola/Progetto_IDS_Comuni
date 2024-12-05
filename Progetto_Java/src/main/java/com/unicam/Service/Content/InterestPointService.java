@@ -84,7 +84,7 @@ public class InterestPointService {
         List<InterestPointResponse> response = new ArrayList<>();
         for(InterestPoint point : points){
             InterestPointResponse pointResponse = new InterestPointResponse(point.getId(), point.getTitle(),
-                    point.getDescription(), point.getReference().getName());
+                    point.getDescription(), point.getReference().getName(), point.getOpen(), point.getClose());
             response.add(pointResponse);
         }
         return response;

@@ -52,7 +52,7 @@ public class UserController {
     @Autowired
     private PromotionService promotionService;
 
-    @GetMapping("api/user/get/all/municipalities")
+    @GetMapping("/get/all/municipalities")
     public ResponseEntity <List<String>> GetMunicipality() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -75,7 +75,7 @@ public class UserController {
         return ResponseEntity.ok(municipalities);
     }
 
-    @GetMapping("api/user/get/own/contents")
+    @GetMapping("/get/own/contents")
     public ResponseEntity <Map<String,List<?>>> GetOwnContents(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -115,7 +115,7 @@ public class UserController {
 
 
     //TODO implementare correttamente
-    @DeleteMapping("api/user/delete/own/content")
+    @DeleteMapping("/delete/own/content")
     public ResponseEntity<String> DeleteContent(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY", "EVENT", "CONTEST"}))
@@ -160,7 +160,7 @@ public class UserController {
         return ResponseEntity.ok("Eliminazione del contenuto eseguita con successo");
     }
 
-    @PostMapping("api/user/role/promotion/request")
+    @PostMapping("/role/promotion/request")
     public ResponseEntity<String> PromotionRequest(
             @Parameter(description = "Ruolo",
                     schema = @Schema(type = "Role", allowableValues = {"CURATOR","CONTRIBUTOR",
@@ -188,7 +188,7 @@ public class UserController {
         return ResponseEntity.ok("Richiesta di promozione inviata");
     }
 
-    @GetMapping("api/user/contest/available")
+    @GetMapping("/contest/available")
     public ResponseEntity<List<ContestResponse>> getAllContestAvailable(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -215,7 +215,7 @@ public class UserController {
         return ResponseEntity.ok(contestsAvailable);
     }
 
-    @PutMapping("api/user/partecipate/contest")
+    @PutMapping("/partecipate/contest")
     public ResponseEntity<String> partecipateContest(@RequestParam long idContest){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -243,8 +243,17 @@ public class UserController {
     }
 
 
+    @GetMapping("/viewAllContentByOwnMunicipality")
+    public ResponseEntity<String> viewAllContentByOwnMunicipality(){
+        //TODO impementare la visualizzazione di tutti i contenuti del proprio comune
+        return null;
+    }
+
+
     @DeleteMapping("api/user/delete/account")
     public void deleteAccount(){
         //TODO chiamare il metodo del servizio dell'utente e passare l'id dell'utente
     }
+
+
 }
