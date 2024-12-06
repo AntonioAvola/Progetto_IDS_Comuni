@@ -1,5 +1,6 @@
 package com.unicam.Service.Content;
 
+import com.unicam.DTO.Response.InterestPointResponse;
 import com.unicam.DTO.Response.ItineraryResponse;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.InterestPoint;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -94,7 +94,7 @@ public class ItineraryService {
     private List<ItineraryResponse> convertResponse(List<Itinerary> itineraries) {
         List<ItineraryResponse> response = new ArrayList<>();
         for(Itinerary itinerary : itineraries){
-            List<String> path = convertPathInString(itinerary.getPath());
+            List<InterestPointResponse> path = convertPathInResponse(itinerary.getPath());
             ItineraryResponse itineraryResponse = new ItineraryResponse(itinerary.getId(), itinerary.getTitle(),
                     itinerary.getDescription(), path);
             response.add(itineraryResponse);
@@ -102,10 +102,11 @@ public class ItineraryService {
         return response;
     }
 
-    private List<String> convertPathInString(List<InterestPoint> path) {
-        List<String> response = new ArrayList<>();
+    private List<InterestPointResponse> convertPathInResponse(List<InterestPoint> path) {
+        List<InterestPointResponse> response = new ArrayList<>();
         for(InterestPoint point : path){
-            response.add(point.getTitle());
+            response.add(new InterestPointResponse(point.getId(), point.getTitle(), point.getDescription(), point.getReference().getName(),
+                    point.getOpen(), point.getClose()));
         }
         return response;
     }

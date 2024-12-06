@@ -7,12 +7,12 @@ public class ItineraryResponse {
     private long id;
     private String title;
     private String description;
-    private List<String> path;
+    private List<InterestPointResponse> path;
 
     public ItineraryResponse(long id,
                              String title,
                              String description,
-                             List<String> path){
+                             List<InterestPointResponse> path){
         this.id = id;
         this.title = title;
         this.description = description;
@@ -27,7 +27,7 @@ public class ItineraryResponse {
         return description;
     }
 
-    public List<String> getPath() {
+    public List<InterestPointResponse> getPath() {
         return path;
     }
 
