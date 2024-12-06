@@ -132,6 +132,8 @@ public class AnimatorController {
 
         //TODO controllo ruolo
 
+        this.contestService.updateActivityStatus(LocalDateTime.now());
+
         List<ContestClosedResponse> closed = this.contestService.getContestNoWinner(municipality, ActivityStatus.FINISHED);
         return ResponseEntity.ok(closed);
     }

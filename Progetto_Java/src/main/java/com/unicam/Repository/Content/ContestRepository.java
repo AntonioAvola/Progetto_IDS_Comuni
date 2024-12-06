@@ -25,4 +25,6 @@ public interface ContestRepository extends JpaRepository<Contest, Long> {
     List<Contest> findByMunicipalityAndActivityStatus(String municipality, ActivityStatus finished);
 
     List<Contest> findByMunicipality(String municipality);
+
+    List<Contest> findByMunicipalityAndActivityStatusAndWinnerName(String municipality, ActivityStatus finished, String s);
 }

@@ -116,14 +116,15 @@ public class ContestService {
     }
 
     public List<ContestClosedResponse> getContestNoWinner(String municipality, ActivityStatus finished) {
-        List<Contest> contestsMunicipalityClosed = this.repoContest.findByMunicipalityAndActivityStatus(municipality, finished);
-        List<Contest> noWinner = new ArrayList<>();
+        List<Contest> contestsMunicipalityClosed = this.repoContest.findByMunicipalityAndActivityStatusAndWinnerName(municipality, finished, "");
+        /*List<Contest> noWinner = new ArrayList<>();
         for(Contest contest : contestsMunicipalityClosed){
             if(contest.getWinnerName().equals("")){
                 noWinner.add(contest);
             }
         }
-        return convertClosedResponse(noWinner);
+        return convertClosedResponse(noWinner);*/
+        return convertClosedResponse(contestsMunicipalityClosed);
     }
 
     private List<ContestClosedResponse> convertClosedResponse(List<Contest> contests) {
