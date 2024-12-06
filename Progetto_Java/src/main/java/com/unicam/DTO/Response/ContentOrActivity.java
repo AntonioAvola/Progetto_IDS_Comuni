@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ContentOrActivityPending {
+public class ContentOrActivity {
 
     private Map<String, List<?>> contents;
 
-    public ContentOrActivityPending(){
+    public ContentOrActivity(){
         this.contents = new HashMap<>();
     }
 

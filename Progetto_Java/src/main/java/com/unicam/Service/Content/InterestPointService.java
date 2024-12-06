@@ -46,16 +46,14 @@ public class InterestPointService {
         return true;
     }
 
-    public List<InterestPoint> getList(List<String> path, String municipality) {
+    public List<InterestPoint> getList(List<Long> path, String municipality) {
         List<InterestPoint> points = new ArrayList<>();
         List<InterestPoint> pointsDB = this.repoInterest.findByMunicipality(municipality);
-        for(InterestPoint point : pointsDB){
-            if(path.contains(point.getReference().getName())){
+        for(InterestPoint point : pointsDB) {
+            if (path.contains(point.getId())) {
                 points.add(point);
             }
         }
-        if(path.size() != points.size())
-            throw new IllegalArgumentException("Sono stati inseriti nomi di punti di interesse inesistenti");
         return points;
     }
 
@@ -117,5 +115,10 @@ public class InterestPointService {
     public List<InterestPointResponse> getByUser(User user) {
         List<InterestPoint> pois = this.repoInterest.findAllByAuthor(user);
         return convertResponse(pois);
+    }
+
+    public List<InterestPointResponse> getAllPOIByMunicipality(String municipality) {
+        List<InterestPoint> POI = this.repoInterest.findByMunicipalityAndStatus(municipality, ContentStatus.APPROVED);
+        return convertResponse(POI);
     }
 }

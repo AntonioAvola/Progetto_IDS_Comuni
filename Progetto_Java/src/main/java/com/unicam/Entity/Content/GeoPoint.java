@@ -44,4 +44,8 @@ public class GeoPoint {
     public void setMunicipality(String municipality) {
         this.municipality = municipality;
     }
+
+    public long getId() {
+        return id;
+    }
 }

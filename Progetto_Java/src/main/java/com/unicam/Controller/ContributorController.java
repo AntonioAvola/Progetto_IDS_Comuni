@@ -2,9 +2,11 @@ package com.unicam.Controller;
 
 import com.unicam.DTO.Request.ItineraryRequest;
 import com.unicam.DTO.Request.InterestPointRequest;
+import com.unicam.DTO.Response.InterestPointResponse;
 import com.unicam.Entity.CommandPattern.InterestPointCommand;
 import com.unicam.Entity.CommandPattern.ItineraryCommand;
 import com.unicam.Entity.Content.ContentStatus;
+import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.InterestPointType;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
@@ -129,16 +131,36 @@ public class ContributorController {
         // se CONTRIBUTOR AUTORIZZATO allora status = APPROVED;
         // se qualsiasi altri ruolo, allora eccezione
 
-        //TODO controlla lunghezza lista punti di interesse, se non ha lunghezza minima 2 o ci sono punti di interesse ripetuti (true), lancia l'eccezione
+        //controlla lunghezza lista punti di interesse, se non ha lunghezza minima 2 o ci sono punti di interesse ripetuti (true), lancia l'eccezione
         if(!this.itineraryService.checkPathLength(request.getPath()))
             throw new IllegalArgumentException("Nella lista di punti di interesse sono presenti punti duplicati o meno di due punti di interesse");
 
+        //TODO controllo dei punti
         User user = this.userService.getUser(idUser);
 
         ItineraryCommand Itinerary = new ItineraryCommand(request, itineraryService, interestPointService, user, ContentStatus.PENDING);
         Itinerary.execute();
 
         return ResponseEntity.ok("Itinerario aggiunto con successo");
+    }
+
+    @GetMapping("/getAllPOIofOwnMunicipality")
+    public ResponseEntity<List<InterestPointResponse>> getAllPOIofOwnMunicipality(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+
+        List<InterestPointResponse> response = this.interestPointService.getAllPOIByMunicipality(municipality);
+
+        return ResponseEntity.ok(response);
     }
 
     /*@DeleteMapping ("Api/Contributor/DeleteContent")

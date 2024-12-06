@@ -72,7 +72,7 @@ public class MunicipalityManagerController {
     @GetMapping("api/municipalityManager/view/all/activity/pending")
     @Operation(summary = "Visualizza attività in attesa",
             description = "Restituisce una lista di attività in attesa con i relativi ID.")
-    public ResponseEntity<ContentOrActivityPending> getActivityPending(){
+    public ResponseEntity<ContentOrActivity> getActivityPending(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -93,7 +93,7 @@ public class MunicipalityManagerController {
 
         List<EventResponse> eventPending = this.eventService.getEvent(municipality, ContentStatus.PENDING);
         List<ContestResponse> contestPending = this.contestService.getContest(municipality, ContentStatus.PENDING);
-        ContentOrActivityPending pending = new ContentOrActivityPending();
+        ContentOrActivity pending = new ContentOrActivity();
         pending.getContents().put("event", eventPending);
         pending.getContents().put("contest", contestPending);
 

@@ -1,13 +1,7 @@
 package com.unicam.Controller;
 
-import com.unicam.DTO.Response.ContestResponse;
-import com.unicam.DTO.Response.EventResponse;
-import com.unicam.DTO.Response.InterestPointResponse;
-import com.unicam.DTO.Response.ItineraryResponse;
-import com.unicam.Entity.Content.Contest;
-import com.unicam.Entity.Content.Event;
-import com.unicam.Entity.Content.InterestPoint;
-import com.unicam.Entity.Content.Itinerary;
+import com.unicam.DTO.Response.*;
+import com.unicam.Entity.Content.*;
 import com.unicam.Entity.Role;
 import com.unicam.Entity.RolePromotion;
 import com.unicam.Entity.User;
@@ -28,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -244,9 +237,30 @@ public class UserController {
 
 
     @GetMapping("/viewAllContentByOwnMunicipality")
-    public ResponseEntity<String> viewAllContentByOwnMunicipality(){
-        //TODO impementare la visualizzazione di tutti i contenuti del proprio comune
-        return null;
+    public ResponseEntity<ContentOrActivity> viewAllContentByOwnMunicipality(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        List<InterestPointResponse> responsePOI = this.interestPointService.getAllPOIByMunicipality(municipality);
+        List<ItineraryResponse> responseItinerary = this.itineraryService.getItinerary(municipality, ContentStatus.APPROVED);
+        List<EventResponse> responseEvent = this.eventService.getEvent(municipality, ContentStatus.APPROVED);
+        List<ContestResponse> responseContest = this.contestService.getContestAvailable(municipality);
+
+        ContentOrActivity contentOrActivity = new ContentOrActivity();
+        contentOrActivity.getContents().put("InterestPoint", responsePOI);
+        contentOrActivity.getContents().put("Itinerary", responseItinerary);
+        contentOrActivity.getContents().put("Event", responseEvent);
+        contentOrActivity.getContents().put("Contest", responseContest);
+
+        return ResponseEntity.ok(contentOrActivity);
     }
 
 

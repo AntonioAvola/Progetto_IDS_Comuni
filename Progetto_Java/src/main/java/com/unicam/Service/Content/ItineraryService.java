@@ -73,21 +73,21 @@ public class ItineraryService {
         this.repoItinerary.deleteAll(itineraries);
     }
 
-    public boolean checkPathLength(List<String> path) {
+    public boolean checkPathLength(List<Long> path) {
         if(path.size()>=2)
-            return this.checkNoDuplicatedPoints(path);
+            return true;
         return false;
     }
 
-    private boolean checkNoDuplicatedPoints(List<String> path) {
-        //l'hashset contiene tutti elementi univoci
-        HashSet<String> set = new HashSet<>(path);
-        //se il path ha la stessa lunghezza dell'hashset, allora non sono presenti punti di interesse duplicati
-        return path.size() == set.size();
-    }
+//    private boolean checkNoDuplicatedPoints(List<String> path) {
+//        //l'hashset contiene tutti elementi univoci
+//        HashSet<String> set = new HashSet<>(path);
+//        //se il path ha la stessa lunghezza dell'hashset, allora non sono presenti punti di interesse duplicati
+//        return path.size() == set.size();
+//    }
 
-    public List<ItineraryResponse> getItinerary(String municipality, ContentStatus pending) {
-        List<Itinerary> itineraries = this.repoItinerary.findByMunicipalityAndStatus(municipality, pending);
+    public List<ItineraryResponse> getItinerary(String municipality, ContentStatus status) {
+        List<Itinerary> itineraries = this.repoItinerary.findByMunicipalityAndStatus(municipality, status);
         return convertResponse(itineraries);
     }
 

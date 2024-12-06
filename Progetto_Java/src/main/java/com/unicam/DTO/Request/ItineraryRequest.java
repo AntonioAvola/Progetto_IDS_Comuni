@@ -1,6 +1,7 @@
 package com.unicam.DTO.Request;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -8,15 +9,14 @@ public class ItineraryRequest {
 
     private String title;
     private String description;
-    private List<String> path = new ArrayList<>();
+    private List<Long> path;
 
 
-    public ItineraryRequest(String title, String description, List<String> path) {
+    public ItineraryRequest(String title, String description, List<Long> path) {
         this.title = title.toUpperCase(Locale.ROOT);
         this.description = description;
-        for(String point : path){
-            this.path.add(point.toUpperCase(Locale.ROOT));
-        }
+        HashSet<Long> set = new HashSet<>(path);
+        this.path = new ArrayList<>(set);
     }
 
     public String getTitle() {
@@ -27,7 +27,7 @@ public class ItineraryRequest {
         return description;
     }
 
-    public List<String> getPath() {
+    public List<Long> getPath() {
         return path;
     }
 }

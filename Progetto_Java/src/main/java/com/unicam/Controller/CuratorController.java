@@ -1,6 +1,6 @@
 package com.unicam.Controller;
 
-import com.unicam.DTO.Response.ContentOrActivityPending;
+import com.unicam.DTO.Response.ContentOrActivity;
 import com.unicam.DTO.Response.InterestPointResponse;
 import com.unicam.DTO.Response.ItineraryResponse;
 import com.unicam.Entity.Content.ContentStatus;
@@ -32,7 +32,7 @@ public class CuratorController {
     @GetMapping("api/curator/view/all/content/pending")
     @Operation(summary = "Visualizza contenuti in attesa",
             description = "Restituisce una lista di contenuti in attesa con i relativi ID.")
-    public ResponseEntity<ContentOrActivityPending> getContentPending(){
+    public ResponseEntity<ContentOrActivity> getContentPending(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -53,7 +53,7 @@ public class CuratorController {
 
         List<InterestPointResponse> interestPointPending = this.interestPointService.getPoint(municipality, ContentStatus.PENDING);
         List<ItineraryResponse> itineraryPending = this.itineraryService.getItinerary(municipality, ContentStatus.PENDING);
-        ContentOrActivityPending pending = new ContentOrActivityPending();
+        ContentOrActivity pending = new ContentOrActivity();
         pending.getContents().put("interest point", interestPointPending);
         pending.getContents().put("itineray", itineraryPending);
 
