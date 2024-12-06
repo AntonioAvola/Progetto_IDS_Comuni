@@ -210,6 +210,8 @@ public class AnimatorController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+
+        this.contestService.updateActivityStatus(LocalDateTime.now());
         List<ContestProgress> contestProgresses = this.contestService.getContestProgress(municipality);
 
         return ResponseEntity.ok(contestProgresses);
