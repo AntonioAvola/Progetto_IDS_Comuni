@@ -145,13 +145,10 @@ public class ContestService {
         return partecipants;
     }
 
-    public boolean assignWinner(long idContest, User winner) {
+    public void assignWinner(long idContest, User winner) {
         Contest contest = this.repoContest.findById(idContest);
-        if(!contest.getParticipants().contains(winner))
-            return false;
         contest.setWinnerName(winner.getUsername());
         this.repoContest.save(contest);
-        return true;
     }
 
     public List<ContestProgress> getContestProgress(String municipality) {

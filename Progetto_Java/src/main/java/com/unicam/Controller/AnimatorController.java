@@ -185,8 +185,7 @@ public class AnimatorController {
 
         User winner = this.userService.getUser(idPartecipant);
 
-        if(!this.contestService.assignWinner(idContest, winner))
-            throw new UnsupportedOperationException("L'utente non ha partecipato a questo contest");
+        this.contestService.assignWinner(idContest, winner);
 
         return ResponseEntity.ok("Vincitore assegnato con successo");
     }
