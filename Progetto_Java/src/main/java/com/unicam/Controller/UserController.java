@@ -139,7 +139,7 @@ public class UserController {
                 throw new IllegalArgumentException("Il punto di interesse non rientra tra i tuoi contenuti");
         }
         else if(type.equals("ITINERARY")){
-            if(this.itineraryService.getAndRemoveItinerary(idContent, user))
+            if(!this.itineraryService.getAndRemoveItinerary(idContent, user))
                 throw new IllegalArgumentException("L'itinerario non rientra tra i tuoi contenuti");
         }
         else if(type.equals("EVENT")){
