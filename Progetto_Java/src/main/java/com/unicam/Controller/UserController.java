@@ -265,8 +265,22 @@ public class UserController {
 
 
     @DeleteMapping("api/user/delete/account")
-    public void deleteAccount(){
+    public ResponseEntity<String> deleteAccount(){
         //TODO chiamare il metodo del servizio dell'utente e passare l'id dell'utente
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        this.userService.deleteAccount(idUser);
+
+        return ResponseEntity.ok("Account eliminato con successo");
     }
 
 
