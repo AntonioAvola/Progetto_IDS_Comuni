@@ -249,7 +249,7 @@ public class UserController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
-        List<InterestPointResponse> responsePOI = this.interestPointService.getAllPOIByMunicipality(visitedMunicipality);
+        List<InterestPointResponse> responsePOI = this.interestPointService.getPoint(visitedMunicipality, ContentStatus.APPROVED);
         List<ItineraryResponse> responseItinerary = this.itineraryService.getItinerary(visitedMunicipality, ContentStatus.APPROVED);
         List<EventResponse> responseEvent = this.eventService.getEvent(visitedMunicipality, ContentStatus.APPROVED);
         List<ContestResponse> responseContest = this.contestService.getContestAvailable(visitedMunicipality);

@@ -117,9 +117,4 @@ public class InterestPointService {
         List<InterestPoint> pois = this.repoInterest.findAllByAuthor(user);
         return convertResponse(pois);
     }
-
-    public List<InterestPointResponse> getAllPOIByMunicipality(String municipality) {
-        List<InterestPoint> POI = this.repoInterest.findByMunicipalityAndStatus(municipality, ContentStatus.APPROVED);
-        return convertResponse(POI);
-    }
 }
