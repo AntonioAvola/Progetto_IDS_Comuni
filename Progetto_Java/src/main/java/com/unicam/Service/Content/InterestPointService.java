@@ -46,14 +46,15 @@ public class InterestPointService {
         return true;
     }
 
-    public List<InterestPoint> getList(List<Long> path, String municipality) {
-        List<InterestPoint> points = new ArrayList<>();
-        List<InterestPoint> pointsDB = this.repoInterest.findByMunicipality(municipality);
+    public List<InterestPoint> getList(List<Long> path /*, String municipality*/) {
+        //List<InterestPoint> points = new ArrayList<>();
+        List<InterestPoint> points = this.repoInterest.findAllById(path);
+        /*List<InterestPoint> pointsDB = this.repoInterest.findByMunicipality(municipality);
         for(InterestPoint point : pointsDB) {
             if (path.contains(point.getId())) {
                 points.add(point);
             }
-        }
+        }*/
         return points;
     }
 

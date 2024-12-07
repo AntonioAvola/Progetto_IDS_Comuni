@@ -26,7 +26,7 @@ public class ItineraryCommand implements Command{
         this.Builder.buildDescription(itineraryRequest.getDescription());
         this.Builder.buildMunicipality(author.getMunicipality());
         this.Builder.buildTitle(itineraryRequest.getTitle());
-        this.Builder.buildPath(this.interestPointService.getList(itineraryRequest.getPath(), author.getMunicipality()));
+        this.Builder.buildPath(this.interestPointService.getList(itineraryRequest.getPath() /*, author.getMunicipality()*/));
         this.Builder.buildStatus(status);
         this.itinerary = this.Builder.result();
     }

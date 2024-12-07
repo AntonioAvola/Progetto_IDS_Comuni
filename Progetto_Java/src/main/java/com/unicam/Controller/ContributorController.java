@@ -133,7 +133,7 @@ public class ContributorController {
 
         //controlla lunghezza lista punti di interesse, se non ha lunghezza minima 2 o ci sono punti di interesse ripetuti (true), lancia l'eccezione
         if(!this.itineraryService.checkPathLength(request.getPath()))
-            throw new IllegalArgumentException("Nella lista di punti di interesse sono presenti punti duplicati o meno di due punti di interesse");
+            throw new IllegalArgumentException("Nella lista di punti di interesse sono presenti meno di due punti di interesse");
 
         //TODO controllo dei punti
         User user = this.userService.getUser(idUser);

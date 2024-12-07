@@ -236,8 +236,8 @@ public class UserController {
     }
 
 
-    @GetMapping("/viewAllContentByOwnMunicipality")
-    public ResponseEntity<ContentOrActivity> viewAllContentByOwnMunicipality(){
+    @GetMapping("/viewAllContentByMunicipality")
+    public ResponseEntity<ContentOrActivity> viewAllContentByMunicipality(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
@@ -249,10 +249,10 @@ public class UserController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
-        List<InterestPointResponse> responsePOI = this.interestPointService.getAllPOIByMunicipality(municipality);
-        List<ItineraryResponse> responseItinerary = this.itineraryService.getItinerary(municipality, ContentStatus.APPROVED);
-        List<EventResponse> responseEvent = this.eventService.getEvent(municipality, ContentStatus.APPROVED);
-        List<ContestResponse> responseContest = this.contestService.getContestAvailable(municipality);
+        List<InterestPointResponse> responsePOI = this.interestPointService.getAllPOIByMunicipality(visitedMunicipality);
+        List<ItineraryResponse> responseItinerary = this.itineraryService.getItinerary(visitedMunicipality, ContentStatus.APPROVED);
+        List<EventResponse> responseEvent = this.eventService.getEvent(visitedMunicipality, ContentStatus.APPROVED);
+        List<ContestResponse> responseContest = this.contestService.getContestAvailable(visitedMunicipality);
 
         ContentOrActivity contentOrActivity = new ContentOrActivity();
         contentOrActivity.getContents().put("InterestPoint", responsePOI);
