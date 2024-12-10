@@ -158,7 +158,7 @@ public class ContributorController {
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
 
-        List<InterestPointResponse> response = this.interestPointService.getAllPOIByMunicipality(municipality);
+        List<InterestPointResponse> response = this.interestPointService.getPoint(municipality, ContentStatus.APPROVED);
 
         return ResponseEntity.ok(response);
     }
