@@ -171,13 +171,10 @@ public class ContestService {
         return progresses;
     }
 
-    public boolean partecipateContest(long idContest, User partecipant) {
+    public void partecipateContest(long idContest, User partecipant) {
         Contest contest = this.repoContest.findById(idContest);
-        if(contest.getParticipants().contains(partecipant))
-            return false;
         contest.getParticipants().add(partecipant);
         this.repoContest.save(contest);
-        return true;
     }
 
     public List<ContestResponse> getContestAvailable(String municipality) {

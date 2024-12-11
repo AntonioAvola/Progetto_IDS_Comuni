@@ -158,7 +158,8 @@ public class UserController {
             @Parameter(description = "Ruolo",
                     schema = @Schema(type = "Role", allowableValues = {"CURATOR","CONTRIBUTOR",
                             "AUTHORIZED_CONTRIBUTOR", "ANIMATOR", "MUNICIPALITY_MANAGER"}))
-            @RequestParam(defaultValue = "CONTRIBUTOR") Role newRole){
+            @RequestParam(defaultValue = "CONTRIBUTOR") Role newRole,
+            @RequestParam String justification){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -175,7 +176,7 @@ public class UserController {
         if(this.promotionService.checkPromotion(user)){
             throw new IllegalArgumentException("La tua richiesta di promozione è ancora in attesa di validazione!");
         }
-        RolePromotion promotion = new RolePromotion(user, newRole, municipality);
+        RolePromotion promotion = new RolePromotion(user, newRole, municipality, justification);
         this.promotionService.addPromotion(promotion);
 
         return ResponseEntity.ok("Richiesta di promozione inviata");
@@ -229,9 +230,7 @@ public class UserController {
         //TODO controllo ruolo
 
         User partecipant = this.userService.getUser(idUser);
-        if(!this.contestService.partecipateContest(idContest, partecipant)){
-            throw new UnsupportedOperationException("Sei già presente come partecipante");
-        }
+        this.contestService.partecipateContest(idContest, partecipant);
         return ResponseEntity.ok("Partecipazione aggiunta con successo");
     }
 

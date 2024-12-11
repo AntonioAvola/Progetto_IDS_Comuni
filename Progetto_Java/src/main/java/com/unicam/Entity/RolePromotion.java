@@ -12,14 +12,18 @@ public class RolePromotion {
     private User user;
     private Role promotion;
     private String municipality;
+    private String justification;
 
     public RolePromotion(){}
 
     public RolePromotion(User user,
-                         Role promotion, String municipality){
+                         Role promotion,
+                         String municipality,
+                         String justification){
         this.user = user;
         this.promotion = promotion;
         this.municipality = municipality;
+        this.justification = justification;
     }
 
     public User getUser() {
@@ -36,5 +40,13 @@ public class RolePromotion {
 
     public long getId() {
         return id;
+    }
+
+    public String getJustification() {
+        return justification;
+    }
+
+    public void setJustification(String justification) {
+        this.justification = justification;
     }
 }
