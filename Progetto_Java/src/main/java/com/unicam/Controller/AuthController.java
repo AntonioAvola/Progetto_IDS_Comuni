@@ -20,7 +20,6 @@ public class AuthController {
         String token = userService.login(username, password);
         //viene restituito il token dell'account
         return ResponseEntity.ok(token);
-        //TODO implementare la visualizzazione di tutti i contenuti del proprio comune, quindi approvati
     }
 
     @PostMapping("/singIn")
@@ -28,6 +27,5 @@ public class AuthController {
         String token = userService.singIn(request);
         //viene restituito il token dell'account
         return ResponseEntity.ok(token);
-        //TODO implementare la visualizzazione di tutti i contenuti del proprio comune, quindi approvati
     }
 }
