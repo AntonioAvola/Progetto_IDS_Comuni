@@ -40,19 +40,12 @@ public class UserService {
     //TODO inserire reviews
 
     public String login(String username, String password){
-        try {
-            checkCredentialsDB(username, password);
+        checkCredentialsDB(username, password);
 
-            User user = repoUser.findByUsername(username);
-            user.setVisitedMunicipality(user.getMunicipality());
-            this.repoUser.save(user);
-            LocalDateTime now = LocalDateTime.now();
-            this.eventService.updateActivityStatus(now);
-            this.contestService.updateActivityStatus(now);
-            return tokenProvider.createToken(user);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid credentials", e);
-        }
+        User user = repoUser.findByUsername(username);
+        user.setVisitedMunicipality(user.getMunicipality());
+        this.repoUser.save(user);
+        return tokenProvider.createToken(user);
     }
 
     public String singIn(SingInDTO singInDTO){
@@ -61,9 +54,6 @@ public class UserService {
         nameEmailAlreadyExists(user);
         user.HashPassword();
         this.repoUser.save(user);
-        LocalDateTime now = LocalDateTime.now();
-        this.eventService.updateActivityStatus(now);
-        this.contestService.updateActivityStatus(now);
         return tokenProvider.createToken(user);
     }
 
@@ -95,13 +85,13 @@ public class UserService {
         User utenteLogin = repoUser.findByUsername(username);
         if(utenteLogin == null)
             throw new NullPointerException("Non esiste alcun utente con l'username passato");
-        if(!checkPassword(password, utenteLogin.getUsername()))
+        if(!checkPassword(password, utenteLogin.getPassword()))
             throw new IllegalArgumentException("Password errata");
     }
 
-    private boolean checkPassword(String password, String username){
+    private boolean checkPassword(String password, String checkPassword){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.matches(password, this.repoUser.findByUsername(username).getPassword());
+        return passwordEncoder.matches(password, checkPassword);
     }
 
     private void checkUserFields(User user){
