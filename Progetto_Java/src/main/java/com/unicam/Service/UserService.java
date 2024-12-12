@@ -95,8 +95,6 @@ public class UserService {
     }
 
     private void checkUserFields(User user){
-        if(user == null)
-            throw new NullPointerException("L'utente passato è nullo");
         if(user.getName().isBlank())
             throw new IllegalArgumentException("Il nome non è stato inserito");
         if(user.getUsername().isBlank())
