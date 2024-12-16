@@ -122,4 +122,10 @@ public class UserService {
         user.setRole(promotion.getPromotion());
         this.repoUser.save(user);
     }
+
+    public void visitMunicipality(String newMunicipality, long idUser) {
+        User user = this.repoUser.findUserById(idUser);
+        user.setMunicipality(newMunicipality);
+        this.repoUser.save(user);
+    }
 }

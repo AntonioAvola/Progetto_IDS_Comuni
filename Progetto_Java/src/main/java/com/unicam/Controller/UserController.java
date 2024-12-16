@@ -262,6 +262,50 @@ public class UserController {
         return ResponseEntity.ok(contentOrActivity);
     }
 
+    @PutMapping("/visited/municipality")
+    public ResponseEntity <String> visitedMunicipality(@RequestParam String newMunicipality){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        this.userService.visitMunicipality(newMunicipality, idUser);
+        return ResponseEntity.ok("Visita il comune eseguita con successo");
+    }
+
+    @PutMapping("/reported")
+    public ResponseEntity <String> reportContent(
+            @Parameter(description = "Tipo di contenuto",
+                    schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
+            @RequestParam(defaultValue = "INTEREST POINT") String type,
+            @RequestParam long idContent) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        if(type.equals("INTEREST POINT")) {
+            this.interestPointService.reportPOI(idContent);
+        }
+        else {
+            this.itineraryService.reportItinerary(idContent);
+        }
+        return ResponseEntity.ok("Segnalazione eseguita con successo");
+    }
+
 
     @DeleteMapping("api/user/delete/account")
     public ResponseEntity<String> deleteAccount(){

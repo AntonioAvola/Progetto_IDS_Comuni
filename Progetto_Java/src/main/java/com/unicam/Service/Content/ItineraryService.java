@@ -134,4 +134,10 @@ public class ItineraryService {
         List<Itinerary> itineraries = this.repoItinerary.findAllByAuthor(user);
         return convertResponse(itineraries);
     }
+
+    public void reportItinerary(long idContent) {
+        Itinerary itinerary = this.repoItinerary.findById(idContent);
+        itinerary.setStatus(ContentStatus.REPORTED);
+        this.repoItinerary.save(itinerary);
+    }
 }

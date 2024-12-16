@@ -117,4 +117,10 @@ public class InterestPointService {
         List<InterestPoint> pois = this.repoInterest.findAllByAuthor(user);
         return convertResponse(pois);
     }
+
+    public void reportPOI(long idContent) {
+        InterestPoint point = this.repoInterest.findById(idContent);
+        point.setStatus(ContentStatus.REPORTED);
+        this.repoInterest.save(point);
+    }
 }
