@@ -61,9 +61,9 @@ public class CuratorController {
     }
 
     @PutMapping("api/curator/approve/or/reject/content")
-    @Operation(summary = "Approva o rifiuta un contenuto",
-            description = "Approva o rifiuta un contenuto in attesa. Usa uno degli ID disponibili da /getContentPending.")
-    public ResponseEntity<String> approveOrRejectContent(
+    @Operation(summary = "Approva o rifiuta un contenuto o segnalazione",
+            description = "Approva o rifiuta un contenuto in attesa o segnalazione. Usa uno degli ID disponibili da /getContentPending.")
+    public ResponseEntity<String> ValidatePendingOrReported(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
             @RequestParam(defaultValue = "INTEREST POINT") String type,
@@ -100,5 +100,27 @@ public class CuratorController {
             this.itineraryService.approveOrRejectItinerary(idContent, status);
         }
         return ResponseEntity.ok("Operazione eseguita con successo");
+    }
+
+    @GetMapping("/ViewAllReportedContent")
+    public ResponseEntity <ContentOrActivity> ViewAllReportedContent(){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        List <InterestPointResponse> Point = this.interestPointService.getPoint(municipality, ContentStatus.REPORTED);
+        List <ItineraryResponse> Itinerary = this.itineraryService.getItinerary(municipality, ContentStatus.REPORTED);
+        ContentOrActivity Response = new ContentOrActivity();
+        Response.getContents().put("InterestPoint", Point);
+        Response.getContents().put("Itinerary", Itinerary);
+        return ResponseEntity.ok(Response);
     }
 }
