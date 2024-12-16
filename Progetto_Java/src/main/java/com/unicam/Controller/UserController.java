@@ -6,10 +6,7 @@ import com.unicam.Entity.Role;
 import com.unicam.Entity.RolePromotion;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
-import com.unicam.Service.Content.ContestService;
-import com.unicam.Service.Content.EventService;
-import com.unicam.Service.Content.InterestPointService;
-import com.unicam.Service.Content.ItineraryService;
+import com.unicam.Service.Content.*;
 import com.unicam.Service.MunicipalityService;
 import com.unicam.Service.PromotionService;
 import com.unicam.Service.UserService;
@@ -44,6 +41,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private PromotionService promotionService;
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping("/get/all/municipalities")
     public ResponseEntity <List<String>> GetMunicipality() {
@@ -308,7 +307,40 @@ public class UserController {
         return ResponseEntity.ok("Segnalazione eseguita con successo");
     }
 
+    @GetMapping("/ReviewSinglePoint")
+    public ResponseEntity <List<Review>> ReviewSinglePoint(@RequestParam long idPoint){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        List <Review> Response = this.reviewService.GetReviewSinglePoint(idPoint);
+        return ResponseEntity.ok(Response);
+    }
+
+    @GetMapping("/ContestIParticipated")
+    public  ResponseEntity <List<Contest>> contestIPartecipated(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String username = userDetails.getUsername();
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        User user = this.userService.getUser(idUser);
+        List <Contest> contestResponse = this.contestService.getContestPartecipated(user);
+        return ResponseEntity.ok(contestResponse);
+    }
     @DeleteMapping("api/user/delete/account")
     public ResponseEntity<String> deleteAccount(){
         //TODO chiamare il metodo del servizio dell'utente e passare l'id dell'utente

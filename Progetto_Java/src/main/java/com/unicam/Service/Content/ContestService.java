@@ -178,7 +178,18 @@ public class ContestService {
     }
 
     public List<ContestResponse> getContestAvailable(String municipality) {
-        List<Contest> contests = this.repoContest.findByMunicipalityAndActivityStatus(municipality, ActivityStatus.WAITING);
-        return convertResponse(contests);
+        List<Contest> contest = this.repoContest.findByMunicipalityAndActivityStatus(municipality, ActivityStatus.WAITING);
+        return convertResponse(contest);
+    }
+
+    public List<Contest> getContestPartecipated(User user) {
+        List <Contest> contest = this.repoContest.findByMunicipality(user.getMunicipality());
+        List <Contest> contestResponse = new ArrayList<>();
+        for (Contest found : contest) {
+            if(found.getParticipants().contains(user)){
+                contestResponse.add(found);
+            }
+        }
+        return contestResponse;
     }
 }

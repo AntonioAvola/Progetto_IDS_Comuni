@@ -123,4 +123,8 @@ public class InterestPointService {
         point.setStatus(ContentStatus.REPORTED);
         this.repoInterest.save(point);
     }
+
+    public InterestPoint GetSinglePoint(long idPoint) {
+        return this.repoInterest.findById(idPoint);
+    }
 }
