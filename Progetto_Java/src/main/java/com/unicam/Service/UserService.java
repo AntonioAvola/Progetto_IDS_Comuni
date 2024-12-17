@@ -1,6 +1,7 @@
 package com.unicam.Service;
 
 import com.unicam.DTO.Request.SingInDTO;
+import com.unicam.Entity.Role;
 import com.unicam.Entity.RolePromotion;
 import com.unicam.Entity.User;
 import com.unicam.Repository.UserRepository;
@@ -48,7 +49,7 @@ public class UserService {
         return tokenProvider.createToken(user);
     }
 
-    public String singIn(SingInDTO singInDTO){
+    public String singIn(SingInDTO singInDTO, Role role){
         User user = singInDTO.toEntity();
         checkUserFields(user);
         nameEmailAlreadyExists(user);

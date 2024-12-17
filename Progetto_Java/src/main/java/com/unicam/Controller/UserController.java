@@ -41,7 +41,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     private PromotionService promotionService;
-    @Autowired
+    //@Autowired
     private ReviewService reviewService;
 
     @GetMapping("/get/all/municipalities")
@@ -202,8 +202,8 @@ public class UserController {
         //TODO controllo ruolo
 
         this.contestService.updateActivityStatus(LocalDateTime.now());
-
-        List<ContestResponse> contestsAvailable = this.contestService.getContestAvailable(municipality);
+        User user = this.userService.getUser(idUser);
+        List<ContestResponse> contestsAvailable = this.contestService.getContestAvailableNoPartecipated(municipality, user);
 
         return ResponseEntity.ok(contestsAvailable);
     }

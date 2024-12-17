@@ -11,20 +11,20 @@ public class SingInDTO {
     private String password;
     private String email;
     private String municipality;
-    private boolean animator;
-    private boolean municipalityManger;
-    private boolean curator;
+    //private boolean animator;
+    //private boolean municipalityManger;
+    //private boolean curator;
 
 
-    public SingInDTO(String username, String name, String password, String email, String municipality, boolean animator, boolean municipalityManger, boolean curator) {
+    public SingInDTO(String username, String name, String password, String email, String municipality/*,boolean animator, boolean municipalityManger, boolean curator*/) {
         this.username = username;
         this.name = name;
         this.password = password;
         this.email = email;
         this.municipality = municipality.toUpperCase(Locale.ROOT);
-        this.animator = animator;
+        /*this.animator = animator;
         this.municipalityManger = municipalityManger;
-        this.curator = curator;
+        this.curator = curator;*/
     }
 
 
@@ -48,22 +48,10 @@ public class SingInDTO {
         return municipality;
     }
 
-    public boolean isAnimator() {
-        return animator;
-    }
 
-    public boolean isMunicipalityManger() {
-        return municipalityManger;
-    }
-
-    public boolean isCurator() {
-        return curator;
-    }
-
-
-    public User toEntity(){
+    public User toEntity(Role role){
         User user = new User(getName(), getUsername(), getMunicipality(), getEmail(), getPassword());
-        if(isCurator()){
+        /*if(isCurator()){
             user.setRole(Role.CURATOR);
         }else if(isAnimator()){
             user.setRole(Role.ANIMATOR);
@@ -72,7 +60,8 @@ public class SingInDTO {
         }
         else {
             user.setRole(Role.CONTRIBUTOR);
-        }
+        }*/
+        user.setRole(role);
         user.setVisitedMunicipality(getMunicipality());
         return user;
     }

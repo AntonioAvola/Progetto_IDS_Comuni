@@ -192,4 +192,15 @@ public class ContestService {
         }
         return contestResponse;
     }
+
+    public List<ContestResponse> getContestAvailableNoPartecipated(String municipality, User user) {
+        List<Contest> contest = this.repoContest.findByMunicipalityAndActivityStatus(municipality, ActivityStatus.WAITING);
+        List <Contest> contestResponse = new ArrayList<>();
+        for (Contest found : contest) {
+            if(!found.getParticipants().contains(user)){
+                contestResponse.add(found);
+            }
+        }
+        return convertResponse(contestResponse);
+    }
 }
