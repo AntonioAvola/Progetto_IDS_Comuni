@@ -22,8 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class TuristController {
     @Autowired
     private UserService userService;
+    @Autowired
     private InterestPointService interestPointService;
+    @Autowired
     private ItineraryService itineraryService;
+    @Autowired
     private EventService eventService;
 
     @PutMapping("AddToFavorite")
@@ -44,11 +47,11 @@ public class TuristController {
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
         if (type.equals("INTEREST POINT")) {
-          this.interestPointService.addFavorite(idUser, idContent);
+          this.interestPointService.addFavorite(idContent, idUser);
         } else if (type.equals("ITINERARY")) {
-            this.itineraryService.addFavorite(idUser, idContent);
+            this.itineraryService.addFavorite(idContent, idUser);
         } else
-            this.eventService.addFavorite(idUser, idContent);
+            this.eventService.addFavorite(idContent, idUser);
         return ResponseEntity.ok("Operazione eseguita con successo");
     }
 }

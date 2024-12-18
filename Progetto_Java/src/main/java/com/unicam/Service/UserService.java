@@ -50,7 +50,7 @@ public class UserService {
     }
 
     public String singIn(SingInDTO singInDTO, Role role){
-        User user = singInDTO.toEntity();
+        User user = singInDTO.toEntity(role);
         checkUserFields(user);
         nameEmailAlreadyExists(user);
         user.HashPassword();
@@ -126,7 +126,7 @@ public class UserService {
 
     public void visitMunicipality(String newMunicipality, long idUser) {
         User user = this.repoUser.findUserById(idUser);
-        user.setMunicipality(newMunicipality);
+        user.setVisitedMunicipality(newMunicipality);
         this.repoUser.save(user);
     }
 }
