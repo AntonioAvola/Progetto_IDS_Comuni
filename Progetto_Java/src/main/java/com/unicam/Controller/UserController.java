@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @RestController
@@ -276,7 +277,7 @@ public class UserController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
-        this.userService.visitMunicipality(newMunicipality, idUser);
+        this.userService.visitMunicipality(newMunicipality.toUpperCase(Locale.ROOT), idUser);
         return ResponseEntity.ok("Visita il comune eseguita con successo");
     }
 
