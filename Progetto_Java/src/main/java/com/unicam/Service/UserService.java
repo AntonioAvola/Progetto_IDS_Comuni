@@ -10,8 +10,10 @@ import com.unicam.Service.Content.*;
 import com.unicam.Validators.EmailValidator;
 import com.unicam.Validators.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 
@@ -76,18 +78,18 @@ public class UserService {
     public void nameEmailAlreadyExists(User user){
         User userFound = repoUser.findByUsername(user.getUsername());
         if (userFound != null)
-            throw new IllegalArgumentException("L'username è già in uso");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'username è già in uso");
         userFound = repoUser.findByEmail(user.getEmail());
         if(userFound != null)
-            throw new IllegalArgumentException("L'email è già in uso");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'email è già in uso");
     }
 
     private void checkCredentialsDB(String username, String password){
         User utenteLogin = repoUser.findByUsername(username);
         if(utenteLogin == null)
-            throw new NullPointerException("Non esiste alcun utente con l'username passato");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Non esiste alcun utente con l'username passato");
         if(!checkPassword(password, utenteLogin.getPassword()))
-            throw new IllegalArgumentException("Password errata");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password errata");
     }
 
     private boolean checkPassword(String password, String checkPassword){
@@ -97,19 +99,19 @@ public class UserService {
 
     private void checkUserFields(User user){
         if(user.getName().isBlank())
-            throw new IllegalArgumentException("Il nome non è stato inserito");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Il nome non è stato inserito");
         if(user.getUsername().isBlank())
-            throw new IllegalArgumentException("L'username non è stato inserito");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'username non è stato inserito");
         if(user.getMunicipality().isBlank())
-            throw new IllegalArgumentException("Il Comune di residenza non è stato inserito");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Il Comune di residenza non è stato inserito");
         if(user.getEmail().isBlank())
-            throw new IllegalArgumentException("L'email non è stata inserita");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'email non è stata inserita");
         if(!EmailValidator.isValidEmail(user.getEmail()))
-            throw new IllegalArgumentException("L'email non è stata inserita correttamente. Si prega di inserire una email valida");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "L'email non è stata inserita correttamente. Si prega di inserire una email valida");
         if(user.getPassword().isBlank())
-            throw new IllegalArgumentException("La password non è stata inserita");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La password non è stata inserita");
         if(!PasswordValidator.isValidPassword(user.getPassword()))
-            throw new IllegalArgumentException("La password non rispetta i requisiti richiesti: lunghezza 5, almeno una maiuscola, " +
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La password non rispetta i requisiti richiesti: lunghezza 5, almeno una maiuscola, " +
                     "almeno una minuscola, almeno un numero, almeno un simbolo speciale, niente spazi vuoti");
     }
 
