@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "Api/Animator")
+@RequestMapping("api/animator")
 public class AnimatorController {
 
     @Autowired
@@ -38,7 +38,7 @@ public class AnimatorController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("api/animator/add/event")
+    @PostMapping("/add/event")
     public void Addevent(EventRequest request){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -82,7 +82,7 @@ public class AnimatorController {
         event.execute();
     }
 
-    @PostMapping("api/animator/add/contest")
+    @PostMapping("/add/contest")
     public void AddContest(ContestRequest request){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -113,7 +113,7 @@ public class AnimatorController {
         contest.execute();
     }
 
-    @GetMapping("api/animator/contest/closed")
+    @GetMapping("/contest/closed")
     public ResponseEntity<List<ContestClosedResponse>> getContestClosed(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -138,7 +138,7 @@ public class AnimatorController {
         return ResponseEntity.ok(closed);
     }
 
-    @GetMapping("api/animator/partecipants/of/contest")
+    @GetMapping("/show/partecipants/of/contest")
     public ResponseEntity<ContestPartecipants> getPartecipantContest(@RequestParam long idContest){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -163,7 +163,7 @@ public class AnimatorController {
         return ResponseEntity.ok(partecipantsContest);
     }
 
-    @PutMapping("api/animator/assign/winner")
+    @PutMapping("/assign/winner")
     public ResponseEntity<String> assignWinner(@RequestParam long idContest, @RequestParam long idPartecipant){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -190,7 +190,7 @@ public class AnimatorController {
         return ResponseEntity.ok("Vincitore assegnato con successo");
     }
 
-    @GetMapping("api/animator/contests/progress")
+    @GetMapping("/contests/progress")
     public ResponseEntity<List<ContestProgress>> getContestsProgress(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

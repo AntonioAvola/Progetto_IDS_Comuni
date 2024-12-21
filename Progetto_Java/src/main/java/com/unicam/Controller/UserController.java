@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @RestController
-@RequestMapping(name = "api/User")
+@RequestMapping("api/user")
 
 public class UserController {
     @Autowired
@@ -235,7 +235,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/viewAllContentByMunicipality")
+    @GetMapping("/view/all/content/by/municipality")
     public ResponseEntity<ContentOrActivity> viewAllContentByMunicipality(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -308,7 +308,7 @@ public class UserController {
         return ResponseEntity.ok("Segnalazione eseguita con successo");
     }
 
-    @GetMapping("/ReviewSinglePoint")
+    @GetMapping("/view/all/review/single/POI")
     public ResponseEntity <List<Review>> ReviewSinglePoint(@RequestParam long idPoint){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -325,7 +325,7 @@ public class UserController {
         return ResponseEntity.ok(Response);
     }
 
-    @GetMapping("/ContestIParticipated")
+    @GetMapping("/all/contests/I/participated/to")
     public  ResponseEntity <List<Contest>> contestIPartecipated(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -342,7 +342,7 @@ public class UserController {
         List <Contest> contestResponse = this.contestService.getContestPartecipated(user);
         return ResponseEntity.ok(contestResponse);
     }
-    @DeleteMapping("api/user/delete/account")
+    @DeleteMapping("/delete/account")
     public ResponseEntity<String> deleteAccount(){
         //TODO chiamare il metodo del servizio dell'utente e passare l'id dell'utente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -360,6 +360,4 @@ public class UserController {
 
         return ResponseEntity.ok("Account eliminato con successo");
     }
-
-
 }

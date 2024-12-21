@@ -6,8 +6,8 @@ import com.unicam.DTO.Response.InterestPointResponse;
 import com.unicam.Entity.CommandPattern.InterestPointCommand;
 import com.unicam.Entity.CommandPattern.ItineraryCommand;
 import com.unicam.Entity.Content.ContentStatus;
-import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.InterestPointType;
+import com.unicam.Entity.Role;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.GeoPointService;
@@ -18,11 +18,12 @@ import com.unicam.Service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -31,7 +32,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "api/contributor")
+@RequestMapping("api/contributor")
 public class ContributorController {
     @Autowired
     private InterestPointService interestPointService;
@@ -44,13 +45,13 @@ public class ContributorController {
     @Autowired
     private ProxyOSM proxy;
 
-    @PostMapping("api/contributor/add/interestPoint")
+    @PostMapping("/add/interestPoint")
     public ResponseEntity<String> AddInterestPoint(
             @Parameter(description = "Tipologia di punto di interesse",
                     schema = @Schema(type = "InterestPointType", allowableValues = {"MUSEUM", "HISTORICAL_MONUMENT",
                             "RESTAURANT", "HOTEL", "BED_AND_BREAKFAST", "PARK", "STATUE", "SQUARE"}))
             @RequestParam(defaultValue = "MUSEUM") InterestPointType type,
-            InterestPointRequest request,
+            @RequestBody InterestPointRequest request,
             @Parameter(description = "Ora di inizio")
             @RequestParam(defaultValue = "00") String openHour,
             @Parameter(description = "Minuti di inizio")
@@ -88,7 +89,7 @@ public class ContributorController {
 
         //TODO controlla se esiste già il punto geolocalizzato, se esiste, lancia l'eccezione
         if(this.geoPointService.checkGeoPointAlreadyExists(request.getReference(), municipality))
-            throw new UnsupportedOperationException("Esiste già un punto di interesse per questo determinato punto geolocalizzato");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Esiste già un punto di interesse per questo determinato punto geolocalizzato"); //errore 409 Conflict
 
         User user = this.userService.getUser(idUser);
         LocalTime open;
@@ -107,7 +108,7 @@ public class ContributorController {
         return ResponseEntity.ok("Punto di interesse aggiunto con successo");
     }
 
-    @PostMapping("api/contributor/add/itinerary")
+    @PostMapping("/add/itinerary")
     public ResponseEntity<String> AddItinerary(ItineraryRequest request) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -133,9 +134,10 @@ public class ContributorController {
 
         //controlla lunghezza lista punti di interesse, se non ha lunghezza minima 2 o ci sono punti di interesse ripetuti (true), lancia l'eccezione
         if(!this.itineraryService.checkPathLength(request.getPath()))
-            throw new IllegalArgumentException("Nella lista di punti di interesse sono presenti meno di due punti di interesse");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nella lista di punti di interesse sono presenti meno di due punti di interesse");
 
         //TODO controllo dei punti
+
         User user = this.userService.getUser(idUser);
 
         ItineraryCommand Itinerary = new ItineraryCommand(request, itineraryService, interestPointService, user, ContentStatus.PENDING);
@@ -144,7 +146,7 @@ public class ContributorController {
         return ResponseEntity.ok("Itinerario aggiunto con successo");
     }
 
-    @GetMapping("/getAllPOIofOwnMunicipality")
+    @GetMapping("/get/all/POI/of/own/municipality")
     public ResponseEntity<List<InterestPointResponse>> getAllPOIofOwnMunicipality(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "Api/Curator")
+@RequestMapping("api/curator")
 public class CuratorController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class CuratorController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("api/curator/view/all/content/pending")
+    @GetMapping("/view/all/content/pending")
     @Operation(summary = "Visualizza contenuti in attesa",
             description = "Restituisce una lista di contenuti in attesa con i relativi ID.")
     public ResponseEntity<ContentOrActivity> getContentPending(){
@@ -60,7 +60,7 @@ public class CuratorController {
         return ResponseEntity.ok(pending);
     }
 
-    @PutMapping("api/curator/approve/or/reject/content")
+    @PutMapping("/approve/or/reject/content/or/report")
     @Operation(summary = "Approva o rifiuta un contenuto o segnalazione",
             description = "Approva o rifiuta un contenuto in attesa o segnalazione. Usa uno degli ID disponibili da /getContentPending.")
     public ResponseEntity<String> ValidatePendingOrReported(
@@ -102,7 +102,7 @@ public class CuratorController {
         return ResponseEntity.ok("Operazione eseguita con successo");
     }
 
-    @GetMapping("/ViewAllReportedContent")
+    @GetMapping("/view/all/reported/contents")
     public ResponseEntity <ContentOrActivity> ViewAllReportedContent(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

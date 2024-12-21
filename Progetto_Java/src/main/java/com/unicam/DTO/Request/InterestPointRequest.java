@@ -15,6 +15,7 @@ public class InterestPointRequest {
     private String description;
     private String reference;
 
+    public InterestPointRequest(){}
     public InterestPointRequest(String title, String description, String reference) {
         this.title = title.toUpperCase(Locale.ROOT);
         this.description = description;

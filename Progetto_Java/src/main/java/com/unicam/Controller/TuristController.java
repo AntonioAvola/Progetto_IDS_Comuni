@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(name = "api/turist")
+@RequestMapping("api/turist")
 public class TuristController {
     @Autowired
     private UserService userService;
@@ -29,7 +29,7 @@ public class TuristController {
     @Autowired
     private EventService eventService;
 
-    @PutMapping("AddToFavorite")
+    @PutMapping("/add/to/favorite")
     public ResponseEntity <String> AddToFavorite(
         @Parameter(description = "Tipo di contenuto",
             schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY", "EVENT"}))

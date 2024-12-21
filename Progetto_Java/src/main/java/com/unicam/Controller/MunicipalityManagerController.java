@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "api/MunicipalityManager")
+@RequestMapping("api/municipalityManager")
 public class MunicipalityManagerController {
 
     @Autowired
@@ -41,7 +41,7 @@ public class MunicipalityManagerController {
     private UserService userService;
 
 
-    @PostMapping("api/municipalityManager/addMunicipality")
+    @PostMapping("/add/municipality")
     public void addMunicipality(@RequestParam String description) throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -69,7 +69,7 @@ public class MunicipalityManagerController {
         municipalityAdd.execute();
     }
 
-    @GetMapping("api/municipalityManager/view/all/activity/pending")
+    @GetMapping("/view/all/activity/pending")
     @Operation(summary = "Visualizza attività in attesa",
             description = "Restituisce una lista di attività in attesa con i relativi ID.")
     public ResponseEntity<ContentOrActivity> getActivityPending(){
@@ -100,7 +100,7 @@ public class MunicipalityManagerController {
         return ResponseEntity.ok(pending);
     }
 
-    @PutMapping("api/municipalityManager/approve/or/reject/activity")
+    @PutMapping("/approve/or/reject/activity")
     @Operation(summary = "Approva o rifiuta un'attività",
             description = "Approva o rifiuta un'attività in attesa. Usa uno degli ID disponibili da /getActivityPending.")
     public ResponseEntity<String> approveOrRejectActivity(
@@ -138,7 +138,7 @@ public class MunicipalityManagerController {
         return ResponseEntity.ok("Operazione eseguita con successo");
     }
 
-    @PutMapping("api/municipalityManager/approve/or/reject/promotion")
+    @PutMapping("/approve/or/reject/role/promotion")
     public ResponseEntity<String> approveOrRejectPromotion(
             @RequestParam long idPromotion,
             @Parameter(description = "Operazione da eseguire",
@@ -163,7 +163,7 @@ public class MunicipalityManagerController {
         return ResponseEntity.ok("Operazione eseguita con successo!");
     }
 
-    @GetMapping("/getPromotionRequests")
+    @GetMapping("/view/all/promotion/requests")
     public ResponseEntity<List<PromotionResponse>> getPromotionRequests(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
