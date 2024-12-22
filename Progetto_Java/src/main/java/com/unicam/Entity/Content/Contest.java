@@ -14,7 +14,7 @@ public class Contest extends Content{
     @Embedded
     private Time duration;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(
             name = "contest_partecipants",
             joinColumns = @JoinColumn(name = "contest_Id"),
