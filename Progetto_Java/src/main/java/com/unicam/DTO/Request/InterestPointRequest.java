@@ -23,7 +23,7 @@ public class InterestPointRequest {
     }
 
     public String getTitle() {
-        return title;
+        return title.toUpperCase(Locale.ROOT);
     }
 
     public String getDescription() {
@@ -31,6 +31,6 @@ public class InterestPointRequest {
     }
 
     public String getReference() {
-        return reference;
+        return reference.toUpperCase(Locale.ROOT);
     }
 }

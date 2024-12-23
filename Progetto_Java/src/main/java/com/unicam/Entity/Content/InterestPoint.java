@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "interest_point")
 public class InterestPoint extends Content{
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "position_Id", nullable = false)
     private GeoPoint reference;
     private InterestPointType type;
