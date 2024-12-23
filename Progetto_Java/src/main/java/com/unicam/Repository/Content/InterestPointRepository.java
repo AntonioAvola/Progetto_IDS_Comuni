@@ -23,4 +23,8 @@ public interface InterestPointRepository extends JpaRepository<InterestPoint, Lo
     boolean existsByIdAndAuthor(long idPoint, User author);
 
     boolean existsByIdAndMunicipality(long idContent, String municipality);
+
+    boolean existsByMunicipalityAndReferenceAndStatus(String municipality, GeoPoint geoPoint, ContentStatus contentStatus);
+
+    List<InterestPoint> findAllByReferenceAndStatus(GeoPoint reference, ContentStatus contentStatus);
 }

@@ -2,6 +2,7 @@ package com.unicam.Service.Content;
 
 import com.unicam.DTO.Response.InterestPointResponse;
 import com.unicam.Entity.Content.ContentStatus;
+import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.InterestPointRepository;
@@ -97,8 +98,15 @@ public class InterestPointService {
         else{
             point.setStatus(approved);
             this.repoInterest.save(point);
+            deletePOIPending(point.getReference());
         }
     }
+
+    private void deletePOIPending(GeoPoint reference) {
+        List<InterestPoint> list = this.repoInterest.findAllByReferenceAndStatus(reference, ContentStatus.PENDING);
+        this.repoInterest.deleteAll(list);
+    }
+
 
     private void removeInterestPointPending(InterestPoint point) {
         this.repoInterest.delete(point);
@@ -126,5 +134,14 @@ public class InterestPointService {
 
     public InterestPoint GetSinglePoint(long idPoint) {
         return this.repoInterest.findById(idPoint);
+    }
+
+    public boolean checkPointAlreadyApproved(String reference, String municipality) {
+        GeoPoint geoPoint = this.serviceGeo.getPoint(reference, municipality);
+        if(geoPoint == null){
+            return false;
+        }
+        return this.repoInterest.existsByMunicipalityAndReferenceAndStatus(municipality, geoPoint, ContentStatus.APPROVED);
+
     }
 }

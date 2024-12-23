@@ -52,9 +52,14 @@ public class InterestPointBuilder implements Builder {
     }
 
     public void buildReference(String name, List<Double> coordinates){
-        GeoPoint reference = new GeoPoint(name, this.interestPoint.getMunicipality(), coordinates.get(0), coordinates.get(1));
-        this.geoPointService.addGeoPoint(reference);
-        this.interestPoint.setReference(reference);
+        GeoPoint point = geoPointService.getPoint(name, interestPoint.getMunicipality());
+        if(point != null){
+             this.interestPoint.setReference(point);
+        }else{
+            GeoPoint reference = new GeoPoint(name, this.interestPoint.getMunicipality(), coordinates.get(0), coordinates.get(1));
+            this.geoPointService.addGeoPoint(reference);
+            this.interestPoint.setReference(reference);
+        }
     }
 
     public void buildType(InterestPointType type){

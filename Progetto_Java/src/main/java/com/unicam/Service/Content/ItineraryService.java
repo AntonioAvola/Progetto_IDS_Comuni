@@ -5,6 +5,7 @@ import com.unicam.DTO.Response.ItineraryResponse;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Itinerary;
+import com.unicam.Entity.Municipality;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.ItineraryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,8 +120,21 @@ public class ItineraryService {
             Itinerary itinerary = this.repoItinerary.findById(idContent);
             itinerary.setStatus(approved);
             this.repoItinerary.save(itinerary);
+            deleteItineraryPending(itinerary.getPath(), itinerary.getMunicipality());
         }
     }
+
+    public void deleteItineraryPending(List<InterestPoint> path, String municipality) {
+        List<Itinerary> list = this.repoItinerary.findByMunicipalityAndStatus(municipality, ContentStatus.PENDING);
+        for(Itinerary itinerary2 : list){
+            if(itinerary2.getPath().size() == path.size()){
+                if(itinerary2.getPath().containsAll(path)){
+                    this.repoItinerary.delete(itinerary2);
+                }
+            }
+        }
+    }
+
 
     public boolean checkMunicipality(long idContent, String municipality) {
         return this.repoItinerary.existsByIdAndMunicipality(idContent, municipality);

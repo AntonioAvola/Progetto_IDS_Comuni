@@ -6,6 +6,7 @@ import com.unicam.DTO.Response.InterestPointResponse;
 import com.unicam.Entity.CommandPattern.InterestPointCommand;
 import com.unicam.Entity.CommandPattern.ItineraryCommand;
 import com.unicam.Entity.Content.ContentStatus;
+import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.InterestPointType;
 import com.unicam.Entity.Role;
 import com.unicam.Entity.User;
@@ -88,7 +89,7 @@ public class ContributorController {
         List<Double> coordinates = proxy.getCoordinates(address + "," + currentMunicipality);
 
         //TODO controlla se esiste già il punto geolocalizzato, se esiste, lancia l'eccezione
-        if(this.geoPointService.checkGeoPointAlreadyExists(request.getReference(), municipality))
+        if(this.interestPointService.checkPointAlreadyApproved(request.getReference(), municipality))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Esiste già un punto di interesse per questo determinato punto geolocalizzato"); //errore 409 Conflict
 
         User user = this.userService.getUser(idUser);
@@ -103,6 +104,9 @@ public class ContributorController {
             close = null;
         }
         InterestPointCommand InterestPoint = new InterestPointCommand(request, user, open, close, type, interestPointService, geoPointService, status, coordinates);
+        if(role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())){
+            this.interestPointService.checkPointAlreadyApproved(request.getReference(), municipality);
+        }
         InterestPoint.execute();
 
         return ResponseEntity.ok("Punto di interesse aggiunto con successo");
@@ -141,6 +145,10 @@ public class ContributorController {
         User user = this.userService.getUser(idUser);
 
         ItineraryCommand Itinerary = new ItineraryCommand(request, itineraryService, interestPointService, user, ContentStatus.PENDING);
+        if(role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())){
+            List<InterestPoint> list = this.interestPointService.getList(request.getPath());
+            this.itineraryService.deleteItineraryPending(list, municipality);
+        }
         Itinerary.execute();
 
         return ResponseEntity.ok("Itinerario aggiunto con successo");

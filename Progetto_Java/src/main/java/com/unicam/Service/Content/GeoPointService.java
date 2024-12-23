@@ -24,9 +24,6 @@ public class GeoPointService {
 
     public GeoPoint getPoint(String reference, String municipality) {
         GeoPoint point = this.repoGeo.findByNameAndMunicipality(reference, municipality);
-        if(point == null){
-            throw new NullPointerException("Il punto non esiste");
-        }
         return point;
     }
 
