@@ -31,7 +31,7 @@ public class ContributorTest {
     }
 
     @Test
-    @WithMockUserDetails(username = "contributor1", idUser = 5,  municipality = "MILANO", roles = "CONTRIBUTOR")
+    @WithMockUserDetails(username = "contributor1", idUser = 5,  municipality = "MILANO", roles = "CONTRIBUTOR", visitedMunicipality = "MILANO")
     void testAddRequestPOISuccessful() throws Exception {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(APPLICATION_JSON) // Imposta il tipo di contenuto come JSON
@@ -47,7 +47,7 @@ public class ContributorTest {
 						"reference": "duomo"
 					}
 					""")) // Corpo della richiesta
-                .andExpect(status().isOk()) // Verifica che la risposta HTTP sia 200 OK
+                .andExpect(status().isOk()) //risposta HTTP 200 OK
                 .andExpect(content().string("Punto di interesse aggiunto con successo"));
 
         mockMvc.perform(post("/api/contributor/add/interestPoint")
@@ -64,12 +64,12 @@ public class ContributorTest {
 						"reference": "torre velasca"
 					}
 					""")) // Corpo della richiesta
-                .andExpect(status().isOk()) // Verifica che la risposta HTTP sia 200 OK
+                .andExpect(status().isOk()) //risposta HTTP 200 OK
                 .andExpect(content().string("Punto di interesse aggiunto con successo"));
     }
 
     @Test
-    @WithMockUserDetails(username = "authorizedContributor1", idUser = 6,  municipality = "MILANO", roles = "AUTHORIZED_CONTRIBUTOR")
+    @WithMockUserDetails(username = "authorizedContributor1", idUser = 6,  municipality = "MILANO", roles = "AUTHORIZED_CONTRIBUTOR", visitedMunicipality = "MILANO")
     void testAddPOISuccessful() throws Exception {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(APPLICATION_JSON)
@@ -85,12 +85,12 @@ public class ContributorTest {
 						"reference": "torre velasca"
 					}
 					""")) // Corpo della richiesta
-                .andExpect(status().isOk()) // Verifica che la risposta HTTP sia 200 OK
+                .andExpect(status().isOk()) //risposta HTTP 200 OK
                 .andExpect(content().string("Punto di interesse aggiunto con successo"));
     }
 
     @Test
-    @WithMockUserDetails(username = "authorizedContributor1", idUser = 6,  municipality = "MILANO", roles = "AUTHORIZED_CONTRIBUTOR")
+    @WithMockUserDetails(username = "authorizedContributor1", idUser = 6,  municipality = "MILANO", roles = "AUTHORIZED_CONTRIBUTOR", visitedMunicipality = "MILANO")
     void testAddPOIFailed() throws Exception {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(APPLICATION_JSON)
@@ -106,7 +106,7 @@ public class ContributorTest {
 						"reference": "teatro alla scala"
 					}
 					""")) // Corpo della richiesta
-                .andExpect(status().isConflict()) // Verifica che la risposta HTTP sia 200 OK
+                .andExpect(status().isConflict()) //risposta HTTP 409 Conflit
                 .andExpect(jsonPath("$.message").value("Esiste già un punto di interesse per questo determinato punto geolocalizzato"));
     }
 }

@@ -13,6 +13,7 @@ public class EventRequest {
     private LocalDateTime start;
     private LocalDateTime end;
 
+    public EventRequest(){}
     public EventRequest(String title, String description, String reference, LocalDateTime start, LocalDateTime end) {
         this.title = title.toUpperCase(Locale.ROOT);
         this.description = description;
@@ -22,7 +23,7 @@ public class EventRequest {
     }
 
     public String getTitle() {
-        return title;
+        return title.toUpperCase(Locale.ROOT);
     }
 
     public String getDescription() {
@@ -30,7 +31,7 @@ public class EventRequest {
     }
 
     public String getReference() {
-        return reference;
+        return reference.toUpperCase(Locale.ROOT);
     }
 
     public LocalDateTime getStart() {

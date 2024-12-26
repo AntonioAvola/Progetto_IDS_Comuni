@@ -11,6 +11,8 @@ public class ContestRequest {
     private LocalDateTime start;
     private LocalDateTime end;
 
+    public ContestRequest(){}
+
     public ContestRequest(String title, String description, String reward, LocalDateTime start, LocalDateTime end) {
         this.title = title.toUpperCase(Locale.ROOT);
         this.description = description;

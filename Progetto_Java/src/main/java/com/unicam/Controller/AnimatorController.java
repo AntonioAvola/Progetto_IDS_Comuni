@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("api/animator")
@@ -39,7 +40,7 @@ public class AnimatorController {
     private UserService userService;
 
     @PostMapping("/add/event")
-    public void Addevent(EventRequest request){
+    public ResponseEntity<String> Addevent(@RequestBody EventRequest request){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -59,7 +60,7 @@ public class AnimatorController {
         //TODO controllo ruolo
 
         //controllo presenza GeoPoint
-        if(!this.geoPointService.checkGeoPointAlreadyExists(request.getReference(),municipality))
+        if(!this.geoPointService.checkGeoPointAlreadyExists(request.getReference().toUpperCase(Locale.ROOT),municipality))
             throw new IllegalArgumentException("Il punto di riferimento non esiste");
 
         GeoPoint reference = this.geoPointService.getPoint(request.getReference(), municipality);
@@ -80,10 +81,11 @@ public class AnimatorController {
 
         EventCommand event = new EventCommand(request, eventService, geoPointService, user);
         event.execute();
+        return ResponseEntity.ok("Proposta di evento inviata con successo");
     }
 
     @PostMapping("/add/contest")
-    public void AddContest(ContestRequest request){
+    public ResponseEntity<String> AddContest(@RequestBody ContestRequest request){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -111,6 +113,7 @@ public class AnimatorController {
 
         ContestCommand contest = new ContestCommand(request, contestService, user);
         contest.execute();
+        return ResponseEntity.ok("Proposta di contest inviata con successo");
     }
 
     @GetMapping("/contest/closed")
