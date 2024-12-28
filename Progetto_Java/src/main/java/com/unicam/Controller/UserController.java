@@ -189,7 +189,6 @@ public class UserController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -216,7 +215,6 @@ public class UserController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -241,7 +239,6 @@ public class UserController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -270,7 +267,6 @@ public class UserController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -292,7 +288,6 @@ public class UserController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -314,7 +309,6 @@ public class UserController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -331,7 +325,6 @@ public class UserController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -349,7 +342,6 @@ public class UserController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();

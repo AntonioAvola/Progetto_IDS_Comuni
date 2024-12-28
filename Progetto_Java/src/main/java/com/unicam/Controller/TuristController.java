@@ -39,10 +39,8 @@ public class TuristController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
-        String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 

@@ -30,15 +30,6 @@ public class ContestService {
         this.repoContest.delete(contest);
     }
 
-
-    private boolean exists(Contest contest){
-        if(this.repoContest.existsByTitleAndMunicipality(contest.getTitle(), contest.getMunicipality())){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
     public boolean getAndRemoveContest(long idContest, User author) {
         if(!this.repoContest.existsByIdAndAuthor(idContest, author))
             return false;
@@ -90,10 +81,6 @@ public class ContestService {
         return response;
     }
 
-    public boolean checkMunicipality(long idContent, String municipality) {
-        return this.repoContest.existsByIdAndMunicipality(idContent, municipality);
-    }
-
     public void validateContest(long idContent, ContentStatus status) {
         if(status.equals(ContentStatus.REJECTED)) {
             this.removeContest(idContent);
@@ -106,10 +93,6 @@ public class ContestService {
         }
     }
 
-    /*public List<Contest> getByUser(User user) {
-        return this.repoContest.findAllByAuthor(user);
-    }*/
-
     public List<ContestResponse> getByUser(User user) {
         List<Contest> contests = this.repoContest.findAllByAuthor(user);
         return convertResponse(contests);
@@ -117,13 +100,6 @@ public class ContestService {
 
     public List<ContestClosedResponse> getContestNoWinner(String municipality, ActivityStatus finished) {
         List<Contest> contestsMunicipalityClosed = this.repoContest.findByMunicipalityAndActivityStatusAndWinnerName(municipality, finished, "");
-        /*List<Contest> noWinner = new ArrayList<>();
-        for(Contest contest : contestsMunicipalityClosed){
-            if(contest.getWinnerName().equals("")){
-                noWinner.add(contest);
-            }
-        }
-        return convertClosedResponse(noWinner);*/
         return convertClosedResponse(contestsMunicipalityClosed);
     }
 

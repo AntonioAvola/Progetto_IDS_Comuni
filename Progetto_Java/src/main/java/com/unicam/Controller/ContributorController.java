@@ -66,7 +66,6 @@ public class ContributorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -119,7 +118,6 @@ public class ContributorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -160,7 +158,6 @@ public class ContributorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -172,39 +169,4 @@ public class ContributorController {
 
         return ResponseEntity.ok(response);
     }
-
-    /*@DeleteMapping ("Api/Contributor/DeleteContent")
-    public ResponseEntity<String> DeleteContent(
-            @Parameter(description = "Tipo di contenuto",
-                    schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
-            @RequestParam(defaultValue = "INTEREST POINT") String type,
-            @RequestParam long idContent) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
-
-        String username = userDetails.getUsername();
-        String id = userDetails.getId();
-        long idUser = Long.parseLong(id);
-        String role = userDetails.getRole();
-        String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
-
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        User user = this.userService.getUser(idUser);
-
-        if (type.equals("INTEREST POINT")){
-            if(!this.interestPointService.getAndRemoveInterestPoint(idContent, user))
-                throw new IllegalArgumentException("Il punto di interesse non rientra tra i tuoi contenuti");
-        }
-        else {
-            if(this.itineraryService.getAndRemoveItinerary(idContent, user))
-                throw new IllegalArgumentException("L'itinerario non rientra tra i tuoi contenuti");
-        }
-        return ResponseEntity.ok("Eliminazione del contenuto eseguita con successo");
-    }*/
 }

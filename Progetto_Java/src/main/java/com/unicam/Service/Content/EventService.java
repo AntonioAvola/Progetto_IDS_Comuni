@@ -102,10 +102,6 @@ public class EventService {
         return response;
     }
 
-    public boolean checkMunicipality(long idContent, String municipality) {
-        return this.repoEvent.existsByIdAndMunicipality(idContent, municipality);
-    }
-
     public void validateEvent(long idContent, ContentStatus status) {
         if(status.equals(ContentStatus.REJECTED)) {
             this.removeEvent(idContent);
@@ -130,10 +126,6 @@ public class EventService {
             }
         }
     }
-
-    /*public List<Event> getByUser(User user) {
-        return this.repoEvent.findAllByAuthor(user);
-    }*/
 
     public List<EventResponse> getByUser(User user) {
         List<Event> events = this.repoEvent.findAllByAuthor(user);

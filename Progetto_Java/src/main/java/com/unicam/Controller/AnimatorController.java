@@ -46,7 +46,6 @@ public class AnimatorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -91,7 +90,6 @@ public class AnimatorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -122,7 +120,6 @@ public class AnimatorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -148,7 +145,6 @@ public class AnimatorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -173,7 +169,6 @@ public class AnimatorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -200,7 +195,6 @@ public class AnimatorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
@@ -218,40 +212,4 @@ public class AnimatorController {
 
         return ResponseEntity.ok(contestProgresses);
     }
-    /*@DeleteMapping("Api/Animator/DeleteActivity")
-    public ResponseEntity<String> DeleteActivity(
-            @Parameter(description = "Tipo di contenuto",
-                    schema = @Schema(type = "String", allowableValues = {"EVENT", "CONTEST"}))
-            @RequestParam(defaultValue = "EVENT") String type,
-            @RequestParam long idContent){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
-
-        String username = userDetails.getUsername();
-        String id = userDetails.getId();
-        long idUser = Long.parseLong(id);
-        String role = userDetails.getRole();
-        String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
-
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        //TODO controllo ruolo
-
-        User user = this.userService.getUser(idUser);
-
-        if(type.equals("EVENT")){
-            if(!this.eventService.getAndRemoveEvent(idContent, user))
-                throw new IllegalArgumentException("L'evento non rientra tra le proprie attività");
-        }
-        else{
-           if(!this.contestService.getAndRemoveContest(idContent, user))
-               throw new IllegalArgumentException("Il contest non rientra tra le proprie attività");
-        }
-        return ResponseEntity.ok("Eliminazione attività eseguita con successo");
-    }*/
 }
