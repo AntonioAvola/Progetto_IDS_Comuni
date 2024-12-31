@@ -14,16 +14,20 @@ import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.GeoPointService;
 import com.unicam.Service.Content.InterestPointService;
 import com.unicam.Service.Content.ItineraryService;
+import com.unicam.Service.Content.MediaService;
 import com.unicam.Service.ProxyOSM.ProxyOSM;
 import com.unicam.Service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
@@ -42,17 +46,24 @@ public class ContributorController {
     @Autowired
     private ItineraryService itineraryService;
     @Autowired
+    private MediaService mediaService;
+    @Autowired
     private UserService userService;
     @Autowired
     private ProxyOSM proxy;
 
-    @PostMapping("/add/interestPoint")
+    @PostMapping(value = "/add/interestPoint", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> AddInterestPoint(
             @Parameter(description = "Tipologia di punto di interesse",
                     schema = @Schema(type = "InterestPointType", allowableValues = {"MUSEUM", "HISTORICAL_MONUMENT",
                             "RESTAURANT", "HOTEL", "BED_AND_BREAKFAST", "PARK", "STATUE", "SQUARE"}))
             @RequestParam(defaultValue = "MUSEUM") InterestPointType type,
-            @RequestBody InterestPointRequest request,
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam String reference,
+            //@RequestBody InterestPointRequest request,
+            @Validated @RequestParam(value = "fileUploaded", required = false)
+            List<MultipartFile> fileUploaded,
             @Parameter(description = "Ora di inizio")
             @RequestParam(defaultValue = "00") String openHour,
             @Parameter(description = "Minuti di inizio")
@@ -82,6 +93,7 @@ public class ContributorController {
         // se CONTRIBUTOR AUTORIZZATO allora status = APPROVED;
         // se qualsiasi altri ruolo, allora eccezione
 
+        InterestPointRequest request = new InterestPointRequest(title, description, reference);
         String address = request.getReference();
         String currentMunicipality = URLEncoder.encode(municipality, StandardCharsets.UTF_8.toString());
         address = URLEncoder.encode(address, StandardCharsets.UTF_8.toString());
@@ -102,7 +114,7 @@ public class ContributorController {
             open = null;
             close = null;
         }
-        InterestPointCommand InterestPoint = new InterestPointCommand(request, user, open, close, type, interestPointService, geoPointService, status, coordinates);
+        InterestPointCommand InterestPoint = new InterestPointCommand(request, user, fileUploaded, open, close, type, interestPointService, geoPointService, mediaService, status, coordinates);
         if(role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())){
             this.interestPointService.checkPointAlreadyApproved(request.getReference(), municipality);
         }

@@ -17,11 +17,6 @@ public class Municipality {
     private long id;
     private String name;
 
-    /*@OneToOne
-    private GeoPoint referenceMax;
-    @OneToOne
-    private GeoPoint referenceMin;*/
-
     private double latitudeMin;
     private double latitudeMax;
     private double longitudeMin;

@@ -1,29 +1,25 @@
 package com.unicam.Entity.BuilderPattern;
 
-import com.unicam.Entity.Content.ContentStatus;
-import com.unicam.Entity.Content.GeoPoint;
-import com.unicam.Entity.Content.InterestPoint;
-import com.unicam.Entity.Content.InterestPointType;
+import com.unicam.Entity.Content.*;
 import com.unicam.Entity.User;
-import com.unicam.Repository.Content.GeoPointRepository;
 import com.unicam.Service.Content.GeoPointService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.unicam.Service.Content.MediaService;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.Time;
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
 
 public class InterestPointBuilder implements Builder {
 
     private InterestPoint interestPoint = new InterestPoint();
-
-    private GeoPointRepository geoPointRepository;
-
     private GeoPointService geoPointService;
+    private MediaService mediaService;
 
-    public InterestPointBuilder(GeoPointService geoPointService) {
+    public InterestPointBuilder(GeoPointService geoPointService,
+                                MediaService mediaService) {
         this.geoPointService = geoPointService;
+        this.mediaService = mediaService;
     }
 
     @Override
@@ -73,5 +69,15 @@ public class InterestPointBuilder implements Builder {
 
     public InterestPoint result(){
         return this.interestPoint;
+    }
+
+    public void buildFile(List<MultipartFile> fileUploaded) throws IOException {
+        for(MultipartFile file: fileUploaded){
+            if (file != null && !file.isEmpty()) {
+                Media media = new Media(file.getOriginalFilename(), file.getBytes(), file.getContentType());
+                this.mediaService.save(media);
+                this.interestPoint.setMedias(media); // Metodo per aggiungere contenuto all'entità
+            }
+        }
     }
 }

@@ -1,12 +1,7 @@
 package com.unicam.Entity.Content;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.unicam.Entity.User;
 import jakarta.persistence.*;
-import org.springframework.cglib.core.Local;
 
-import java.sql.Time;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +17,9 @@ public class InterestPoint extends Content{
     private LocalTime open;
     private LocalTime close;
     private List<Long> idUserFavorites = new ArrayList<>();
-
-    //TODO aggiungere i file multimediali
+    @ElementCollection
+    @Lob
+    private List<Media> medias = new ArrayList<>();
 
     public InterestPoint(){
         super();
@@ -67,5 +63,13 @@ public class InterestPoint extends Content{
 
     public void setClose(LocalTime close) {
         this.close = close;
+    }
+
+    public List<Media> getMedias() {
+        return medias;
+    }
+
+    public void setMedias(Media medias) {
+        this.medias.add(medias);
     }
 }
