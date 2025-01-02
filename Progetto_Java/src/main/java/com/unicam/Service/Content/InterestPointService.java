@@ -4,6 +4,7 @@ import com.unicam.DTO.Response.InterestPointResponse;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.Content.InterestPoint;
+import com.unicam.Entity.Content.Media;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.InterestPointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class InterestPointService {
     private ItineraryService serviceItinerary;
     @Autowired
     private EventService serviceEvent;
+    @Autowired
+    private MediaService mediaService;
 
     public InterestPointService(InterestPointRepository repoInterest) {
         this.repoInterest = repoInterest;
@@ -31,7 +34,6 @@ public class InterestPointService {
         this.repoInterest.save(point);
     }
 
-    //TODO vedere se metodo funzionante
     public void removeInterestPoint(long idPoint){
         InterestPoint point = this.repoInterest.findById(idPoint);
         this.serviceEvent.checkEvent(point.getReference());
@@ -97,13 +99,22 @@ public class InterestPointService {
 
     private void deletePOIPending(GeoPoint reference) {
         List<InterestPoint> list = this.repoInterest.findAllByReferenceAndStatus(reference, ContentStatus.PENDING);
+        List<Media> toBeDelete = new ArrayList<>();
+        for(InterestPoint point: list){
+            toBeDelete.addAll(point.getMedias());
+        }
         this.repoInterest.deleteAll(list);
+        this.mediaService.deleteMedias(toBeDelete);
     }
 
 
     private void removeInterestPointPending(InterestPoint point) {
+        List<Media> medias = new ArrayList<>(point.getMedias());
         this.repoInterest.delete(point);
-        this.serviceGeo.removeGeoPoint(point.getReference());
+        if(this.repoInterest.findAllByReferenceAndStatus(point.getReference(), ContentStatus.PENDING).isEmpty()){
+            this.serviceGeo.removeGeoPoint(point.getReference());
+        }
+        this.mediaService.deleteMedias(medias);
     }
 
     public boolean checkMunicipality(long idContent, String municipality) {

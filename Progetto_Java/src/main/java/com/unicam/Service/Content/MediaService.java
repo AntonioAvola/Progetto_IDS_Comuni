@@ -5,6 +5,8 @@ import com.unicam.Repository.Content.MediaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MediaService {
 
@@ -16,5 +18,15 @@ public class MediaService {
 
     public Media getMedia(long mediaId) {
         return this.mediaRepository.findById(mediaId);
+    }
+
+    public void removeMedia(long id){
+        this.mediaRepository.deleteById(id);
+    }
+
+    public void deleteMedias(List<Media> medias) {
+        for(Media media: medias){
+            removeMedia(media.getId());
+        }
     }
 }

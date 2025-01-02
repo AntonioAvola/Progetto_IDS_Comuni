@@ -84,13 +84,9 @@ public class CuratorController {
         //TODO controllo ruolo
 
         if(type.equals("INTEREST POINT")){
-            if(!this.interestPointService.checkMunicipality(idContent, municipality))
-                throw new IllegalArgumentException("Punto di interesse non appartenente al comune di " + municipality);
             this.interestPointService.approveOrRejectPoint(idContent, status);
         }
         else {
-            if(!this.itineraryService.checkMunicipality(idContent, municipality))
-                throw new IllegalArgumentException("Itinerario non appartenente al comune di " + municipality);
             this.itineraryService.approveOrRejectItinerary(idContent, status);
         }
         return ResponseEntity.ok("Operazione eseguita con successo");
