@@ -10,13 +10,16 @@ import com.unicam.Service.Content.*;
 import com.unicam.Service.MunicipalityService;
 import com.unicam.Service.PromotionService;
 import com.unicam.Service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -46,17 +49,17 @@ public class UserController {
     private ReviewService reviewService;
 
     @GetMapping("/get/all/municipalities")
-    public ResponseEntity <List<String>> GetMunicipality() {
+    @Operation(summary = "Visualizza tutti i comuni presenti nella piattaforma")
+    public ResponseEntity<List<String>> GetMunicipality() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -69,17 +72,17 @@ public class UserController {
     }
 
     @GetMapping("/get/own/contents")
-    public ResponseEntity <Map<String,List<?>>> GetOwnContents(){
+    @Operation(summary = "Visualizza solamente i propri contenuti, mostrando il relativo ID")
+    public ResponseEntity<Map<String,List<?>>> GetOwnContents(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
-        String username = userDetails.getUsername();
         String id = userDetails.getId();
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -90,25 +93,39 @@ public class UserController {
         Map<String, List<?>> contents = new HashMap<>();
 
         if (!municipality.equals(visitedMunicipality)){
-            //TODO chiamata al service delle recensioni
+            List<ReviewResponse> ownReviews = this.reviewService.getByUser(user, visitedMunicipality);
+            if(!ownReviews.isEmpty()){
+                contents.put( visitedMunicipality + " reviews", ownReviews);
+            }
         }
         else {
-            List <InterestPointResponse> OwnPOI = this.interestPointService.getByUser(user);
-            List <ItineraryResponse> OwnItinerary = this.itineraryService.getByUser(user);
-            contents.put("interestPoint", OwnPOI);
-            contents.put("itinerary", OwnItinerary);
-            List <EventResponse> OwnEvent = this.eventService.getByUser(user);
-            List <ContestResponse> OwnContest = this.contestService.getByUser(user);
-            contents.put("event", OwnEvent);
-            contents.put("contest", OwnContest);
+            List <InterestPointResponse> ownPOI = this.interestPointService.getByUser(user);
+            List <ItineraryResponse> ownItinerary = this.itineraryService.getByUser(user);
+            if(!ownPOI.isEmpty()){
+                contents.put("interestPoint", ownPOI);
+            }
+            if(!ownItinerary.isEmpty()){
+                contents.put("itinerary", ownItinerary);
+            }
+            List <EventResponse> ownEvent = this.eventService.getByUser(user);
+            List <ContestResponse> ownContest = this.contestService.getByUser(user);
+            if(!ownEvent.isEmpty()){
+                contents.put("event", ownEvent);
+            }
+            if(!ownContest.isEmpty()){
+                contents.put("contest", ownContest);
+            }
+        }
+        if(contents.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.OK, "Non hia inserito alcun contenuto, attività o recensione");
         }
         return ResponseEntity.ok(contents);
 
     }
 
-
-    //TODO implementare correttamente
     @DeleteMapping("/delete/own/content")
+    @Operation(summary = "Elimina un proprio contenuto",
+            description = "Elimina un tuo contenuto. Usa uno degli ID disponibili da /get/own/contents.")
     public ResponseEntity<String> DeleteContent(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY", "EVENT", "CONTEST"}))
@@ -124,7 +141,7 @@ public class UserController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -154,6 +171,7 @@ public class UserController {
     }
 
     @PostMapping("/role/promotion/request")
+    @Operation(summary = "Richiedi la promozione ad un ruolo differente dal tuo attuale")
     public ResponseEntity<String> PromotionRequest(
             @Parameter(description = "Ruolo",
                     schema = @Schema(type = "Role", allowableValues = {"CURATOR","CONTRIBUTOR",
@@ -170,11 +188,11 @@ public class UserController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         User user = this.userService.getUser(idUser);
         if(this.promotionService.checkPromotion(user)){
-            throw new IllegalArgumentException("La tua richiesta di promozione è ancora in attesa di validazione!");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "La tua richiesta di promozione è ancora in attesa di validazione!");
         }
         RolePromotion promotion = new RolePromotion(user, newRole, municipality, justification);
         this.promotionService.addPromotion(promotion);
@@ -183,6 +201,7 @@ public class UserController {
     }
 
     @GetMapping("/contest/available")
+    @Operation(summary = "Visualizza tutti i contest non ancora iniziati, a cui non si è ancora partecipato, con relativo ID")
     public ResponseEntity<List<ContestResponse>> getAllContestAvailable(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -193,7 +212,7 @@ public class UserController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -209,6 +228,9 @@ public class UserController {
     }
 
     @PutMapping("/partecipate/contest")
+    @Operation(summary = "Partecipa ad un contest",
+            description = "Partecipa ad un contest al momento disponibile. " +
+                    "Usa uno degli ID disponibili da /contest/available.")
     public ResponseEntity<String> partecipateContest(@RequestParam long idContest){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -219,7 +241,7 @@ public class UserController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -234,6 +256,7 @@ public class UserController {
 
 
     @GetMapping("/view/all/content/by/municipality")
+    @Operation(summary = "Visualizza tutti i contenuti nella piattaforma relativi al comune (approvati e segnalati), con relativo ID")
     public ResponseEntity<ContentOrActivity> viewAllContentByMunicipality(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -243,25 +266,40 @@ public class UserController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        List<InterestPointResponse> responsePOI = this.interestPointService.getPoint(visitedMunicipality, ContentStatus.APPROVED);
-        responsePOI.addAll(this.interestPointService.getPoint(visitedMunicipality, ContentStatus.REPORTED));
+        this.eventService.updateActivityStatus(LocalDateTime.now());
+        this.contestService.updateActivityStatus(LocalDateTime.now());
+
+        List<InterestPointWithReviewNum> responsePOI = this.interestPointService.getInterestPoint(visitedMunicipality, ContentStatus.APPROVED);
+        responsePOI.addAll(this.interestPointService.getInterestPoint(visitedMunicipality, ContentStatus.REPORTED));
         List<ItineraryResponse> responseItinerary = this.itineraryService.getItinerary(visitedMunicipality, ContentStatus.APPROVED);
         responseItinerary.addAll(this.itineraryService.getItinerary(visitedMunicipality, ContentStatus.REPORTED));
         List<EventResponse> responseEvent = this.eventService.getEvent(visitedMunicipality, ContentStatus.APPROVED);
         List<ContestResponse> responseContest = this.contestService.getContestAvailable(visitedMunicipality);
 
         ContentOrActivity contentOrActivity = new ContentOrActivity();
-        contentOrActivity.getContents().put("InterestPoint", responsePOI);
-        contentOrActivity.getContents().put("Itinerary", responseItinerary);
-        contentOrActivity.getContents().put("Event", responseEvent);
-        contentOrActivity.getContents().put("Contest", responseContest);
+        if(!responsePOI.isEmpty()){
+            contentOrActivity.getContents().put("InterestPoint", responsePOI);
+        }
+        if(!responseItinerary.isEmpty()){
+            contentOrActivity.getContents().put("Itinerary", responseItinerary);
+        }
+        if(!responseEvent.isEmpty()){
+            contentOrActivity.getContents().put("Event", responseEvent);
+        }
+        if(!responseContest.isEmpty()){
+            contentOrActivity.getContents().put("Contest", responseContest);
+        }
+        if(contentOrActivity.getContents().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti contenuti o attività inerenti al comune");
+        }
 
         return ResponseEntity.ok(contentOrActivity);
     }
 
     @PutMapping("/visited/municipality")
+    @Operation(summary = "Visita un comune")
     public ResponseEntity<String> visitedMunicipality(@RequestParam String newMunicipality){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -271,13 +309,16 @@ public class UserController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         this.userService.visitMunicipality(newMunicipality.toUpperCase(Locale.ROOT), idUser);
         return ResponseEntity.ok("Visita il comune eseguita con successo");
     }
 
     @GetMapping("/view/all/review/single/POI")
+    @Operation(summary = "Visualizza recensioni",
+            description = "Visualizza tutte le recensioni di uno specifico punto di interesse. " +
+                    "Usa uno degli ID disponibili da /view/all/content/by/municipality.")
     public ResponseEntity<ReviewPOI> reviewSinglePoint(@RequestParam long idPoint){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -287,11 +328,11 @@ public class UserController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         InterestPoint interestPoint = this.interestPointService.GetSinglePoint(idPoint);
 
-        List<ReviewResponse> reviews = this.reviewService.GetReviewSinglePoint(interestPoint);
+        List<ReviewPOIResponse> reviews = this.reviewService.GetReviewSinglePoint(interestPoint);
         ReviewPOI response = new ReviewPOI();
         response.setNamePOI(interestPoint.getTitle());
         response.setReference(interestPoint.getReference().getName());
@@ -300,6 +341,7 @@ public class UserController {
     }
 
     @GetMapping("/all/contests/I/participated/to")
+    @Operation(summary = "Visualizza tutti i contest a cui si è partecipato")
     public  ResponseEntity<List<Contest>> contestIPartecipated(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -309,13 +351,14 @@ public class UserController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         User user = this.userService.getUser(idUser);
         List<Contest> contestResponse = this.contestService.getContestPartecipated(user);
         return ResponseEntity.ok(contestResponse);
     }
     @DeleteMapping("/delete/account")
+    @Operation(summary = "Elimina il proprio account e tutti i contenuti associati")
     public ResponseEntity<String> deleteAccount(){
         //TODO chiamare il metodo del servizio dell'utente e passare l'id dell'utente
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -326,7 +369,7 @@ public class UserController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         this.userService.deleteAccount(idUser);
 

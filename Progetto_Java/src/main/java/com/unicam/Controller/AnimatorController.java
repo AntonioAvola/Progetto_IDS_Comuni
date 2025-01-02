@@ -16,6 +16,7 @@ import com.unicam.Service.Content.ContestService;
 import com.unicam.Service.Content.EventService;
 import com.unicam.Service.Content.GeoPointService;
 import com.unicam.Service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,10 @@ public class AnimatorController {
     @Autowired
     private UserService userService;
 
+    //TODO rivedere per il punto geolocalizzzato; se usare direttamente l'ID e quindi
+    // creare una API di visualizzazione di tutti i punti geolocalizzati che hanno un punto di interesse approvato
     @PostMapping("/add/event")
+    @Operation(summary = "Proponi un evento")
     public ResponseEntity<String> Addevent(@RequestBody EventRequest request){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -52,7 +56,7 @@ public class AnimatorController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -86,6 +90,7 @@ public class AnimatorController {
     }
 
     @PostMapping("/add/contest")
+    @Operation(summary = "Proponi un contest")
     public ResponseEntity<String> AddContest(@RequestBody ContestRequest request){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -96,7 +101,7 @@ public class AnimatorController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -118,6 +123,8 @@ public class AnimatorController {
     }
 
     @GetMapping("/contest/closed")
+    @Operation(summary = "Visualizza contest terminati",
+            description = "Visualizza solamente i contest terminati, a cui però non è ancora stato assegnato un vincitore.")
     public ResponseEntity<List<ContestClosedResponse>> getContestClosed(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -127,7 +134,7 @@ public class AnimatorController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -139,12 +146,15 @@ public class AnimatorController {
 
         List<ContestClosedResponse> closed = this.contestService.getContestNoWinner(municipality, ActivityStatus.FINISHED);
         if(closed.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non ci sono contest terminati");
+            throw new ResponseStatusException(HttpStatus.OK, "Al momento non ci sono contest terminati");
         }
         return ResponseEntity.ok(closed);
     }
 
     @GetMapping("/show/partecipants/of/contest")
+    @Operation(summary = "Visualizza partecipanti contest terminati",
+            description = "Visualizza la lista di tutti i partecipanti di un determinato contest terminato. " +
+                    "Usa gli ID disponibili da /contest/closed.")
     public ResponseEntity<ContestPartecipants> getPartecipantContest(@RequestParam long idContest){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -155,7 +165,7 @@ public class AnimatorController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -165,13 +175,16 @@ public class AnimatorController {
 
         List<Partecipants> partecipants = this.contestService.getPartecipants(idContest);
         if(partecipants.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Non ci sono partecipanti al contest");
+            throw new ResponseStatusException(HttpStatus.OK, "Non ci sono partecipanti al contest");
         }
         ContestPartecipants partecipantsContest = new ContestPartecipants(idContest, partecipants);
         return ResponseEntity.ok(partecipantsContest);
     }
 
     @PutMapping("/assign/winner")
+    @Operation(summary = "Assegna vincitore",
+            description = "Proclama un partecipante come vincitore del contest. " +
+                    "Usa gli ID disponibili rispettivamente da '/contest/closed' e '/show/partecipants/of/contest'.")
     public ResponseEntity<String> assignWinner(@RequestParam long idContest, @RequestParam long idPartecipant){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -182,7 +195,7 @@ public class AnimatorController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -198,6 +211,8 @@ public class AnimatorController {
     }
 
     @GetMapping("/contests/progress")
+    @Operation(summary = "Visualizza andamento contest",
+            description = "Visualizza lo stato di avanzamento di tutti i contest del proprio comune")
     public ResponseEntity<List<ContestProgress>> getContestsProgress(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -208,7 +223,7 @@ public class AnimatorController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;

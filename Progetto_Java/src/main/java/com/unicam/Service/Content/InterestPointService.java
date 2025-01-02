@@ -1,6 +1,7 @@
 package com.unicam.Service.Content;
 
 import com.unicam.DTO.Response.InterestPointResponse;
+import com.unicam.DTO.Response.InterestPointWithReviewNum;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.Content.InterestPoint;
@@ -25,6 +26,8 @@ public class InterestPointService {
     private EventService serviceEvent;
     @Autowired
     private MediaService mediaService;
+    @Autowired
+    private ReviewService reviewService;
 
     public InterestPointService(InterestPointRepository repoInterest) {
         this.repoInterest = repoInterest;
@@ -147,5 +150,21 @@ public class InterestPointService {
 
     public InterestPoint getPointById(long referencePOI) {
         return this.repoInterest.findById(referencePOI);
+    }
+
+    public List<InterestPointWithReviewNum> getInterestPoint(String municipality, ContentStatus status) {
+        List<InterestPoint> points = this.repoInterest.findByMunicipalityAndStatus(municipality, status);
+        return convertWithReviews(points);
+    }
+
+    private List<InterestPointWithReviewNum> convertWithReviews(List<InterestPoint> points) {
+        List<InterestPointWithReviewNum> response = new ArrayList<>();
+        for(InterestPoint point : points){
+            InterestPointWithReviewNum pointResponse = new InterestPointWithReviewNum(point.getId(), point.getTitle(),
+                    point.getDescription(), point.getReference().getName(), point.getOpen(), point.getClose());
+            pointResponse.setReviewCount(this.reviewService.getReviewsNum(point));
+            response.add(pointResponse);
+        }
+        return response;
     }
 }

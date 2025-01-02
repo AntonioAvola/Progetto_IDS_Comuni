@@ -17,6 +17,7 @@ import com.unicam.Service.Content.ItineraryService;
 import com.unicam.Service.Content.MediaService;
 import com.unicam.Service.ProxyOSM.ProxyOSM;
 import com.unicam.Service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,9 @@ public class ContributorController {
     private ProxyOSM proxy;
 
     @PostMapping(value = "/add/interestPoint", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Operation(summary = "Richiesta/Aggiunta punto di interesse",
+            description = "Se non c'è un orario di apertura e chiusura da definire, lasciare gli 00. " +
+                    "Aggiunta dei file multimediali opzionale")
     public ResponseEntity<String> AddInterestPoint(
             @Parameter(description = "Tipologia di punto di interesse",
                     schema = @Schema(type = "InterestPointType", allowableValues = {"MUSEUM", "HISTORICAL_MONUMENT",
@@ -80,7 +84,7 @@ public class ContributorController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -123,6 +127,9 @@ public class ContributorController {
     }
 
     @PostMapping("/add/itinerary")
+    @Operation(summary = "Richiesta/Aggiunta itinerario",
+            description = "Inserisci le informazioni inerenti all'itinerario che vuoi proporre. " +
+                    "Per i punti di interesse usa gli ID disponibili da /get/all/POI/of/own/municipality.")
     public ResponseEntity<String> AddItinerary(ItineraryRequest request) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -133,7 +140,7 @@ public class ContributorController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -164,6 +171,7 @@ public class ContributorController {
     }
 
     @GetMapping("/get/all/POI/of/own/municipality")
+    @Operation(summary = "Visualizza tutti i punti di interesse approvati del comune, con relativo ID")
     public ResponseEntity<List<InterestPointResponse>> getAllPOIofOwnMunicipality(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -173,10 +181,13 @@ public class ContributorController {
         long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
 
         List<InterestPointResponse> response = this.interestPointService.getPoint(municipality, ContentStatus.APPROVED);
+        if(response.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti punti di interesse");
+        }
 
         return ResponseEntity.ok(response);
     }

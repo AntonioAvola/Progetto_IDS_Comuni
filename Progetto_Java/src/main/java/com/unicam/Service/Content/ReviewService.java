@@ -1,34 +1,32 @@
 package com.unicam.Service.Content;
 
+import com.unicam.DTO.Response.ReviewPOIResponse;
 import com.unicam.DTO.Response.ReviewResponse;
 import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Media;
 import com.unicam.Entity.Content.Review;
+import com.unicam.Entity.User;
 import com.unicam.Repository.Content.ReviewRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ReviewService {
-    @Autowired
-    private InterestPointService interestPointService;
     private final ReviewRepository reviewRepository;
     public ReviewService(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
     }
-    public List<ReviewResponse> GetReviewSinglePoint(InterestPoint point) {
+    public List<ReviewPOIResponse> GetReviewSinglePoint(InterestPoint point) {
         List<Review> reviews = this.reviewRepository.findAllByReference(point);
         return convertResponse(reviews, point.getId());
     }
 
-    private List<ReviewResponse> convertResponse(List<Review> reviews, long pointId) {
-        List<ReviewResponse> listResponse = new ArrayList<>();
+    private List<ReviewPOIResponse> convertResponse(List<Review> reviews, long pointId) {
+        List<ReviewPOIResponse> listResponse = new ArrayList<>();
         for(Review review : reviews){
-            ReviewResponse response = new ReviewResponse(review.getTitle(), review.getDescription(), review.getAuthor().getUsername());
+            ReviewPOIResponse response = new ReviewPOIResponse(review.getTitle(), review.getDescription(), review.getAuthor().getUsername());
             List<Media> medias = review.getMedias();
             for(Media file: medias){
                 response.setFileUrl("/api/poi/" + pointId + "/media/" + file.getId());
@@ -42,4 +40,19 @@ public class ReviewService {
         this.reviewRepository.save(review);
     }
 
+    public int getReviewsNum(InterestPoint point) {
+        List<Review> reviews = this.reviewRepository.findAllByReference(point);
+        return reviews.size();
+    }
+
+    public List<ReviewResponse> getByUser(User user, String visitedMunicipality) {
+        List<Review> reviews = this.reviewRepository.findAllByMunicipalityAndAuthor(visitedMunicipality, user);
+        List<ReviewResponse> response = new ArrayList<>();
+        for(Review review : reviews){
+            ReviewResponse reviewResponse = new ReviewResponse(review.getTitle(), review.getDescription(),
+                    review.getAuthor().getUsername(), review.getReference().getTitle(), review.getReference().getReference().getName());
+            response.add(reviewResponse);
+        }
+        return response;
+    }
 }

@@ -1,14 +1,12 @@
 package com.unicam.DTO.Response;
 
-import com.unicam.Service.Content.ReviewService;
-
 import java.util.List;
 
 public class ReviewPOI {
 
     private String namePOI;
     private String reference;
-    private List<ReviewResponse> reviews;
+    private List<ReviewPOIResponse> reviews;
 
     public ReviewPOI(){}
 
@@ -20,11 +18,11 @@ public class ReviewPOI {
         this.namePOI = namePOI;
     }
 
-    public List<ReviewResponse> getReviews() {
+    public List<ReviewPOIResponse> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<ReviewResponse> reviews) {
+    public void setReviews(List<ReviewPOIResponse> reviews) {
         this.reviews = reviews;
     }
 

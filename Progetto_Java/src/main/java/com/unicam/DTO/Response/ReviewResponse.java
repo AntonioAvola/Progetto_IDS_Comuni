@@ -1,41 +1,28 @@
 package com.unicam.DTO.Response;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ReviewResponse extends ReviewPOIResponse{
 
-public class ReviewResponse {
-
-    private String author;
-    private String title;
-    private String description;
-    private List<String> fileUrl;
-
-    public ReviewResponse(String title,
-                          String description,
-                          String author){
-        this.title = title;
-        this.description = description;
-        this.author = author;
-        this.fileUrl = new ArrayList<>();
+    private String poi;
+    private String reference;
+    public ReviewResponse(String title, String description, String author, String poi, String reference) {
+        super(title, description, author);
+        this.poi = poi;
+        this.reference = reference;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getPoi() {
+        return poi;
     }
 
-    public String getTitle() {
-        return title;
+    public void setPoi(String poi) {
+        this.poi = poi;
     }
 
-    public String getDescription() {
-        return description;
+    public String getReference() {
+        return reference;
     }
 
-    public List<String> getFileUrl() {
-        return fileUrl;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl.add(fileUrl);
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 }

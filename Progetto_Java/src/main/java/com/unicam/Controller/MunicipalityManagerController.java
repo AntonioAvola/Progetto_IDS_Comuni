@@ -44,15 +44,18 @@ public class MunicipalityManagerController {
 
 
     @PostMapping("/add/municipality")
+    @Operation(summary = "Richiedi l'aggiunta del comune alla piattaforma")
     public void addMunicipality(@RequestParam String description) throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -77,9 +80,11 @@ public class MunicipalityManagerController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -97,14 +102,15 @@ public class MunicipalityManagerController {
             response.getContents().put("contest", contestPending);
         }
         if(response.getContents().isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non sono presenti contenuti segnalati");
+            throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti contenuti segnalati");
         }
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/approve/or/reject/activity")
-    @Operation(summary = "Approva o rifiuta un'attività",
-            description = "Approva o rifiuta un'attività in attesa. Usa uno degli ID disponibili da /getActivityPending.")
+    @Operation(summary = "Validazione attività",
+            description = "Approva o rifiuta un'attività in attesa. " +
+                    "Usa uno degli ID disponibili da /view/all/activity/pending.")
     public ResponseEntity<String> approveOrRejectActivity(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"EVENT", "CONTEST"}))
@@ -118,9 +124,11 @@ public class MunicipalityManagerController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -149,6 +157,9 @@ public class MunicipalityManagerController {
     }
 
     @PutMapping("/approve/or/reject/role/promotion")
+    @Operation(summary = "Validazione richieste di promozione",
+            description = "Accetta o rifiuta una richiesta di promozione del ruolo. " +
+                    "Usa uno degli ID disponibili da /view/all/promotion/requests.")
     public ResponseEntity<String> approveOrRejectPromotion(
             @RequestParam long idPromotion,
             @Parameter(description = "Operazione da eseguire",
@@ -159,9 +170,11 @@ public class MunicipalityManagerController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         String response = "Promozione rifiutata";
 
@@ -175,18 +188,21 @@ public class MunicipalityManagerController {
     }
 
     @GetMapping("/view/all/promotion/requests")
+    @Operation(summary = "Visualizza tutte le richieste di promozione del ruolo, con relativo ID")
     public ResponseEntity<List<PromotionResponse>> getPromotionRequests(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         List<PromotionResponse> responses = this.promotionService.getAllPromotionRequests(municipality);
         if(responses.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non sono presenti richieste di promozione del ruolo");
+            throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti richieste di promozione del ruolo");
         }
 
         return ResponseEntity.ok(responses);

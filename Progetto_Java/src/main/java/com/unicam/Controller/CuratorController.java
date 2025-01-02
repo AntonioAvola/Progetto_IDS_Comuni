@@ -40,9 +40,11 @@ public class CuratorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -60,14 +62,15 @@ public class CuratorController {
             response.getContents().put("itineray", itineraryPending);
         }
         if(response.getContents().isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non sono presenti contenuti in attesa di validazione");
+            throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti contenuti in attesa di validazione");
         }
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/approve/or/reject/content")
-    @Operation(summary = "Approva o rifiuta un contenuto",
-            description = "Approva o rifiuta un contenuto in attesa. Usa uno degli ID disponibili da /view/all/content/pending.")
+    @Operation(summary = "Validazione contenuto",
+            description = "Approva o rifiuta un contenuto in attesa. " +
+                    "Usa uno degli ID disponibili da /view/all/content/pending.")
     public ResponseEntity<String> ValidatePending(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
@@ -81,9 +84,11 @@ public class CuratorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
@@ -121,9 +126,11 @@ public class CuratorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         List <InterestPointResponse> points = this.interestPointService.getPoint(municipality, ContentStatus.REPORTED);
         List <ItineraryResponse> itineraries = this.itineraryService.getItinerary(municipality, ContentStatus.REPORTED);
@@ -135,14 +142,15 @@ public class CuratorController {
             response.getContents().put("Itinerary", itineraries);
         }
         if(response.getContents().isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non sono presenti contenuti segnalati");
+            throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti contenuti segnalati");
         }
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/approve/or/reject/report")
-    @Operation(summary = "Approva o rifiuta un contenuto segnalato",
-            description = "Approva o rifiuta un contenuto segnalato. Usa uno degli ID disponibili da /ViewAllReportedContent.")
+    @Operation(summary = "Validazione contenuto segnalato",
+            description = "Approva o rifiuta un contenuto segnalato. " +
+                    "Usa uno degli ID disponibili da /view/all/reported/contents.")
     public ResponseEntity<String> ValidateReported(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
@@ -156,9 +164,11 @@ public class CuratorController {
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;

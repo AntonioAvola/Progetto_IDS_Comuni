@@ -28,7 +28,7 @@ public class ReviewCommand implements Command {
         this.builder.buildReference(reference);
         this.builder.buildAuthor(author);
         this.builder.buildStatus(ContentStatus.APPROVED);
-        this.builder.buildMunicipality(author.getMunicipality());
+        this.builder.buildMunicipality(author.getVisitedMunicipality());
         if(fileUploaded != null){
             this.builder.buildFile(fileUploaded);
         }
