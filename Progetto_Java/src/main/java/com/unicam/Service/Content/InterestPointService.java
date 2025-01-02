@@ -144,4 +144,8 @@ public class InterestPointService {
         return this.repoInterest.existsByMunicipalityAndReferenceAndStatus(municipality, geoPoint, ContentStatus.APPROVED);
 
     }
+
+    public InterestPoint getPointById(long referencePOI) {
+        return this.repoInterest.findById(referencePOI);
+    }
 }

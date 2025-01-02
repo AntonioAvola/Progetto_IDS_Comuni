@@ -1,21 +1,27 @@
 package com.unicam.Controller;
 
+import com.unicam.Entity.CommandPattern.ReviewCommand;
 import com.unicam.Entity.Content.InterestPoint;
+import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
-import com.unicam.Service.Content.EventService;
-import com.unicam.Service.Content.InterestPointService;
-import com.unicam.Service.Content.ItineraryService;
+import com.unicam.Service.Content.*;
 import com.unicam.Service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/turist")
@@ -28,6 +34,10 @@ public class TuristController {
     private ItineraryService itineraryService;
     @Autowired
     private EventService eventService;
+    @Autowired
+    private ReviewService reviewService;
+    @Autowired
+    private MediaService mediaService;
 
     @PutMapping("/add/to/favorite")
     public ResponseEntity <String> AddToFavorite(
@@ -46,10 +56,70 @@ public class TuristController {
 
         if (type.equals("INTEREST POINT")) {
           this.interestPointService.addFavorite(idContent, idUser);
-        } else if (type.equals("ITINERARY")) {
+        }
+        else if (type.equals("ITINERARY")) {
             this.itineraryService.addFavorite(idContent, idUser);
-        } else
+        }
+        else {
             this.eventService.addFavorite(idContent, idUser);
-        return ResponseEntity.ok("Operazione eseguita con successo");
+        }
+        return ResponseEntity.ok("Contenuto aggiunto con successo ai preferiti");
+    }
+
+    @PutMapping("/reported")
+    public ResponseEntity <String> reportContent(
+            @Parameter(description = "Tipo di contenuto",
+                    schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
+            @RequestParam(defaultValue = "INTEREST POINT") String type,
+            @RequestParam long idContent) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        if(type.equals("INTEREST POINT")) {
+            this.interestPointService.reportPOI(idContent);
+            return ResponseEntity.ok("Punto di interesse segnalato con successo");
+        }
+        else {
+            this.itineraryService.reportItinerary(idContent);
+            return ResponseEntity.ok("Itinerario segnalato con successo");
+        }
+    }
+
+    @PutMapping(value = "/add/review", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> addReview(
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam long referencePOI,
+            @Validated @RequestParam(value = "fileUploaded", required = false)
+            List<MultipartFile> fileUploaded) throws IOException {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = userDetails.getVisitedMunicipality();
+
+        //TODO controllo che i due comuni siano differenti (essere turista)
+
+        User author = this.userService.getUser(idUser);
+
+        InterestPoint reference = this.interestPointService.getPointById(referencePOI);
+
+        ReviewCommand review = new ReviewCommand(title, description, author, reference, fileUploaded, reviewService, mediaService);
+        review.execute();
+
+        return ResponseEntity.ok("Recensione aggiunta con successo");
     }
 }

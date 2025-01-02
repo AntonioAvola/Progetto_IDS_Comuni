@@ -17,10 +17,12 @@ import com.unicam.Service.Content.EventService;
 import com.unicam.Service.Content.GeoPointService;
 import com.unicam.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,21 +62,21 @@ public class AnimatorController {
 
         //controllo presenza GeoPoint
         if(!this.geoPointService.checkGeoPointAlreadyExists(request.getReference().toUpperCase(Locale.ROOT),municipality))
-            throw new IllegalArgumentException("Il punto di riferimento non esiste");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Il punto di riferimento non esiste");
 
         GeoPoint reference = this.geoPointService.getPoint(request.getReference(), municipality);
 
         //controllo su inizio e fine
         LocalDateTime now = LocalDateTime.now();
         if(!this.eventService.checkDuration(request.getStart(), request.getEnd(), now))
-            throw new IllegalArgumentException("Inizio e Fine non conformi");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inizio e Fine non conformi");
 
         /**
          * controllare che sullo stesso punto non ci sia un evento già approvato
          * con cui si andrebbero ad accavallare quello proposto
          */
         if(this.eventService.checkOverlapDuration(request.getStart(), request.getEnd(), reference))
-            throw new IllegalArgumentException("Sovrapposizione durata con un evento già approvato per questo riferimento");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Sovrapposizione durata con un evento già approvato per questo riferimento");
 
         User user = this.userService.getUser(idUser);
 
@@ -105,12 +107,13 @@ public class AnimatorController {
         //controllo su inizio e fine
         LocalDateTime now = LocalDateTime.now();
         if(!this.contestService.checkDuration(request.getStart(), request.getEnd(), now))
-            throw new IllegalArgumentException("Inizio e Fine non conformi");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inizio e Fine non conformi");
 
         User user = this.userService.getUser(idUser);
 
         ContestCommand contest = new ContestCommand(request, contestService, user);
         contest.execute();
+
         return ResponseEntity.ok("Proposta di contest inviata con successo");
     }
 
@@ -135,6 +138,9 @@ public class AnimatorController {
         this.contestService.updateActivityStatus(LocalDateTime.now());
 
         List<ContestClosedResponse> closed = this.contestService.getContestNoWinner(municipality, ActivityStatus.FINISHED);
+        if(closed.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non ci sono contest terminati");
+        }
         return ResponseEntity.ok(closed);
     }
 
@@ -158,6 +164,9 @@ public class AnimatorController {
         //TODO controllo ruolo
 
         List<Partecipants> partecipants = this.contestService.getPartecipants(idContest);
+        if(partecipants.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Non ci sono partecipanti al contest");
+        }
         ContestPartecipants partecipantsContest = new ContestPartecipants(idContest, partecipants);
         return ResponseEntity.ok(partecipantsContest);
     }

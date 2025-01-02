@@ -15,10 +15,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,7 +61,7 @@ public class MunicipalityManagerController {
         //TODO controllo ruolo
 
         if(this.municipalityService.exists(municipality))
-            throw new UnsupportedOperationException("Il comune è già presente o è già stata inviata una richiesta");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Il comune è già presente o è già stata inviata una richiesta");
 
         MunicipalityDetails details = proxyOSM.getDetails(municipality);
         MunicipalityCommand municipalityAdd = new MunicipalityCommand(municipalityService, municipality, description, details);
@@ -87,11 +89,17 @@ public class MunicipalityManagerController {
 
         List<EventResponse> eventPending = this.eventService.getEvent(municipality, ContentStatus.PENDING);
         List<ContestResponse> contestPending = this.contestService.getContest(municipality, ContentStatus.PENDING);
-        ContentOrActivity pending = new ContentOrActivity();
-        pending.getContents().put("event", eventPending);
-        pending.getContents().put("contest", contestPending);
-
-        return ResponseEntity.ok(pending);
+        ContentOrActivity response = new ContentOrActivity();
+        if(!eventPending.isEmpty()){
+            response.getContents().put("event", eventPending);
+        }
+        if(!contestPending.isEmpty()){
+            response.getContents().put("contest", contestPending);
+        }
+        if(response.getContents().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non sono presenti contenuti segnalati");
+        }
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/approve/or/reject/activity")
@@ -122,11 +130,22 @@ public class MunicipalityManagerController {
 
         if(type.equals("EVENT")){
             this.eventService.validateEvent(idActivity, status);
+            if(status.equals(ContentStatus.APPROVED)){
+                return ResponseEntity.ok("Evento approvato con successo");
+            }
+            else{
+                return ResponseEntity.ok("Evento rifiutato");
+            }
         }
         else {
             this.contestService.validateContest(idActivity, status);
+            if(status.equals(ContentStatus.APPROVED)){
+                return ResponseEntity.ok("Contest approvato con successo");
+            }
+            else{
+                return ResponseEntity.ok("Contest rifiutato");
+            }
         }
-        return ResponseEntity.ok("Operazione eseguita con successo");
     }
 
     @PutMapping("/approve/or/reject/role/promotion")
@@ -144,11 +163,15 @@ public class MunicipalityManagerController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
+        String response = "Promozione rifiutata";
+
         if(status.equals(ContentStatus.APPROVED)){
             this.userService.updateRole(idPromotion);
+            response = "Promozione accettata";
         }
         this.promotionService.removePromotionRequest(idPromotion);
-        return ResponseEntity.ok("Operazione eseguita con successo!");
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/view/all/promotion/requests")
@@ -162,6 +185,9 @@ public class MunicipalityManagerController {
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
         List<PromotionResponse> responses = this.promotionService.getAllPromotionRequests(municipality);
+        if(responses.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non sono presenti richieste di promozione del ruolo");
+        }
 
         return ResponseEntity.ok(responses);
     }

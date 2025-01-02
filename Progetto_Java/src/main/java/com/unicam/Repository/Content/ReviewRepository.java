@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-//@Repository
-public interface ReviewRepository /**extends JpaRepository<Review, Long> */{
+@Repository
+public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByReference(InterestPoint interestPoint);
 }

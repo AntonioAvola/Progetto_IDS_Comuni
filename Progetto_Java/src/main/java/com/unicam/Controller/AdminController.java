@@ -7,10 +7,12 @@ import com.unicam.Service.MunicipalityService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -29,6 +31,9 @@ public class AdminController {
         String role = userDetails.getRole();
 
         List<MunicipalityResponse> responses = this.municipalityService.getMunicipalityRequests();
+        if(responses.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non sono presenti richieste di inserimento di nuovi comuni nella piattaforma");
+        }
 
         return ResponseEntity.ok(responses);
     }
@@ -47,7 +52,11 @@ public class AdminController {
         String role = userDetails.getRole();
 
         this.municipalityService.validateMunicipality(idMunicipality, status);
-
-        return ResponseEntity.ok("Operazione eseguita con successo");
+        if(status.equals(ContentStatus.APPROVED)){
+            return ResponseEntity.ok("Comune approvato con successo");
+        }
+        else{
+            return ResponseEntity.ok("Comune rifiutato con successo");
+        }
     }
 }

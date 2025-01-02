@@ -67,17 +67,17 @@ public class InterestPointBuilder implements Builder {
         this.interestPoint.setClose(close);
     }
 
-    public InterestPoint result(){
-        return this.interestPoint;
-    }
-
     public void buildFile(List<MultipartFile> fileUploaded) throws IOException {
         for(MultipartFile file: fileUploaded){
             if (file != null && !file.isEmpty()) {
                 Media media = new Media(file.getOriginalFilename(), file.getBytes(), file.getContentType());
                 this.mediaService.save(media);
-                this.interestPoint.setMedias(media); // Metodo per aggiungere contenuto all'entità
+                this.interestPoint.setMedias(media);
             }
         }
+    }
+
+    public InterestPoint result(){
+        return this.interestPoint;
     }
 }

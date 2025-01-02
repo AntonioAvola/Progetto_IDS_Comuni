@@ -61,7 +61,6 @@ public class ContributorController {
             @RequestParam String title,
             @RequestParam String description,
             @RequestParam String reference,
-            //@RequestBody InterestPointRequest request,
             @Validated @RequestParam(value = "fileUploaded", required = false)
             List<MultipartFile> fileUploaded,
             @Parameter(description = "Ora di inizio")

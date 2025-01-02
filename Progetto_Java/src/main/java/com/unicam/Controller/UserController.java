@@ -42,7 +42,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     private PromotionService promotionService;
-    //@Autowired
+    @Autowired
     private ReviewService reviewService;
 
     @GetMapping("/get/all/municipalities")
@@ -262,7 +262,7 @@ public class UserController {
     }
 
     @PutMapping("/visited/municipality")
-    public ResponseEntity <String> visitedMunicipality(@RequestParam String newMunicipality){
+    public ResponseEntity<String> visitedMunicipality(@RequestParam String newMunicipality){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
@@ -277,34 +277,8 @@ public class UserController {
         return ResponseEntity.ok("Visita il comune eseguita con successo");
     }
 
-    @PutMapping("/reported")
-    public ResponseEntity <String> reportContent(
-            @Parameter(description = "Tipo di contenuto",
-                    schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
-            @RequestParam(defaultValue = "INTEREST POINT") String type,
-            @RequestParam long idContent) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
-
-        String id = userDetails.getId();
-        long idUser = Long.parseLong(id);
-        String role = userDetails.getRole();
-        String municipality = userDetails.getMunicipality();
-        String visitedMunicipality = userDetails.getVisitedMunicipality();
-
-        if(type.equals("INTEREST POINT")) {
-            this.interestPointService.reportPOI(idContent);
-        }
-        else {
-            this.itineraryService.reportItinerary(idContent);
-        }
-        return ResponseEntity.ok("Segnalazione eseguita con successo");
-    }
-
     @GetMapping("/view/all/review/single/POI")
-    public ResponseEntity <List<Review>> ReviewSinglePoint(@RequestParam long idPoint){
+    public ResponseEntity<ReviewPOI> reviewSinglePoint(@RequestParam long idPoint){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
@@ -315,12 +289,18 @@ public class UserController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
-        List <Review> Response = this.reviewService.GetReviewSinglePoint(idPoint);
-        return ResponseEntity.ok(Response);
+        InterestPoint interestPoint = this.interestPointService.GetSinglePoint(idPoint);
+
+        List<ReviewResponse> reviews = this.reviewService.GetReviewSinglePoint(interestPoint);
+        ReviewPOI response = new ReviewPOI();
+        response.setNamePOI(interestPoint.getTitle());
+        response.setReference(interestPoint.getReference().getName());
+        response.setReviews(reviews);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/all/contests/I/participated/to")
-    public  ResponseEntity <List<Contest>> contestIPartecipated(){
+    public  ResponseEntity<List<Contest>> contestIPartecipated(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
@@ -332,7 +312,7 @@ public class UserController {
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
         User user = this.userService.getUser(idUser);
-        List <Contest> contestResponse = this.contestService.getContestPartecipated(user);
+        List<Contest> contestResponse = this.contestService.getContestPartecipated(user);
         return ResponseEntity.ok(contestResponse);
     }
     @DeleteMapping("/delete/account")

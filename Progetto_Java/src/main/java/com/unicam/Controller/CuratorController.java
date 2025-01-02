@@ -11,10 +11,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -50,16 +52,22 @@ public class CuratorController {
 
         List<InterestPointResponse> interestPointPending = this.interestPointService.getPoint(municipality, ContentStatus.PENDING);
         List<ItineraryResponse> itineraryPending = this.itineraryService.getItinerary(municipality, ContentStatus.PENDING);
-        ContentOrActivity pending = new ContentOrActivity();
-        pending.getContents().put("interest point", interestPointPending);
-        pending.getContents().put("itineray", itineraryPending);
-
-        return ResponseEntity.ok(pending);
+        ContentOrActivity response = new ContentOrActivity();
+        if(!interestPointPending.isEmpty()){
+            response.getContents().put("interest point", interestPointPending);
+        }
+        if(!itineraryPending.isEmpty()){
+            response.getContents().put("itineray", itineraryPending);
+        }
+        if(response.getContents().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non sono presenti contenuti in attesa di validazione");
+        }
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/approve/or/reject/content")
     @Operation(summary = "Approva o rifiuta un contenuto",
-            description = "Approva o rifiuta un contenuto in attesa. Usa uno degli ID disponibili da /getContentPending.")
+            description = "Approva o rifiuta un contenuto in attesa. Usa uno degli ID disponibili da /view/all/content/pending.")
     public ResponseEntity<String> ValidatePending(
             @Parameter(description = "Tipo di contenuto",
                     schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY"}))
@@ -85,14 +93,28 @@ public class CuratorController {
 
         if(type.equals("INTEREST POINT")){
             this.interestPointService.approveOrRejectPoint(idContent, status);
+            if(status.equals(ContentStatus.APPROVED)){
+                return ResponseEntity.ok("Punto di interesse approvato con successo");
+            }
+            else{
+                return ResponseEntity.ok("Punto di interesse rifiutato");
+            }
         }
         else {
             this.itineraryService.approveOrRejectItinerary(idContent, status);
+            if(status.equals(ContentStatus.APPROVED)){
+                return ResponseEntity.ok("Itinerario approvato con successo");
+            }
+            else{
+                return ResponseEntity.ok("Itinerario rifiutato");
+            }
         }
-        return ResponseEntity.ok("Operazione eseguita con successo");
     }
 
+
     @GetMapping("/view/all/reported/contents")
+    @Operation(summary = "Visualizza contenuti segnalati",
+            description = "Restituisce la lista di contenuti segnalati con i relativi ID.")
     public ResponseEntity <ContentOrActivity> ViewAllReportedContent(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -103,12 +125,19 @@ public class CuratorController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = userDetails.getVisitedMunicipality();
 
-        List <InterestPointResponse> Point = this.interestPointService.getPoint(municipality, ContentStatus.REPORTED);
-        List <ItineraryResponse> Itinerary = this.itineraryService.getItinerary(municipality, ContentStatus.REPORTED);
-        ContentOrActivity Response = new ContentOrActivity();
-        Response.getContents().put("InterestPoint", Point);
-        Response.getContents().put("Itinerary", Itinerary);
-        return ResponseEntity.ok(Response);
+        List <InterestPointResponse> points = this.interestPointService.getPoint(municipality, ContentStatus.REPORTED);
+        List <ItineraryResponse> itineraries = this.itineraryService.getItinerary(municipality, ContentStatus.REPORTED);
+        ContentOrActivity response = new ContentOrActivity();
+        if(!points.isEmpty()){
+            response.getContents().put("InterestPoint", points);
+        }
+        if(!itineraries.isEmpty()){
+            response.getContents().put("Itinerary", itineraries);
+        }
+        if(response.getContents().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Al momento non sono presenti contenuti segnalati");
+        }
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/approve/or/reject/report")
@@ -138,15 +167,22 @@ public class CuratorController {
         //TODO controllo ruolo
 
         if(type.equals("INTEREST POINT")){
-            if(!this.interestPointService.checkMunicipality(idContent, municipality))
-                throw new IllegalArgumentException("Punto di interesse non appartenente al comune di " + municipality);
             this.interestPointService.approveOrRejectPoint(idContent, status);
+            if(status.equals(ContentStatus.APPROVED)){
+                return ResponseEntity.ok("Punto di interesse approvato con successo");
+            }
+            else{
+                return ResponseEntity.ok("Punto di interesse rifiutato");
+            }
         }
         else {
-            if(!this.itineraryService.checkMunicipality(idContent, municipality))
-                throw new IllegalArgumentException("Itinerario non appartenente al comune di " + municipality);
             this.itineraryService.approveOrRejectItinerary(idContent, status);
+            if(status.equals(ContentStatus.APPROVED)){
+                return ResponseEntity.ok("Itinerario approvato con successo");
+            }
+            else{
+                return ResponseEntity.ok("Itinerario rifiutato");
+            }
         }
-        return ResponseEntity.ok("Operazione eseguita con successo");
     }
 }
