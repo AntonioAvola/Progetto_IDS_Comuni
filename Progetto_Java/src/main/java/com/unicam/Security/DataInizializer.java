@@ -2,13 +2,11 @@ package com.unicam.Security;
 
 import com.unicam.DTO.MunicipalityDetails;
 import com.unicam.DTO.Request.InterestPointRequest;
+import com.unicam.Entity.*;
 import com.unicam.Entity.Content.*;
-import com.unicam.Entity.Municipality;
-import com.unicam.Entity.Role;
-import com.unicam.Entity.Time;
-import com.unicam.Entity.User;
 import com.unicam.Repository.Content.*;
 import com.unicam.Repository.MunicipalityRepository;
+import com.unicam.Repository.PromotionRepository;
 import com.unicam.Repository.UserRepository;
 import com.unicam.Service.ProxyOSM.ProxyOSM;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,9 @@ public class DataInizializer  implements CommandLineRunner {
 
     @Autowired
     private ItineraryRepository itineraryRepository;
+
+    @Autowired
+    private PromotionRepository promotionRepository;
 
     @Autowired
     private EventRepository eventRepository;
@@ -85,7 +86,20 @@ public class DataInizializer  implements CommandLineRunner {
                 }
                 i += 1;
             }
+            createPromotionRequest();
         }
+    }
+
+    private void createPromotionRequest() {
+        User user = this.userRepository.findByUsername("animator1");
+        RolePromotion promotion = new RolePromotion(user, Role.CURATOR, user.getMunicipality(), "");
+
+        this.promotionRepository.save(promotion);
+
+        User user2 = this.userRepository.findByUsername("curator1");
+        RolePromotion promotion2 = new RolePromotion(user, Role.ANIMATOR, user.getMunicipality(), "");
+
+        this.promotionRepository.save(promotion2);
     }
 
     private void CreateContest(String name) {
@@ -229,8 +243,8 @@ public class DataInizializer  implements CommandLineRunner {
         itinerary2.setTitle("passeggiata");
         itinerary2.setDescription("passeggiata breve per il comune");
         itinerary2.setAuthor(authorAuthorized);
-        itinerary2.setStatus(ContentStatus.APPROVED);
-        itinerary2.setPath(List.of(pois.get(0), pois.get(3)));
+        itinerary2.setStatus(ContentStatus.REPORTED);
+        itinerary2.setPath(List.of(pois.get(0), pois.get(1)));
         this.itineraryRepository.save(itinerary2);
         System.out.println(name + ": itinerario " + itinerary2.getTitle() + " aggiunto con successo");
 
@@ -290,7 +304,10 @@ public class DataInizializer  implements CommandLineRunner {
                 else{
                     author = this.userRepository.findUserById(6);
                 }
-                status = ContentStatus.APPROVED;
+                if(i > 2){
+                    status = ContentStatus.REJECTED;
+                }else
+                    status = ContentStatus.APPROVED;
             }
             else{
                 if(city.equals("ROMA")){

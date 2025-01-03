@@ -40,7 +40,7 @@ public class AnimatorTest {
 				 {
 					"title": "stelle cadenti",
 					"description": "osservazione stelle cadenti",
-					"reference": "torre velasca",
+					"reference": 6,
 					"start": "2025-02-20T20:00:00",
 					"end": "2025-02-21T03:00:00"
 				}
