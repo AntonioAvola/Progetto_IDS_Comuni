@@ -9,7 +9,9 @@ import com.unicam.Entity.Municipality;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.ItineraryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +45,7 @@ public class ItineraryService {
     public void addFavorite(long idItnerary, long idUser){
         Itinerary itinerary = this.repoItinerary.findById(idItnerary);
         if(itinerary.getIdUserFavorites().contains(idUser))
-            throw new IllegalArgumentException("L'itinerario è già presente tra i preferiti");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "L'itinerario è già presente tra i preferiti");
         itinerary.getIdUserFavorites().add(idUser);
         this.repoItinerary.save(itinerary);
     }

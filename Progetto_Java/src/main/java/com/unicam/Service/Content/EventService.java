@@ -5,7 +5,10 @@ import com.unicam.Entity.Content.*;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ public class EventService {
     public void addFavorite(long idEvent, long idUser){
         Event event = this.repoEvent.findById(idEvent);
         if(event.getIdUserFavorites().contains(idUser))
-            throw new IllegalArgumentException("Evento già presente tra i preferiti");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Evento già presente tra i preferiti");
         event.getIdUserFavorites().add(idUser);
         this.repoEvent.save(event);
     }

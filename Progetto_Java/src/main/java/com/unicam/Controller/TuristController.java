@@ -44,7 +44,7 @@ public class TuristController {
     @Operation(summary = "Aggiungi ai preferiti",
             description = "Aggiunge un punto di interesse, un itinerario o un evento ai tuoi preferiti. " +
                     "Usa uno degli ID disponibili da /view/all/content/by/municipality.")
-    public ResponseEntity <String> AddToFavorite(
+    public ResponseEntity<String> AddToFavorite(
         @Parameter(description = "Tipo di contenuto",
             schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY", "EVENT"}))
         @RequestParam(defaultValue = "INTEREST POINT") String type,

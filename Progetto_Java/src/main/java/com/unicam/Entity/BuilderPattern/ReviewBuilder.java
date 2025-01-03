@@ -50,11 +50,9 @@ public class ReviewBuilder implements Builder{
 
     public void buildFile(List<MultipartFile> fileUploaded) throws IOException {
         for(MultipartFile file: fileUploaded){
-            if (file != null && !file.isEmpty()) {
-                Media media = new Media(file.getOriginalFilename(), file.getBytes(), file.getContentType());
-                this.mediaService.save(media);
-                this.review.setMedias(media); // Metodo per aggiungere contenuto all'entità
-            }
+            Media media = new Media(file.getOriginalFilename(), file.getBytes(), file.getContentType());
+            this.mediaService.save(media);
+            this.review.setMedias(media); // Metodo per aggiungere contenuto all'entità
         }
     }
 

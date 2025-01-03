@@ -10,7 +10,9 @@ import com.unicam.Entity.Content.Media;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.InterestPointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +63,7 @@ public class InterestPointService {
     public void addFavorite(long idInterestPoint, long idUser){
         InterestPoint point = this.repoInterest.findById(idInterestPoint);
         if(point.getIdUserFavorites().contains(idUser))
-            throw new IllegalArgumentException("Il punto di interesse è già tra i preferiti");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Il punto di interesse è già tra i preferiti");
         point.getIdUserFavorites().add(idUser);
         this.repoInterest.save(point);
 
