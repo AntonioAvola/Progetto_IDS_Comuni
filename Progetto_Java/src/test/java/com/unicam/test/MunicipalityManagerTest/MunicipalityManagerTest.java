@@ -60,7 +60,7 @@ public class MunicipalityManagerTest {
     @Test
     @WithMockUserDetails(username = "manager1", idUser = 2,  municipality = "MILANO", roles = "MUNICIPALITY_MANAGER", visitedMunicipality = "MILANO")
     public void PromotionRequest() throws Exception {
-        mockMvc.perform(put("/api/municipalityManager/approve/or/reject/promotion")
+        mockMvc.perform(put("/api/municipalityManager/approve/or/reject/role/promotion")
                         .param("idPromotion", "1")
                         .param("status", "APPROVED"))
                 .andExpect(status().isOk());

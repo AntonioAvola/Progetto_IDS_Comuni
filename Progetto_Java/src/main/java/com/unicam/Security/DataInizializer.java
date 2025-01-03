@@ -97,7 +97,7 @@ public class DataInizializer  implements CommandLineRunner {
         this.promotionRepository.save(promotion);
 
         User user2 = this.userRepository.findByUsername("curator1");
-        RolePromotion promotion2 = new RolePromotion(user, Role.ANIMATOR, user.getMunicipality(), "");
+        RolePromotion promotion2 = new RolePromotion(user2, Role.ANIMATOR, user.getMunicipality(), "");
 
         this.promotionRepository.save(promotion2);
     }
@@ -161,7 +161,7 @@ public class DataInizializer  implements CommandLineRunner {
     }
 
     private void CreateEvent(String name){
-        List<InterestPoint> pois = this.interestPointRepository.findByMunicipalityAndStatus(name, ContentStatus.APPROVED);
+        List<InterestPoint> pois = this.interestPointRepository.findByMunicipality(name);
         User animator;
         if(name.equals("ROMA")){
             animator = this.userRepository.findUserById(9);
@@ -218,7 +218,7 @@ public class DataInizializer  implements CommandLineRunner {
     }
     
     private void CreateItinerary(String name) {
-        List<InterestPoint> pois = this.interestPointRepository.findByMunicipalityAndStatus(name, ContentStatus.APPROVED);
+        List<InterestPoint> pois = this.interestPointRepository.findByMunicipality(name);
         User author;
         User authorAuthorized;
         if(name.equals("ROMA")){
@@ -244,7 +244,7 @@ public class DataInizializer  implements CommandLineRunner {
         itinerary2.setDescription("passeggiata breve per il comune");
         itinerary2.setAuthor(authorAuthorized);
         itinerary2.setStatus(ContentStatus.REPORTED);
-        itinerary2.setPath(List.of(pois.get(0), pois.get(1)));
+        itinerary2.setPath(List.of(pois.get(0), pois.get(3)));
         this.itineraryRepository.save(itinerary2);
         System.out.println(name + ": itinerario " + itinerary2.getTitle() + " aggiunto con successo");
 
@@ -304,7 +304,7 @@ public class DataInizializer  implements CommandLineRunner {
                 else{
                     author = this.userRepository.findUserById(6);
                 }
-                if(i > 2){
+                if(i > 1){
                     status = ContentStatus.REJECTED;
                 }else
                     status = ContentStatus.APPROVED;
