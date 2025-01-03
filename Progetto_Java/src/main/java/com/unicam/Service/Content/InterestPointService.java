@@ -1,5 +1,6 @@
 package com.unicam.Service.Content;
 
+import com.unicam.DTO.Response.GeoPointResponse;
 import com.unicam.DTO.Response.InterestPointResponse;
 import com.unicam.DTO.Response.InterestPointWithReviewNum;
 import com.unicam.Entity.Content.ContentStatus;
@@ -164,6 +165,20 @@ public class InterestPointService {
                     point.getDescription(), point.getReference().getName(), point.getOpen(), point.getClose());
             pointResponse.setReviewCount(this.reviewService.getReviewsNum(point));
             response.add(pointResponse);
+        }
+        return response;
+    }
+
+    public List<GeoPointResponse> getAllReference(String municipality) {
+        List<InterestPoint> list = this.repoInterest.findByMunicipalityAndStatus(municipality, ContentStatus.APPROVED);
+        List<GeoPoint> reference = new ArrayList<>();
+        List<GeoPointResponse> response = new ArrayList<>();
+        for(InterestPoint point : list){
+            reference.add(point.getReference());
+        }
+        for(GeoPoint point : reference){
+            GeoPointResponse geoPoint = new GeoPointResponse(point.getId(), point.getName());
+            response.add(geoPoint);
         }
         return response;
     }

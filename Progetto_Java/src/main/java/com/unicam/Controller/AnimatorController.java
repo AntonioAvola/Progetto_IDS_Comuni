@@ -2,10 +2,7 @@ package com.unicam.Controller;
 
 import com.unicam.DTO.Request.ContestRequest;
 import com.unicam.DTO.Request.EventRequest;
-import com.unicam.DTO.Response.ContestClosedResponse;
-import com.unicam.DTO.Response.ContestPartecipants;
-import com.unicam.DTO.Response.ContestProgress;
-import com.unicam.DTO.Response.Partecipants;
+import com.unicam.DTO.Response.*;
 import com.unicam.Entity.CommandPattern.ContestCommand;
 import com.unicam.Entity.CommandPattern.EventCommand;
 import com.unicam.Entity.Content.ActivityStatus;
@@ -15,6 +12,7 @@ import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.ContestService;
 import com.unicam.Service.Content.EventService;
 import com.unicam.Service.Content.GeoPointService;
+import com.unicam.Service.Content.InterestPointService;
 import com.unicam.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,8 @@ public class AnimatorController {
     @Autowired
     private GeoPointService geoPointService;
     @Autowired
+    private InterestPointService interestPointService;
+    @Autowired
     private UserService userService;
 
     //TODO rivedere per il punto geolocalizzzato; se usare direttamente l'ID e quindi
@@ -64,11 +64,7 @@ public class AnimatorController {
 
         //TODO controllo ruolo
 
-        //controllo presenza GeoPoint
-        if(!this.geoPointService.checkGeoPointAlreadyExists(request.getReference().toUpperCase(Locale.ROOT),municipality))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Il punto di riferimento non esiste");
-
-        GeoPoint reference = this.geoPointService.getPoint(request.getReference(), municipality);
+        GeoPoint reference = this.geoPointService.getById(request.getReference());
 
         //controllo su inizio e fine
         LocalDateTime now = LocalDateTime.now();
@@ -84,7 +80,7 @@ public class AnimatorController {
 
         User user = this.userService.getUser(idUser);
 
-        EventCommand event = new EventCommand(request, eventService, geoPointService, user);
+        EventCommand event = new EventCommand(request, eventService, geoPointService, user, reference);
         event.execute();
         return ResponseEntity.ok("Proposta di evento inviata con successo");
     }
@@ -236,4 +232,28 @@ public class AnimatorController {
 
         return ResponseEntity.ok(contestProgresses);
     }
+
+    @GetMapping("/getAllGeopoint")
+    public ResponseEntity<List<GeoPointResponse>> getAllGeoPoint(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
+
+        String id = userDetails.getId();
+        long idUser = Long.parseLong(id);
+        String role = userDetails.getRole();
+        String municipality = userDetails.getMunicipality();
+        String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
+
+        List<GeoPointResponse> list = this.interestPointService.getAllReference(municipality);
+
+        if(list.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.OK, "Non ci sono punti geolocalizzati");
+        }
+
+        return ResponseEntity.ok(list);
+    }
 }
+
+
+

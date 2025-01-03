@@ -4,6 +4,7 @@ import com.unicam.DTO.Request.EventRequest;
 import com.unicam.Entity.BuilderPattern.EventBuilder;
 import com.unicam.Entity.Content.ContentStatus;
 import com.unicam.Entity.Content.Event;
+import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Entity.User;
 import com.unicam.Service.Content.EventService;
 import com.unicam.Service.Content.GeoPointService;
@@ -19,7 +20,7 @@ public class EventCommand implements Command{
 
     private EventBuilder Builder;
 
-    public EventCommand(EventRequest eventRequest, EventService eventService, GeoPointService geoPointService, User author){
+    public EventCommand(EventRequest eventRequest, EventService eventService, GeoPointService geoPointService, User author, GeoPoint reference){
         this.eventService = eventService;
         this.geoPointService = geoPointService;
         this.Builder = new EventBuilder();
@@ -28,7 +29,7 @@ public class EventCommand implements Command{
         this.Builder.buildTitle(eventRequest.getTitle());
         this.Builder.buildDuration(eventRequest.getStart(), eventRequest.getEnd());
         this.Builder.buildMunicipality(author.getMunicipality());
-        this.Builder.buildReference(this.geoPointService.getPoint(eventRequest.getReference(), author.getMunicipality()));
+        this.Builder.buildReference(reference);
         this.Builder.buildStatus(ContentStatus.PENDING);
         this.event = this.Builder.result();
     }

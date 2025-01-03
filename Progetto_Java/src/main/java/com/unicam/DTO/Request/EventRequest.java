@@ -9,15 +9,15 @@ public class EventRequest {
 
     private String title;
     private String description;
-    private String reference;
+    private long  idReference;
     private LocalDateTime start;
     private LocalDateTime end;
 
     public EventRequest(){}
-    public EventRequest(String title, String description, String reference, LocalDateTime start, LocalDateTime end) {
+    public EventRequest(String title, String description, long idReference, LocalDateTime start, LocalDateTime end) {
         this.title = title.toUpperCase(Locale.ROOT);
         this.description = description;
-        this.reference = reference.toUpperCase(Locale.ROOT);
+        this.idReference = idReference;
         this.start = start;
         this.end = end;
     }
@@ -30,8 +30,8 @@ public class EventRequest {
         return description;
     }
 
-    public String getReference() {
-        return reference.toUpperCase(Locale.ROOT);
+    public long getReference() {
+        return idReference;
     }
 
     public LocalDateTime getStart() {

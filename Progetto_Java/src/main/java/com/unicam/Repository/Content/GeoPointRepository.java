@@ -9,4 +9,6 @@ public interface GeoPointRepository extends JpaRepository<GeoPoint, Long> {
     boolean existsByNameAndMunicipality(String name, String municipality);
 
     GeoPoint findByNameAndMunicipality(String reference, String municipality);
+
+    GeoPoint findById(long id);
 }

@@ -1,9 +1,12 @@
 package com.unicam.Service.Content;
 
+import com.unicam.DTO.Response.GeoPointResponse;
 import com.unicam.Entity.Content.GeoPoint;
 import com.unicam.Repository.Content.GeoPointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class GeoPointService {
@@ -30,4 +33,10 @@ public class GeoPointService {
     public boolean checkGeoPointAlreadyExists(String reference, String municipality) {
         return this.repoGeo.existsByNameAndMunicipality(reference, municipality);
     }
+
+
+    public GeoPoint getById(long id) {
+        return this.repoGeo.findById(id);
+    }
+
 }
