@@ -30,8 +30,6 @@ public class Municipality {
     private String country;
     private Long postCode;
 
-    //TODO aggiungere file multimediali
-
     public Municipality(){}
 
     public Municipality(String name, String description,

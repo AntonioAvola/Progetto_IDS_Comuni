@@ -16,4 +16,6 @@ public interface PromotionRepository extends JpaRepository<RolePromotion, Long> 
     boolean existsByUser(User user);
 
     List<RolePromotion> findAllByMunicipality(String municipality);
+
+    RolePromotion findByUser(User user);
 }

@@ -161,7 +161,8 @@ public class DataInizializer  implements CommandLineRunner {
     }
 
     private void CreateEvent(String name){
-        List<InterestPoint> pois = this.interestPointRepository.findByMunicipality(name);
+        List<InterestPoint> pois = this.interestPointRepository.findByMunicipalityAndStatus(name, ContentStatus.APPROVED);
+        pois.addAll(this.interestPointRepository.findByMunicipalityAndStatus(name, ContentStatus.REPORTED));
         User animator;
         if(name.equals("ROMA")){
             animator = this.userRepository.findUserById(9);
@@ -218,7 +219,8 @@ public class DataInizializer  implements CommandLineRunner {
     }
     
     private void CreateItinerary(String name) {
-        List<InterestPoint> pois = this.interestPointRepository.findByMunicipality(name);
+        List<InterestPoint> pois = this.interestPointRepository.findByMunicipalityAndStatus(name, ContentStatus.APPROVED);
+        pois.addAll(this.interestPointRepository.findByMunicipalityAndStatus(name, ContentStatus.REPORTED));
         User author;
         User authorAuthorized;
         if(name.equals("ROMA")){
@@ -236,6 +238,7 @@ public class DataInizializer  implements CommandLineRunner {
         itinerary1.setAuthor(authorAuthorized);
         itinerary1.setStatus(ContentStatus.APPROVED);
         itinerary1.setPath(List.of(pois.get(0), pois.get(1), pois.get(2)));
+        itinerary1.setMunicipality(name);
         this.itineraryRepository.save(itinerary1);
         System.out.println(name + ": itinerario " + itinerary1.getTitle() + " aggiunto con successo");
 
@@ -245,6 +248,7 @@ public class DataInizializer  implements CommandLineRunner {
         itinerary2.setAuthor(authorAuthorized);
         itinerary2.setStatus(ContentStatus.REPORTED);
         itinerary2.setPath(List.of(pois.get(0), pois.get(3)));
+        itinerary2.setMunicipality(name);
         this.itineraryRepository.save(itinerary2);
         System.out.println(name + ": itinerario " + itinerary2.getTitle() + " aggiunto con successo");
 
@@ -254,6 +258,7 @@ public class DataInizializer  implements CommandLineRunner {
         itinerary3.setAuthor(author);
         itinerary3.setStatus(ContentStatus.PENDING);
         itinerary3.setPath(List.of(pois.get(0), pois.get(2)));
+        itinerary3.setMunicipality(name);
         this.itineraryRepository.save(itinerary3);
         System.out.println(name + ": itinerario " + itinerary3.getTitle() + " aggiunta richiesta di inserimento");
 
@@ -263,6 +268,7 @@ public class DataInizializer  implements CommandLineRunner {
         itinerary4.setAuthor(author);
         itinerary4.setStatus(ContentStatus.PENDING);
         itinerary4.setPath(List.of(pois.get(1), pois.get(2)));
+        itinerary4.setMunicipality(name);
         this.itineraryRepository.save(itinerary4);
         System.out.println(name + ": itinerario " + itinerary4.getTitle() + " aggiunta richiesta di inserimento");
     }
@@ -305,7 +311,7 @@ public class DataInizializer  implements CommandLineRunner {
                     author = this.userRepository.findUserById(6);
                 }
                 if(i > 1){
-                    status = ContentStatus.REJECTED;
+                    status = ContentStatus.REPORTED;
                 }else
                     status = ContentStatus.APPROVED;
             }

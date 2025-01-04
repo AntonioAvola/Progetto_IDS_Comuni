@@ -7,6 +7,7 @@ import com.unicam.Entity.Content.Media;
 import com.unicam.Entity.Content.Review;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.ReviewRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +16,10 @@ import java.util.List;
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
+
+    @Autowired
+    private MediaService mediaService;
+
     public ReviewService(ReviewRepository reviewRepository) {
         this.reviewRepository = reviewRepository;
     }
@@ -54,5 +59,25 @@ public class ReviewService {
             response.add(reviewResponse);
         }
         return response;
+    }
+
+    public void checkReview(InterestPoint point) {
+        List<Review> reviews = this.reviewRepository.findAllByReference(point);
+        List<Media> medias = new ArrayList<>();
+        for(Review review: reviews){
+            medias.addAll(review.getMedias());
+        }
+        this.reviewRepository.deleteAll(reviews);
+        this.mediaService.deleteMedias(medias);
+    }
+
+    public void removeReviewUser(User user) {
+        List<Review> reviews = this.reviewRepository.findAllByAuthor(user);
+        List<Media> medias = new ArrayList<>();
+        for(Review review: reviews){
+            medias.addAll(review.getMedias());
+        }
+        this.reviewRepository.deleteAll(reviews);
+        this.mediaService.deleteMedias(medias);
     }
 }

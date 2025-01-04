@@ -24,6 +24,8 @@ public class InterestPointService {
     @Autowired
     private  GeoPointService serviceGeo;
     @Autowired
+    private EventService eventService;
+    @Autowired
     private ItineraryService serviceItinerary;
     @Autowired
     private EventService serviceEvent;
@@ -94,6 +96,11 @@ public class InterestPointService {
     public void approveOrRejectPoint(long idContent, ContentStatus approved) {
         InterestPoint point = this.repoInterest.findById(idContent);
         if(approved.equals(ContentStatus.REJECTED)) {
+            if(point.getStatus().equals(ContentStatus.REPORTED)){
+                this.reviewService.checkReview(point);
+                this.serviceItinerary.checkItinerary(point);
+                this.eventService.checkEvent(point.getReference());
+            }
             this.removeInterestPointPending(point);
         }
         else{
@@ -173,6 +180,8 @@ public class InterestPointService {
 
     public List<GeoPointResponse> getAllReference(String municipality) {
         List<InterestPoint> list = this.repoInterest.findByMunicipalityAndStatus(municipality, ContentStatus.APPROVED);
+        List<InterestPoint> reported = this.repoInterest.findByMunicipalityAndStatus(municipality, ContentStatus.REPORTED);
+        list.addAll(reported);
         List<GeoPoint> reference = new ArrayList<>();
         List<GeoPointResponse> response = new ArrayList<>();
         for(InterestPoint point : list){

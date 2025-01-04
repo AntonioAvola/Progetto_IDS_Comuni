@@ -36,11 +36,13 @@ public class UserService {
     private ItineraryService itineraryService;
 
     @Autowired
+    private ReviewService reviewService;
+
+    @Autowired
     private PromotionService promotionService;
 
     private JwtTokenProvider tokenProvider = new JwtTokenProvider();
 
-    //TODO inserire reviews
 
     public String login(String username, String password){
         checkCredentialsDB(username, password);
@@ -60,19 +62,15 @@ public class UserService {
         return tokenProvider.createToken(user);
     }
 
-    public void logout(){}
-
     public void deleteAccount(long id){
         User user = this.repoUser.findUserById(id);
-        contestService.removeContestUser(user);
-        eventService.removeEventUser(user);
-        itineraryService.removeItineraryUser(user);
-        interestPointService.removeInterestPointUser(user);
+        this.contestService.removeContestUser(user);
+        this.eventService.removeEventUser(user);
+        this.itineraryService.removeItineraryUser(user);
+        this.reviewService.removeReviewUser(user);
+        this.interestPointService.removeInterestPointUser(user);
+        this.promotionService.removePromotionUser(user);
         this.repoUser.delete(user);
-    }
-
-    public void addAccount(User user) {
-        this.repoUser.save(user);
     }
 
     public void nameEmailAlreadyExists(User user){
