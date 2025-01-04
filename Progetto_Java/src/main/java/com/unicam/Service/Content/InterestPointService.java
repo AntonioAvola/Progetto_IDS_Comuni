@@ -9,7 +9,6 @@ import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Media;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.InterestPointRepository;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -150,7 +149,7 @@ public class InterestPointService {
         return this.repoInterest.findById(idPoint);
     }
 
-    public boolean checkPointAlreadyApproved(String reference, String municipality) {
+    public boolean pointAlreadyApproved(String reference, String municipality) {
         GeoPoint geoPoint = this.serviceGeo.getPoint(reference, municipality);
         if(geoPoint == null){
             return false;

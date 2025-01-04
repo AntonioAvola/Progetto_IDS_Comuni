@@ -53,6 +53,8 @@ public class PromotionService {
 
     public void removePromotionUser(User user) {
         RolePromotion promotion = this.promotionRepository.findByUser(user);
-        this.promotionRepository.delete(promotion);
+        if(promotion != null) {
+            this.promotionRepository.delete(promotion);
+        }
     }
 }

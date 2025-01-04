@@ -103,8 +103,13 @@ public class ContributorController {
         List<Double> coordinates = proxy.getCoordinates(address + "," + currentMunicipality);
 
         //TODO controlla se esiste già il punto geolocalizzato, se esiste, lancia l'eccezione
-        if(this.interestPointService.checkPointAlreadyApproved(request.getReference(), municipality))
+        if(this.interestPointService.pointAlreadyApproved(request.getReference(), municipality))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Esiste già un punto di interesse per questo determinato punto geolocalizzato"); //errore 409 Conflict
+
+        if(role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())){
+            this.interestPointService.checkPointPending(request.getReference(), municipality);
+            status = ContentStatus.APPROVED;
+        }
 
         User user = this.userService.getUser(idUser);
         LocalTime open;
@@ -118,9 +123,7 @@ public class ContributorController {
             close = null;
         }
         InterestPointCommand InterestPoint = new InterestPointCommand(request, user, fileUploaded, open, close, type, interestPointService, geoPointService, mediaService, status, coordinates);
-        if(role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())){
-            this.interestPointService.checkPointPending(request.getReference(), municipality);
-        }
+
         InterestPoint.execute();
 
 
@@ -159,13 +162,19 @@ public class ContributorController {
 
         //TODO controllo dei punti
 
-        User user = this.userService.getUser(idUser);
-
-        ItineraryCommand Itinerary = new ItineraryCommand(request, itineraryService, interestPointService, user, ContentStatus.PENDING);
         if(role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())){
             List<InterestPoint> list = this.interestPointService.getList(request.getPath());
+            if(this.itineraryService.ItineraryAlreadyExists(list, municipality)){
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Esiste già questo itinerario");
+            }
             this.itineraryService.deleteItineraryPending(list, municipality);
+            status = ContentStatus.APPROVED;
         }
+
+        User user = this.userService.getUser(idUser);
+
+        ItineraryCommand Itinerary = new ItineraryCommand(request, itineraryService, interestPointService, user, status);
+
         Itinerary.execute();
 
         return ResponseEntity.ok("Itinerario aggiunto con successo");
@@ -186,6 +195,7 @@ public class ContributorController {
 
 
         List<InterestPointResponse> response = this.interestPointService.getPoint(municipality, ContentStatus.APPROVED);
+        response.addAll(this.interestPointService.getPoint(municipality, ContentStatus.REPORTED));
         if(response.isEmpty()){
             throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti punti di interesse");
         }

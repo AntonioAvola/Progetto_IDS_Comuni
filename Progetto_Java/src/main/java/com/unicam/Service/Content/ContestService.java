@@ -40,6 +40,17 @@ public class ContestService {
     public void removeContestUser(User user){
         List<Contest> contest = this.repoContest.findAllByAuthor(user);
         this.repoContest.deleteAll(contest);
+        deletePartecipant(user);
+    }
+
+    private void deletePartecipant(User user) {
+        List<Contest> contests = this.repoContest.findAll();
+        for(Contest contest: contests){
+            if(contest.getParticipants().contains(user)){
+                contest.getParticipants().remove(user);
+                this.repoContest.save(contest);
+            }
+        }
     }
 
     public boolean checkDuration(LocalDateTime start, LocalDateTime end, LocalDateTime now) {

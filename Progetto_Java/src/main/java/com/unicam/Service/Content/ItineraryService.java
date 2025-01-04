@@ -152,4 +152,15 @@ public class ItineraryService {
         itinerary.setStatus(ContentStatus.REPORTED);
         this.repoItinerary.save(itinerary);
     }
+
+    public boolean ItineraryAlreadyExists(List<InterestPoint> list, String municipality) {
+        List<Itinerary> itineraries = this.repoItinerary.findByMunicipalityAndStatus(municipality, ContentStatus.APPROVED);
+        itineraries.addAll(this.repoItinerary.findByMunicipalityAndStatus(municipality, ContentStatus.REPORTED));
+        for(Itinerary itinerary : itineraries){
+            if(itinerary.getPath().containsAll(list) && itinerary.getPath().size() == list.size()){
+                return true;
+            }
+        }
+        return false;
+    }
 }
