@@ -49,7 +49,8 @@ public class UserController {
     private ReviewService reviewService;
 
     @GetMapping("/get/all/municipalities")
-    @Operation(summary = "Visualizza tutti i comuni presenti nella piattaforma")
+    @Operation(summary = "Visualizza tutti i comuni presenti nella piattaforma",
+            description = "Visualizza la lista di tutti i comuni approvati nella piattaforma, restituendo il nome")
     public ResponseEntity<List<String>> GetMunicipality() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

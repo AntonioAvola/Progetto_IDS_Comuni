@@ -30,7 +30,7 @@ public class EventRequest {
         return description;
     }
 
-    public long getReference() {
+    public long getIdReference() {
         return idReference;
     }
 

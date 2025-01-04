@@ -25,7 +25,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("api/animator")
@@ -64,7 +63,7 @@ public class AnimatorController {
 
         //TODO controllo ruolo
 
-        GeoPoint reference = this.geoPointService.getById(request.getReference());
+        GeoPoint reference = this.geoPointService.getById(request.getIdReference());
 
         //controllo su inizio e fine
         LocalDateTime now = LocalDateTime.now();

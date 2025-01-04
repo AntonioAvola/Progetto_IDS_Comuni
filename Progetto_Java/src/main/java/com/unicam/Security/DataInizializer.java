@@ -62,6 +62,7 @@ public class DataInizializer  implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if(userRepository.count() == 0){
+            System.out.println("----------------------------------------------------");
             CreateSuperAdmin();
             System.out.println("----------------------------------------------------");
             int i = 1;
@@ -72,7 +73,9 @@ public class DataInizializer  implements CommandLineRunner {
                 CreateContributor(name, i);
                 CreateAuthorizedContributor(name, i);
                 System.out.println("----------------------------------------------------");
-                CreateMunicipalityRequest(name);
+                if(!name.equals("FIRENZE")){
+                    CreateMunicipalityRequest(name);
+                }
                 System.out.println("----------------------------------------------------");
                 if(name.equals("MILANO") || name.equals("ROMA")){
                     CreatePOI(name);
@@ -95,11 +98,13 @@ public class DataInizializer  implements CommandLineRunner {
         RolePromotion promotion = new RolePromotion(user, Role.CURATOR, user.getMunicipality(), "");
 
         this.promotionRepository.save(promotion);
+        System.out.println(user.getMunicipality() + "; " + user.getUsername() + ": Richiesta promozione ruolo con successo");
 
         User user2 = this.userRepository.findByUsername("curator1");
         RolePromotion promotion2 = new RolePromotion(user2, Role.ANIMATOR, user.getMunicipality(), "");
 
         this.promotionRepository.save(promotion2);
+        System.out.println(user2.getMunicipality() + "; " + user2.getUsername() + ": Richiesta promozione ruolo con successo");
     }
 
     private void CreateContest(String name) {
@@ -190,7 +195,7 @@ public class DataInizializer  implements CommandLineRunner {
         event2.setMunicipality(name);
         event2.setAuthor(animator);
         event2.setStatus(ContentStatus.APPROVED);
-        event2.setDuration(new Time(LocalDateTime.parse("2024-12-20T12:00:00"), LocalDateTime.parse("2024-12-30T15:00:00")));
+        event2.setDuration(new Time(LocalDateTime.parse("2025-01-02T12:00:00"), LocalDateTime.parse("2025-01-10T15:00:00")));
         event2.setActivityStatus(ActivityStatus.STARTED);
         this.eventRepository.save(event2);
         System.out.println(name + ": evento " + event2.getTitle() + " aggiunto con successo");

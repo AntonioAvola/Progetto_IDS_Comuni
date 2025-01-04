@@ -4,6 +4,7 @@ import com.unicam.DTO.MunicipalityDetails;
 import com.unicam.DTO.Response.*;
 import com.unicam.Entity.CommandPattern.MunicipalityCommand;
 import com.unicam.Entity.Content.ContentStatus;
+import com.unicam.Entity.Role;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.ContestService;
 import com.unicam.Service.Content.EventService;
@@ -45,7 +46,7 @@ public class MunicipalityManagerController {
 
     @PostMapping("/add/municipality")
     @Operation(summary = "Richiedi l'aggiunta del comune alla piattaforma")
-    public void addMunicipality(@RequestParam String description) throws IOException {
+    public ResponseEntity<String> addMunicipality(@RequestParam String description) throws IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -69,6 +70,8 @@ public class MunicipalityManagerController {
         MunicipalityDetails details = proxyOSM.getDetails(municipality);
         MunicipalityCommand municipalityAdd = new MunicipalityCommand(municipalityService, municipality, description, details);
         municipalityAdd.execute();
+
+        return ResponseEntity.ok("Richiesta di inserimento del comune di " + municipality + " inviata con successo");
     }
 
     @GetMapping("/view/all/activity/pending")
