@@ -132,16 +132,16 @@ public class ContestService {
         List<ContestProgress> progresses = new ArrayList<>();
         for(Contest contest : list){
             if(contest.getActivityStatus().equals(ActivityStatus.WAITING)) {
-                progresses.add(new ContestProgress(contest.getId(), contest.getTitle(), "--- Non iniziato ---"));
+                progresses.add(new ContestProgress(contest.getId(), contest.getMunicipality(), contest.getTitle(), contest.getReward(), "--- Non iniziato ---"));
             }
             else if(contest.getActivityStatus().equals(ActivityStatus.STARTED)){
-                progresses.add(new ContestProgress(contest.getId(), contest.getTitle(), "--- In corso ---"));
+                progresses.add(new ContestProgress(contest.getId(), contest.getMunicipality(), contest.getTitle(), contest.getReward(), "--- In corso ---"));
             }
             else if (contest.getActivityStatus().equals(ActivityStatus.FINISHED) && contest.getWinnerName().equals("")){
-                progresses.add(new ContestFinished(contest.getId(), contest.getTitle(), "--- Terminato ---", "--- Vincitore non assegnato ---"));
+                progresses.add(new ContestFinished(contest.getId(), contest.getMunicipality(), contest.getTitle(), contest.getReward(), "--- Terminato ---", "--- Vincitore non assegnato ---"));
             }
             else{
-                progresses.add(new ContestFinished(contest.getId(), contest.getTitle(), "--- Terminato ---", contest.getWinnerName()));
+                progresses.add(new ContestFinished(contest.getId(), contest.getMunicipality(), contest.getTitle(), contest.getReward(), "--- Terminato ---", contest.getWinnerName()));
             }
         }
         return progresses;
@@ -158,12 +158,37 @@ public class ContestService {
         return convertResponse(contest);
     }
 
-    public List<Contest> getContestPartecipated(User user) {
+    /*public List<Contest> getContestPartecipated(User user) {
         List <Contest> contest = this.repoContest.findByMunicipality(user.getMunicipality());
         List <Contest> contestResponse = new ArrayList<>();
         for (Contest found : contest) {
             if(found.getParticipants().contains(user)){
                 contestResponse.add(found);
+            }
+        }
+        return contestResponse;
+    }*/
+
+    public List<ContestProgress> getContestPartecipated(User user) {
+        List<Contest> listContestApproved = this.repoContest.findByStatus(ContentStatus.APPROVED);
+        List <ContestProgress> contestResponse = new ArrayList<>();
+        for (Contest contest : listContestApproved) {
+            if(contest.getParticipants().contains(user)){
+                if(contest.getActivityStatus().equals(ActivityStatus.WAITING)) {
+                    contestResponse.add(new ContestProgress(contest.getId(), contest.getMunicipality(), contest.getTitle(), contest.getReward(), "--- Non iniziato ---"));
+                }
+                else if(contest.getActivityStatus().equals(ActivityStatus.STARTED)){
+                    contestResponse.add(new ContestProgress(contest.getId(), contest.getMunicipality(), contest.getTitle(), contest.getReward(), "--- In corso ---"));
+                }
+                else if(contest.getActivityStatus().equals(ActivityStatus.FINISHED) && contest.getWinnerName().equals("")){
+                    contestResponse.add(new ContestFinished(contest.getId(), contest.getMunicipality(), contest.getTitle(), contest.getReward(), "--- Terminato ---", "--- Vincitore non assegnato ---"));
+                }
+                else if(contest.getActivityStatus().equals(ActivityStatus.FINISHED) && contest.getWinnerName().equals(user.getUsername())){
+                    contestResponse.add(new ContestFinished(contest.getId(), contest.getMunicipality(), contest.getTitle(), contest.getReward(), "--- Terminato ---", "--- Congratulazioni!!!! Hai vinto ---"));
+                }
+                else {
+                    contestResponse.add(new ContestFinished(contest.getId(), contest.getMunicipality(), contest.getTitle(), contest.getReward(), "--- Terminato ---", "--- Non hai vinto ---"));
+                }
             }
         }
         return contestResponse;

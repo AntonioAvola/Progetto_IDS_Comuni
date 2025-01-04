@@ -119,9 +119,10 @@ public class ContributorController {
         }
         InterestPointCommand InterestPoint = new InterestPointCommand(request, user, fileUploaded, open, close, type, interestPointService, geoPointService, mediaService, status, coordinates);
         if(role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())){
-            this.interestPointService.checkPointAlreadyApproved(request.getReference(), municipality);
+            this.interestPointService.checkPointPending(request.getReference(), municipality);
         }
         InterestPoint.execute();
+
 
         return ResponseEntity.ok("Punto di interesse aggiunto con successo");
     }

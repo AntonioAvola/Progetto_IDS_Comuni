@@ -9,6 +9,7 @@ import com.unicam.Entity.Content.InterestPoint;
 import com.unicam.Entity.Content.Media;
 import com.unicam.Entity.User;
 import com.unicam.Repository.Content.InterestPointRepository;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -154,7 +155,8 @@ public class InterestPointService {
         if(geoPoint == null){
             return false;
         }
-        return this.repoInterest.existsByMunicipalityAndReferenceAndStatus(municipality, geoPoint, ContentStatus.APPROVED);
+        return (this.repoInterest.existsByMunicipalityAndReferenceAndStatus(municipality, geoPoint, ContentStatus.APPROVED)
+                || this.repoInterest.existsByMunicipalityAndReferenceAndStatus(municipality, geoPoint, ContentStatus.REPORTED));
 
     }
 
@@ -192,5 +194,24 @@ public class InterestPointService {
             response.add(geoPoint);
         }
         return response;
+    }
+
+    public void checkPointPending(String reference, String municipality) {
+        GeoPoint referencePoint = this.serviceGeo.getPoint(reference, municipality);
+        List<InterestPoint> points = new ArrayList<>();
+        if(referencePoint != null){
+            points.addAll(this.repoInterest.findAllByReferenceAndStatus(referencePoint, ContentStatus.PENDING));
+        }
+        if(!points.isEmpty()){
+            for(InterestPoint point : points){
+                this.removeOnlyInterestPoint(point);
+            }
+        }
+    }
+
+    private void removeOnlyInterestPoint(InterestPoint point) {
+        List<Media> medias = new ArrayList<>(point.getMedias());
+        this.repoInterest.delete(point);
+        this.mediaService.deleteMedias(medias);
     }
 }

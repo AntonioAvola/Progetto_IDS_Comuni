@@ -4,8 +4,8 @@ public class ContestFinished extends ContestProgress{
 
     private String winner;
 
-    public ContestFinished(long id, String title, String status, String winner) {
-        super(id, title, status);
+    public ContestFinished(long id, String municipality, String title, String reward, String status, String winner) {
+        super(id, municipality, title, reward, status);
         this.winner = winner;
     }
 

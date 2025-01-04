@@ -342,7 +342,7 @@ public class UserController {
 
     @GetMapping("/all/contests/I/participated/to")
     @Operation(summary = "Visualizza tutti i contest a cui si è partecipato")
-    public  ResponseEntity<List<Contest>> contestIPartecipated(){
+    public  ResponseEntity<List<ContestProgress>> contestIPartecipated(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
@@ -354,8 +354,8 @@ public class UserController {
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
         User user = this.userService.getUser(idUser);
-        List<Contest> contestResponse = this.contestService.getContestPartecipated(user);
-        return ResponseEntity.ok(contestResponse);
+        List<ContestProgress> response = this.contestService.getContestPartecipated(user);
+        return ResponseEntity.ok(response);
     }
     @DeleteMapping("/delete/account")
     @Operation(summary = "Elimina il proprio account e tutti i contenuti associati")
