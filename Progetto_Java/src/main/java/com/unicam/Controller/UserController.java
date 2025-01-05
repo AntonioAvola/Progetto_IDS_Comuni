@@ -129,7 +129,7 @@ public class UserController {
             description = "Elimina un tuo contenuto. Usa uno degli ID disponibili da /get/own/contents.")
     public ResponseEntity<String> DeleteContent(
             @Parameter(description = "Tipo di contenuto",
-                    schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY", "EVENT", "CONTEST", "REVIEW"}))
+                    schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY", "EVENT", "CONTEST"}))
             @RequestParam(defaultValue = "INTEREST POINT") String type,
             @RequestParam long idContent) {
 
@@ -161,11 +161,8 @@ public class UserController {
         else if(type.equals("EVENT")){
             this.eventService.removeEvent(idContent);
         }
-        else if(type.equals("CONTEST")){
+        else {
             this.contestService.removeContest(idContent);
-        }
-        else{
-            this.reviewService.getAndRemoveReview(idContent);
         }
         return ResponseEntity.ok("Eliminazione del contenuto eseguita con successo");
     }
@@ -280,16 +277,16 @@ public class UserController {
 
         ContentOrActivity contentOrActivity = new ContentOrActivity();
         if(!responsePOI.isEmpty()){
-            contentOrActivity.getContents().put("InterestPoint", responsePOI);
+            contentOrActivity.getContents().put("interest point", responsePOI);
         }
         if(!responseItinerary.isEmpty()){
-            contentOrActivity.getContents().put("Itinerary", responseItinerary);
+            contentOrActivity.getContents().put("itinerary", responseItinerary);
         }
         if(!responseEvent.isEmpty()){
-            contentOrActivity.getContents().put("Event", responseEvent);
+            contentOrActivity.getContents().put("event", responseEvent);
         }
         if(!responseContest.isEmpty()){
-            contentOrActivity.getContents().put("Contest", responseContest);
+            contentOrActivity.getContents().put("contest", responseContest);
         }
         if(contentOrActivity.getContents().isEmpty()){
             throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti contenuti o attività inerenti al comune");

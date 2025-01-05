@@ -81,7 +81,7 @@ public class AnimatorTest {
 				"start": "2025-02-24T20:00:00",
 				"end": "2025-02-21T03:00:00"
 			}
-			""")) // Corpo della richiesta
+			"""))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Inizio e Fine non conformi"));
 
@@ -95,7 +95,7 @@ public class AnimatorTest {
 				"start": "2025-01-08T20:00:00",
 				"end": "2025-01-15T03:00:00"
 			}
-			""")) // Corpo della richiesta
+			"""))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message").value("Sovrapposizione durata con un evento già approvato per questo riferimento"));
     }
@@ -113,8 +113,8 @@ public class AnimatorTest {
 				"start": "2025-02-27T16:00:00",
 				"end": "2025-02-25T18:00:00"
 			}
-			""")) // Corpo della richiesta
-                .andExpect(status().isBadRequest()) // Verifica HTTP 400 BAD_REQUEST
+			"""))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Inizio e Fine non conformi"));
     }
 
