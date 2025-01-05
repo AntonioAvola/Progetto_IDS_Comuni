@@ -129,7 +129,7 @@ public class UserController {
             description = "Elimina un tuo contenuto. Usa uno degli ID disponibili da /get/own/contents.")
     public ResponseEntity<String> DeleteContent(
             @Parameter(description = "Tipo di contenuto",
-                    schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY", "EVENT", "CONTEST"}))
+                    schema = @Schema(type = "String", allowableValues = {"INTEREST POINT", "ITINERARY", "EVENT", "CONTEST", "REVIEW"}))
             @RequestParam(defaultValue = "INTEREST POINT") String type,
             @RequestParam long idContent) {
 
@@ -153,20 +153,19 @@ public class UserController {
         User user = this.userService.getUser(idUser);
 
         if (type.equals("INTEREST POINT")){
-            if(!this.interestPointService.getAndRemoveInterestPoint(idContent, user))
-                throw new IllegalArgumentException("Il punto di interesse non rientra tra i tuoi contenuti");
+            this.interestPointService.removeInterestPoint(idContent);
         }
         else if(type.equals("ITINERARY")){
-            if(!this.itineraryService.getAndRemoveItinerary(idContent, user))
-                throw new IllegalArgumentException("L'itinerario non rientra tra i tuoi contenuti");
+            this.itineraryService.removeItinerary(idContent);
         }
         else if(type.equals("EVENT")){
-            if(!this.eventService.getAndRemoveEvent(idContent, user))
-                throw new IllegalArgumentException("L'evento non rientra tra le proprie attività");
+            this.eventService.removeEvent(idContent);
+        }
+        else if(type.equals("CONTEST")){
+            this.contestService.removeContest(idContent);
         }
         else{
-            if(!this.contestService.getAndRemoveContest(idContent, user))
-                throw new IllegalArgumentException("Il contest non rientra tra le proprie attività");
+            this.reviewService.getAndRemoveReview(idContent);
         }
         return ResponseEntity.ok("Eliminazione del contenuto eseguita con successo");
     }
@@ -371,6 +370,9 @@ public class UserController {
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
+
+        if(role.equals(Role.ADMIN.name()) || role.equals(Role.MUNICIPALITY_MANAGER.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         this.userService.deleteAccount(idUser);
 

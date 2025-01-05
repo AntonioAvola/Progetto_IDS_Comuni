@@ -11,11 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -40,10 +37,10 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
-                        .param("openHour", "00") // Ora di apertura
-                        .param("openMinute", "00") // Minuti di apertura
-                        .param("closeHour", "00") // Ora di chiusura
-                        .param("closeMinute", "00") // Minuti di chiusura
+                        .param("openHour", "00")
+                        .param("openMinute", "00")
+                        .param("closeHour", "00")
+                        .param("closeMinute", "00")
                         .param("title", "monumento")
                         .param("description", "monumento storico")
                         .param("reference", "duomo"))
@@ -53,10 +50,10 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
-                        .param("openHour", "00") // Ora di apertura
-                        .param("openMinute", "00") // Minuti di apertura
-                        .param("closeHour", "00") // Ora di chiusura
-                        .param("closeMinute", "00") // Minuti di chiusura
+                        .param("openHour", "00")
+                        .param("openMinute", "00")
+                        .param("closeHour", "00")
+                        .param("closeMinute", "00")
                         .param("title", "monumento")
                         .param("description", "monumento storico")
                         .param("reference", "torre velasca"))
@@ -70,10 +67,10 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
-                        .param("openHour", "00") // Ora di apertura
-                        .param("openMinute", "00") // Minuti di apertura
-                        .param("closeHour", "00") // Ora di chiusura
-                        .param("closeMinute", "00") // Minuti di chiusura
+                        .param("openHour", "00")
+                        .param("openMinute", "00")
+                        .param("closeHour", "00")
+                        .param("closeMinute", "00")
                         .param("title", "monumento")
                         .param("description", "monumento storico")
                         .param("reference", "torre velasca"))
@@ -87,10 +84,10 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
-                        .param("openHour", "00") // Ora di apertura
-                        .param("openMinute", "00") // Minuti di apertura
-                        .param("closeHour", "00") // Ora di chiusura
-                        .param("closeMinute", "00") // Minuti di chiusura
+                        .param("openHour", "00")
+                        .param("openMinute", "00")
+                        .param("closeHour", "00")
+                        .param("closeMinute", "00")
                         .param("title", "monumento")
                         .param("description", "monumento storico")
                         .param("reference", "teatro alla scala"))

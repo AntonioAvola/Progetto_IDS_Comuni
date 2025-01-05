@@ -15,4 +15,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByMunicipalityAndAuthor(String visitedMunicipality, User user);
 
     List<Review> findAllByAuthor(User user);
+
+    Review findById(long id);
 }

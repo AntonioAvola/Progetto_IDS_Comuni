@@ -92,7 +92,7 @@ public class MunicipalityManagerTest {
     public void testAddMunicipalityFailed() throws Exception {
         mockMvc.perform(post("/api/municipalityManager/add/municipality")
                         .param("description", ""))
-                .andExpect(status().isConflict()) // Verifica HTTP 200
+                .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message").value("Il comune è già presente o è già stata inviata una richiesta"));
     }
 }

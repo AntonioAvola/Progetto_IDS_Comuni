@@ -80,4 +80,11 @@ public class ReviewService {
         this.reviewRepository.deleteAll(reviews);
         this.mediaService.deleteMedias(medias);
     }
+
+    public void getAndRemoveReview(long idContent) {
+        Review review = this.reviewRepository.findById(idContent);
+        List<Media> medias = new ArrayList<>(review.getMedias());
+        this.reviewRepository.delete(review);
+        this.mediaService.deleteMedias(medias);
+    }
 }

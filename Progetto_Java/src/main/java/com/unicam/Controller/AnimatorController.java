@@ -232,7 +232,7 @@ public class AnimatorController {
         return ResponseEntity.ok(contestProgresses);
     }
 
-    @GetMapping("/getAllGeopoint")
+    @GetMapping("/get/all/geopoint")
     @Operation(summary = "Visualizza tutti i punti geolocalizzati",
             description = "Restituisce una lista di punti geolocalizzati associati a punti di interesse approvati con i relativi ID.")
     public ResponseEntity<List<GeoPointResponse>> getAllGeoPoint(){

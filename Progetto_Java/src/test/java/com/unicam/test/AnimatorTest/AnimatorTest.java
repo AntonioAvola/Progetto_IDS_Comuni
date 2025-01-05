@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -45,8 +45,8 @@ public class AnimatorTest {
 					"start": "2025-02-20T20:00:00",
 					"end": "2025-02-21T03:00:00"
 				}
-				""")) // Corpo della richiesta
-                .andExpect(status().isOk()) //risposta HTTP 200 OK
+				"""))
+                .andExpect(status().isOk())
                 .andExpect(content().string("Proposta di evento inviata con successo"));
     }
 
@@ -63,8 +63,8 @@ public class AnimatorTest {
 					"start": "2025-02-25T16:00:00",
 					"end": "2025-02-28T18:00:00"
 				}
-				""")) // Corpo della richiesta
-                .andExpect(status().isOk()) //risposta HTTP 200 OK
+				"""))
+                .andExpect(status().isOk())
                 .andExpect(content().string("Proposta di contest inviata con successo"));
     }
 
