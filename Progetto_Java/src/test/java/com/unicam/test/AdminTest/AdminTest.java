@@ -47,4 +47,13 @@ public class AdminTest {
                         .param("status", "REJECTED"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUserDetails(username = "admin", idUser = 1, municipality = "", roles = "ADMIN", visitedMunicipality = "")
+    public void testGetAllMunicipalityRequestSuccessfull() throws Exception {
+        mockMvc.perform(get("/api/admin/get/all/municipality/requests"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].id").value(3));
+    }
 }
