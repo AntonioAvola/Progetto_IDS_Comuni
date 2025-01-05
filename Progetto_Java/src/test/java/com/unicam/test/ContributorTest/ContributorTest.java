@@ -13,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -36,36 +38,28 @@ public class ContributorTest {
     @WithMockUserDetails(username = "contributor1", idUser = 5,  municipality = "MILANO", roles = "CONTRIBUTOR", visitedMunicipality = "MILANO")
     void testAddRequestPOISuccessful() throws Exception {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
-                        .contentType(APPLICATION_JSON) // Imposta il tipo di contenuto come JSON
+                        .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
                         .param("openHour", "00") // Ora di apertura
                         .param("openMinute", "00") // Minuti di apertura
                         .param("closeHour", "00") // Ora di chiusura
                         .param("closeMinute", "00") // Minuti di chiusura
-                        .content("""
-					{
-						"title": "monumento",
-						"description": "monumento storico",
-						"reference": "duomo"
-					}
-					""")) // Corpo della richiesta
+                        .param("title", "monumento")
+                        .param("description", "monumento storico")
+                        .param("reference", "duomo"))
                 .andExpect(status().isOk()) //risposta HTTP 200 OK
                 .andExpect(content().string("Punto di interesse aggiunto con successo"));
 
         mockMvc.perform(post("/api/contributor/add/interestPoint")
-                .contentType(APPLICATION_JSON)
+                        .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
                         .param("openHour", "00") // Ora di apertura
                         .param("openMinute", "00") // Minuti di apertura
                         .param("closeHour", "00") // Ora di chiusura
                         .param("closeMinute", "00") // Minuti di chiusura
-                        .content("""
-					{
-						"title": "monumento",
-						"description": "monumento storico",
-						"reference": "torre velasca"
-					}
-					""")) // Corpo della richiesta
+                        .param("title", "monumento")
+                        .param("description", "monumento storico")
+                        .param("reference", "torre velasca"))
                 .andExpect(status().isOk()) //risposta HTTP 200 OK
                 .andExpect(content().string("Punto di interesse aggiunto con successo"));
     }
@@ -74,19 +68,15 @@ public class ContributorTest {
     @WithMockUserDetails(username = "authorizedContributor1", idUser = 6,  municipality = "MILANO", roles = "AUTHORIZED_CONTRIBUTOR", visitedMunicipality = "MILANO")
     void testAddPOISuccessful() throws Exception {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
-                        .contentType(APPLICATION_JSON)
+                        .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
                         .param("openHour", "00") // Ora di apertura
                         .param("openMinute", "00") // Minuti di apertura
                         .param("closeHour", "00") // Ora di chiusura
                         .param("closeMinute", "00") // Minuti di chiusura
-                        .content("""
-					{
-						"title": "monumento",
-						"description": "monumento storico",
-						"reference": "torre velasca"
-					}
-					""")) // Corpo della richiesta
+                        .param("title", "monumento")
+                        .param("description", "monumento storico")
+                        .param("reference", "torre velasca"))
                 .andExpect(status().isOk()) //risposta HTTP 200 OK
                 .andExpect(content().string("Punto di interesse aggiunto con successo"));
     }
@@ -95,19 +85,15 @@ public class ContributorTest {
     @WithMockUserDetails(username = "authorizedContributor1", idUser = 6,  municipality = "MILANO", roles = "AUTHORIZED_CONTRIBUTOR", visitedMunicipality = "MILANO")
     void testAddPOIFailed() throws Exception {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
-                        .contentType(APPLICATION_JSON)
+                        .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
                         .param("openHour", "00") // Ora di apertura
                         .param("openMinute", "00") // Minuti di apertura
                         .param("closeHour", "00") // Ora di chiusura
                         .param("closeMinute", "00") // Minuti di chiusura
-                        .content("""
-					{
-						"title": "monumento",
-						"description": "monumento storico",
-						"reference": "teatro alla scala"
-					}
-					""")) // Corpo della richiesta
+                        .param("title", "monumento")
+                        .param("description", "monumento storico")
+                        .param("reference", "teatro alla scala"))
                 .andExpect(status().isConflict()) //risposta HTTP 409 Conflit
                 .andExpect(jsonPath("$.message").value("Esiste già un punto di interesse per questo determinato punto geolocalizzato"));
     }

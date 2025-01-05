@@ -134,7 +134,7 @@ public class ContributorController {
     @Operation(summary = "Richiesta/Aggiunta itinerario",
             description = "Inserisci le informazioni inerenti all'itinerario che vuoi proporre. " +
                     "Per i punti di interesse usa gli ID disponibili da /get/all/POI/of/own/municipality.")
-    public ResponseEntity<String> AddItinerary(ItineraryRequest request) {
+    public ResponseEntity<String> AddItinerary(@RequestBody ItineraryRequest request) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -162,11 +162,11 @@ public class ContributorController {
 
         //TODO controllo dei punti
 
+        List<InterestPoint> list = this.interestPointService.getList(request.getPath());
+        if(this.itineraryService.ItineraryAlreadyExists(list, municipality)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Esiste già questo itinerario");
+        }
         if(role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())){
-            List<InterestPoint> list = this.interestPointService.getList(request.getPath());
-            if(this.itineraryService.ItineraryAlreadyExists(list, municipality)){
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Esiste già questo itinerario");
-            }
             this.itineraryService.deleteItineraryPending(list, municipality);
             status = ContentStatus.APPROVED;
         }
