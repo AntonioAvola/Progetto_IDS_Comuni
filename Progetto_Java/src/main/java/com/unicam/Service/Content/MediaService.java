@@ -20,13 +20,8 @@ public class MediaService {
         return this.mediaRepository.findById(mediaId);
     }
 
-    public void removeMedia(long id){
-        this.mediaRepository.deleteById(id);
-    }
 
     public void deleteMedias(List<Media> medias) {
-        for(Media media: medias){
-            removeMedia(media.getId());
-        }
+        this.mediaRepository.deleteAll(medias);
     }
 }

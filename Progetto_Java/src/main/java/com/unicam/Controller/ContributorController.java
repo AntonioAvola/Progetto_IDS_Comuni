@@ -160,14 +160,7 @@ public class ContributorController {
         if(!this.itineraryService.checkPathLength(request.getPath()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nella lista di punti di interesse sono presenti meno di due punti di interesse");
 
-        //TODO controllo dei punti
-
-        List<InterestPoint> list = this.interestPointService.getList(request.getPath());
-        if(this.itineraryService.ItineraryAlreadyExists(list, municipality)){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Esiste già questo itinerario");
-        }
         if(role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())){
-            this.itineraryService.deleteItineraryPending(list, municipality);
             status = ContentStatus.APPROVED;
         }
 
