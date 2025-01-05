@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,14 +32,18 @@ public class AdminTest {
 
     @Test
     @WithMockUserDetails(username = "admin", idUser = 1,  municipality = "", roles = "ADMIN", visitedMunicipality = "")
-    public void validationMunicipalityRequestPending() throws Exception {
+    public void testValidationMunicipalityRequestApproved() throws Exception {
         mockMvc.perform(post("/api/admin/appprove/or/reject/municipality/request")
                         .param("idMunicipality", "3")
                         .param("status", "APPROVED"))
                 .andExpect(status().isOk());
+    }
 
+    @Test
+    @WithMockUserDetails(username = "admin", idUser = 1,  municipality = "", roles = "ADMIN", visitedMunicipality = "")
+    public void testValidationMunicipalityRequestRejected() throws Exception {
         mockMvc.perform(post("/api/admin/appprove/or/reject/municipality/request")
-                        .param("idMunicipality", "4")
+                        .param("idMunicipality", "3")
                         .param("status", "REJECTED"))
                 .andExpect(status().isOk());
     }

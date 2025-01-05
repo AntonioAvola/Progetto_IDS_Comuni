@@ -258,24 +258,34 @@ public class DataInizializer  implements CommandLineRunner {
         System.out.println(name + ": itinerario " + itinerary2.getTitle() + " aggiunto con successo");
 
         Itinerary itinerary3 = new Itinerary();
-        itinerary3.setTitle("giro in bicicletta");
-        itinerary3.setDescription("percorso con la bicicletta");
-        itinerary3.setAuthor(author);
-        itinerary3.setStatus(ContentStatus.PENDING);
-        itinerary3.setPath(List.of(pois.get(0), pois.get(2)));
+        itinerary3.setTitle("giro");
+        itinerary3.setDescription("giro a piedi per il comune");
+        itinerary3.setAuthor(authorAuthorized);
+        itinerary3.setStatus(ContentStatus.REPORTED);
+        itinerary3.setPath(List.of(pois.get(1), pois.get(2), pois.get(3)));
         itinerary3.setMunicipality(name);
         this.itineraryRepository.save(itinerary3);
-        System.out.println(name + ": itinerario " + itinerary3.getTitle() + " aggiunta richiesta di inserimento");
+        System.out.println(name + ": itinerario " + itinerary3.getTitle() + " aggiunto con successo");
 
         Itinerary itinerary4 = new Itinerary();
-        itinerary4.setTitle("scampagnata");
-        itinerary4.setDescription("percorso sicuro");
+        itinerary4.setTitle("giro in bicicletta");
+        itinerary4.setDescription("percorso con la bicicletta");
         itinerary4.setAuthor(author);
         itinerary4.setStatus(ContentStatus.PENDING);
-        itinerary4.setPath(List.of(pois.get(1), pois.get(2)));
+        itinerary4.setPath(List.of(pois.get(0), pois.get(2)));
         itinerary4.setMunicipality(name);
         this.itineraryRepository.save(itinerary4);
         System.out.println(name + ": itinerario " + itinerary4.getTitle() + " aggiunta richiesta di inserimento");
+
+        Itinerary itinerary5 = new Itinerary();
+        itinerary5.setTitle("scampagnata");
+        itinerary5.setDescription("percorso sicuro");
+        itinerary5.setAuthor(author);
+        itinerary5.setStatus(ContentStatus.PENDING);
+        itinerary5.setPath(List.of(pois.get(1), pois.get(2)));
+        itinerary5.setMunicipality(name);
+        this.itineraryRepository.save(itinerary5);
+        System.out.println(name + ": itinerario " + itinerary5.getTitle() + " aggiunta richiesta di inserimento");
     }
 
     private void CreatePOI(String name) throws IOException {

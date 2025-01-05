@@ -59,7 +59,7 @@ public class CuratorController {
             response.getContents().put("interest point", interestPointPending);
         }
         if(!itineraryPending.isEmpty()){
-            response.getContents().put("itineray", itineraryPending);
+            response.getContents().put("itinerary", itineraryPending);
         }
         if(response.getContents().isEmpty()){
             throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti contenuti in attesa di validazione");
@@ -67,7 +67,7 @@ public class CuratorController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/approve/or/reject/content")
+    @PutMapping("/approve/or/reject/pending/content")
     @Operation(summary = "Validazione contenuto",
             description = "Approva o rifiuta un contenuto in attesa. " +
                     "Usa uno degli ID disponibili da /view/all/content/pending.")
@@ -136,10 +136,10 @@ public class CuratorController {
         List <ItineraryResponse> itineraries = this.itineraryService.getItinerary(municipality, ContentStatus.REPORTED);
         ContentOrActivity response = new ContentOrActivity();
         if(!points.isEmpty()){
-            response.getContents().put("InterestPoint", points);
+            response.getContents().put("interest point", points);
         }
         if(!itineraries.isEmpty()){
-            response.getContents().put("Itinerary", itineraries);
+            response.getContents().put("itinerary", itineraries);
         }
         if(response.getContents().isEmpty()){
             throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti contenuti segnalati");
@@ -147,7 +147,7 @@ public class CuratorController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/approve/or/reject/report")
+    @PutMapping("/approve/or/reject/reported/content")
     @Operation(summary = "Validazione contenuto segnalato",
             description = "Approva o rifiuta un contenuto segnalato. " +
                     "Usa uno degli ID disponibili da /view/all/reported/contents.")

@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,31 +32,33 @@ public class CuratorTest {
 
     @Test
     @WithMockUserDetails(username = "curator1", idUser = 3,  municipality = "MILANO", roles = "CURATOR", visitedMunicipality = "MILANO")
-    public void validationContentPending() throws Exception {
-        mockMvc.perform(put("/api/curator/approve/or/reject/content")
+    public void testValidationContentPending() throws Exception {
+        mockMvc.perform(put("/api/curator/approve/or/reject/pending/content")
                         .param("type", "INTEREST POINT")
                         .param("idContent", "6")
                         .param("status", "APPROVED"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string("Punto di interesse approvato con successo"));
 
-        mockMvc.perform(put("/api/curator/approve/or/reject/content")
+        mockMvc.perform(put("/api/curator/approve/or/reject/pending/content")
                         .param("type", "INTEREST POINT")
                         .param("idContent", "7")
                         .param("status", "REJECTED"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string("Punto di interesse rifiutato"));
 
-        mockMvc.perform(put("/api/curator/approve/or/reject/content")
+        mockMvc.perform(put("/api/curator/approve/or/reject/pending/content")
+                        .param("type", "ITINERARY")
+                        .param("idContent", "4")
+                        .param("status", "APPROVED"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Itinerario approvato con successo"));
+
+        mockMvc.perform(put("/api/curator/approve/or/reject/pending/content")
                         .param("type", "ITINERARY")
                         .param("idContent", "5")
-                        .param("status", "APPROVED"))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(put("/api/curator/approve/or/reject/content")
-                        .param("type", "ITINERARY")
-                        .param("idContent", "6")
                         .param("status", "REJECTED"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string("Itinerario rifiutato"));
     }
-
-
 }
