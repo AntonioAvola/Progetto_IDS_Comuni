@@ -4,6 +4,7 @@ import com.unicam.DTO.Response.ContentOrActivity;
 import com.unicam.DTO.Response.InterestPointResponse;
 import com.unicam.DTO.Response.ItineraryResponse;
 import com.unicam.Entity.Content.ContentStatus;
+import com.unicam.Entity.Role;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.*;
 import com.unicam.Service.UserService;
@@ -52,6 +53,9 @@ public class CuratorController {
 
         //TODO controllo ruolo
 
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.CURATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
+
         List<InterestPointResponse> interestPointPending = this.interestPointService.getPoint(municipality, ContentStatus.PENDING);
         List<ItineraryResponse> itineraryPending = this.itineraryService.getItinerary(municipality, ContentStatus.PENDING);
         ContentOrActivity response = new ContentOrActivity();
@@ -96,6 +100,9 @@ public class CuratorController {
 
         //TODO controllo ruolo
 
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.CURATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
+
         if(type.equals("INTEREST POINT")){
             this.interestPointService.approveOrRejectPoint(idContent, status);
             if(status.equals(ContentStatus.APPROVED)){
@@ -131,6 +138,9 @@ public class CuratorController {
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
+
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.CURATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         List <InterestPointResponse> points = this.interestPointService.getPoint(municipality, ContentStatus.REPORTED);
         List <ItineraryResponse> itineraries = this.itineraryService.getItinerary(municipality, ContentStatus.REPORTED);
@@ -175,6 +185,9 @@ public class CuratorController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.CURATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         if(type.equals("INTEREST POINT")){
             this.interestPointService.approveOrRejectPoint(idContent, status);
