@@ -7,6 +7,7 @@ import com.unicam.Entity.CommandPattern.ContestCommand;
 import com.unicam.Entity.CommandPattern.EventCommand;
 import com.unicam.Entity.Content.ActivityStatus;
 import com.unicam.Entity.Content.GeoPoint;
+import com.unicam.Entity.Role;
 import com.unicam.Entity.User;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.Content.ContestService;
@@ -62,6 +63,8 @@ public class AnimatorController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         GeoPoint reference = this.geoPointService.getById(request.getIdReference());
 
@@ -103,6 +106,8 @@ public class AnimatorController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         //controllo su inizio e fine
         LocalDateTime now = LocalDateTime.now();
@@ -136,6 +141,8 @@ public class AnimatorController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         this.contestService.updateActivityStatus(LocalDateTime.now());
 
@@ -167,6 +174,8 @@ public class AnimatorController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         List<Partecipants> partecipants = this.contestService.getPartecipants(idContest);
         if(partecipants.isEmpty()){
@@ -197,6 +206,8 @@ public class AnimatorController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         User winner = this.userService.getUser(idPartecipant);
 
@@ -225,6 +236,8 @@ public class AnimatorController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         this.contestService.updateActivityStatus(LocalDateTime.now());
         List<ContestProgress> contestProgresses = this.contestService.getContestProgress(municipality);
@@ -245,6 +258,9 @@ public class AnimatorController {
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
+
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         List<GeoPointResponse> list = this.interestPointService.getAllReference(municipality);
 
