@@ -2,6 +2,7 @@ package com.unicam.Controller;
 
 import com.unicam.DTO.Response.MunicipalityResponse;
 import com.unicam.Entity.Content.ContentStatus;
+import com.unicam.Entity.Role;
 import com.unicam.Security.UserCustomDetails;
 import com.unicam.Service.MunicipalityService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +32,8 @@ public class AdminController {
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
         String role = userDetails.getRole();
+        if(!role.equals(Role.ADMIN.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         List<MunicipalityResponse> responses = this.municipalityService.getMunicipalityRequests();
         if(responses.isEmpty()){
@@ -55,6 +58,8 @@ public class AdminController {
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
 
         String role = userDetails.getRole();
+        if(!role.equals(Role.ADMIN.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         this.municipalityService.validateMunicipality(idMunicipality, status);
         if(status.equals(ContentStatus.APPROVED)){
