@@ -85,6 +85,10 @@ public class UserController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
+
+        if(role.equals(Role.ADMIN.name()) || role.equals(Role.MUNICIPALITY_MANAGER.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
+
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
         // altrimenti eccezione
@@ -144,6 +148,9 @@ public class UserController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
+        if(!municipality.equals(visitedMunicipality) || role.equals(Role.ADMIN.name()) || role.equals(Role.MUNICIPALITY_MANAGER.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
+
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
         // altrimenti eccezione
@@ -186,6 +193,9 @@ public class UserController {
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
+
+        if(!municipality.equals(visitedMunicipality) || role.equals(Role.ADMIN.name()) || role.equals(Role.MUNICIPALITY_MANAGER.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         User user = this.userService.getUser(idUser);
         if(this.promotionService.checkPromotion(user)){
@@ -240,6 +250,9 @@ public class UserController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
+        if((municipality.equals(visitedMunicipality) && role.equals(Role.ANIMATOR.name()) || role.equals(Role.ADMIN.name()) || role.equals(Role.MUNICIPALITY_MANAGER.name())))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
+
         //TODO controllo comune:
         // se comune visitato è lo stesso del proprio comune allora proseguire;
         // altrimenti eccezione
@@ -264,6 +277,9 @@ public class UserController {
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
+
+        if(role.equals(Role.ADMIN.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         this.eventService.updateActivityStatus(LocalDateTime.now());
         this.contestService.updateActivityStatus(LocalDateTime.now());
@@ -307,6 +323,10 @@ public class UserController {
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
+
+
+        if(role.equals(Role.ADMIN.name()) || role.equals(Role.MUNICIPALITY_MANAGER.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         this.userService.visitMunicipality(newMunicipality.toUpperCase(Locale.ROOT), idUser);
         return ResponseEntity.ok("Visita il comune eseguita con successo");
@@ -368,7 +388,8 @@ public class UserController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        if(role.equals(Role.ADMIN.name()) || role.equals(Role.MUNICIPALITY_MANAGER.name()))
+        if(!municipality.equals(visitedMunicipality) || role.equals(Role.ADMIN.name())
+                || role.equals(Role.MUNICIPALITY_MANAGER.name()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         this.userService.deleteAccount(idUser);
