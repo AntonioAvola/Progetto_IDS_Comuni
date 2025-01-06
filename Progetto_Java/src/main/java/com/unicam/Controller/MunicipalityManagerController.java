@@ -63,6 +63,8 @@ public class MunicipalityManagerController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.MUNICIPALITY_MANAGER.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         if(this.municipalityService.exists(municipality))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Il comune è già presente o è già stata inviata una richiesta");
@@ -94,6 +96,8 @@ public class MunicipalityManagerController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.MUNICIPALITY_MANAGER.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         List<EventResponse> eventPending = this.eventService.getEvent(municipality, ContentStatus.PENDING);
         List<ContestResponse> contestPending = this.contestService.getContest(municipality, ContentStatus.PENDING);
@@ -138,6 +142,8 @@ public class MunicipalityManagerController {
         // altrimenti eccezione
 
         //TODO controllo ruolo
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.MUNICIPALITY_MANAGER.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         if(type.equals("EVENT")){
             this.eventService.validateEvent(idActivity, status);
@@ -179,6 +185,9 @@ public class MunicipalityManagerController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.MUNICIPALITY_MANAGER.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
+
         String response = "Promozione rifiutata";
 
         if(status.equals(ContentStatus.APPROVED)){
@@ -202,6 +211,9 @@ public class MunicipalityManagerController {
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
+
+        if(!municipality.equals(visitedMunicipality) || !role.equals(Role.MUNICIPALITY_MANAGER.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         List<PromotionResponse> responses = this.promotionService.getAllPromotionRequests(municipality);
         if(responses.isEmpty()){
