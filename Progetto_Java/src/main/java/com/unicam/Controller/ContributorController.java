@@ -90,11 +90,19 @@ public class ContributorController {
         // se comune visitato è lo stesso del proprio comune allora proseguire;
         // altrimenti eccezione
 
-        ContentStatus status = ContentStatus.PENDING;
+        ContentStatus status;
         //TODO controllo ruolo:
         // se CONTRIBUTOR allora status = PENDING;
         // se CONTRIBUTOR AUTORIZZATO allora status = APPROVED;
         // se qualsiasi altri ruolo, allora eccezione
+
+        if(municipality.equals(visitedMunicipality) && role.equals(Role.CONTRIBUTOR.name()))
+            status = ContentStatus.PENDING;
+        else if(municipality.equals(visitedMunicipality) && role.equals(Role.AUTHORIZED_CONTRIBUTOR.name()))
+            status = ContentStatus.APPROVED;
+        else
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
+
 
         InterestPointRequest request = new InterestPointRequest(title, description, reference);
         String address = request.getReference();
@@ -150,11 +158,19 @@ public class ContributorController {
         // se comune visitato è lo stesso del proprio comune allora proseguire;
         // altrimenti eccezione
 
-        ContentStatus status = ContentStatus.PENDING;
+        ContentStatus status;
         //TODO controllo ruolo:
         // se CONTRIBUTOR allora status = PENDING;
         // se CONTRIBUTOR AUTORIZZATO allora status = APPROVED;
         // se qualsiasi altri ruolo, allora eccezione
+
+        if(municipality.equals(visitedMunicipality) && role.equals(Role.CONTRIBUTOR.name()))
+            status = ContentStatus.PENDING;
+        else if(municipality.equals(visitedMunicipality) && role.equals(Role.AUTHORIZED_CONTRIBUTOR.name()))
+            status = ContentStatus.APPROVED;
+        else
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
+
 
         //controlla lunghezza lista punti di interesse, se non ha lunghezza minima 2 o ci sono punti di interesse ripetuti (true), lancia l'eccezione
         if(!this.itineraryService.checkPathLength(request.getPath()))
@@ -175,7 +191,7 @@ public class ContributorController {
 
     @GetMapping("/get/all/POI/of/own/municipality")
     @Operation(summary = "Visualizza tutti i punti di interesse approvati del comune, con relativo ID")
-    public ResponseEntity<List<InterestPointResponse>> getAllPOIofOwnMunicipality(){
+    public ResponseEntity<List<InterestPointResponse>> getAllPOIofOwnMunicipality() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserCustomDetails userDetails = (UserCustomDetails) authentication.getPrincipal();
@@ -186,12 +202,16 @@ public class ContributorController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
+        if (!municipality.equals(visitedMunicipality) || (!role.equals(Role.CONTRIBUTOR.name())
+                && !role.equals(Role.AUTHORIZED_CONTRIBUTOR.name())))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         List<InterestPointResponse> response = this.interestPointService.getPoint(municipality, ContentStatus.APPROVED);
         response.addAll(this.interestPointService.getPoint(municipality, ContentStatus.REPORTED));
-        if(response.isEmpty()){
+        if (response.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.OK, "Al momento non sono presenti punti di interesse");
         }
+
 
         return ResponseEntity.ok(response);
     }
