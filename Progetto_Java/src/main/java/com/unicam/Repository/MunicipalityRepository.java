@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface MunicipalityRepository extends JpaRepository<Municipality, Long> {
-    Municipality findByName(String nameMunicipality);
 
     boolean existsByName(String name);
 

@@ -30,13 +30,6 @@ public class ContestService {
         this.repoContest.delete(contest);
     }
 
-    public boolean getAndRemoveContest(long idContest, User author) {
-        if(!this.repoContest.existsByIdAndAuthor(idContest, author))
-            return false;
-        this.removeContest(idContest);
-        return true;
-    }
-
     public void removeContestUser(User user){
         List<Contest> contest = this.repoContest.findAllByAuthor(user);
         this.repoContest.deleteAll(contest);
@@ -168,17 +161,6 @@ public class ContestService {
         List<Contest> contest = this.repoContest.findByMunicipalityAndActivityStatus(municipality, ActivityStatus.WAITING);
         return convertResponse(contest);
     }
-
-    /*public List<Contest> getContestPartecipated(User user) {
-        List <Contest> contest = this.repoContest.findByMunicipality(user.getMunicipality());
-        List <Contest> contestResponse = new ArrayList<>();
-        for (Contest found : contest) {
-            if(found.getParticipants().contains(user)){
-                contestResponse.add(found);
-            }
-        }
-        return contestResponse;
-    }*/
 
     public List<ContestProgress> getContestPartecipated(User user) {
         List<Contest> listContestApproved = this.repoContest.findByStatus(ContentStatus.APPROVED);

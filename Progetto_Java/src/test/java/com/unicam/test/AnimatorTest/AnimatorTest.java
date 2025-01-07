@@ -38,14 +38,14 @@ public class AnimatorTest {
         mockMvc.perform(post("/api/animator/add/event")
                         .contentType(APPLICATION_JSON)
                         .content("""
-				 {
-					"title": "stelle cadenti",
-					"description": "osservazione stelle cadenti",
-					"idReference": 4,
-					"start": "2025-02-20T20:00:00",
-					"end": "2025-02-21T03:00:00"
-				}
-				"""))
+					 {
+						"title": "stelle cadenti",
+						"description": "osservazione stelle cadenti",
+						"idReference": 4,
+						"start": "2025-02-20T20:00:00",
+						"end": "2025-02-21T03:00:00"
+					}
+					"""))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Proposta di evento inviata con successo"));
     }
@@ -56,14 +56,14 @@ public class AnimatorTest {
         mockMvc.perform(post("/api/animator/add/contest")
                         .contentType(APPLICATION_JSON)
                         .content("""
-				 {
-					"title": "fotografia",
-					"description": "fotografia più bella",
-					"reward": "€150",
-					"start": "2025-02-25T16:00:00",
-					"end": "2025-02-28T18:00:00"
-				}
-				"""))
+					 {
+						"title": "fotografia",
+						"description": "fotografia più bella",
+						"reward": "€150",
+						"start": "2025-02-25T16:00:00",
+						"end": "2025-02-28T18:00:00"
+					}
+					"""))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Proposta di contest inviata con successo"));
     }
@@ -74,28 +74,28 @@ public class AnimatorTest {
         mockMvc.perform(post("/api/animator/add/event")
                         .contentType(APPLICATION_JSON)
                         .content("""
-			 {
-				"title": "stelle cadenti",
-				"description": "osservazione stelle cadenti",
-				"idReference": 6,
-				"start": "2025-02-24T20:00:00",
-				"end": "2025-02-21T03:00:00"
-			}
-			"""))
+					 {
+						"title": "stelle cadenti",
+						"description": "osservazione stelle cadenti",
+						"idReference": 6,
+						"start": "2025-02-24T20:00:00",
+						"end": "2025-02-21T03:00:00"
+					}
+					"""))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Inizio e Fine non conformi"));
 
         mockMvc.perform(post("/api/animator/add/event")
                         .contentType(APPLICATION_JSON)
                         .content("""
-			 {
-				"title": "stelle cadenti",
-				"description": "osservazione stelle cadenti",
-				"idReference": 3,
-				"start": "2025-01-08T20:00:00",
-				"end": "2025-01-15T03:00:00"
-			}
-			"""))
+					 {
+						"title": "stelle cadenti",
+						"description": "osservazione stelle cadenti",
+						"idReference": 3,
+						"start": "2025-01-08T20:00:00",
+						"end": "2025-01-15T03:00:00"
+					}
+					"""))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message").value("Sovrapposizione durata con un evento già approvato per questo riferimento"));
     }
@@ -106,14 +106,14 @@ public class AnimatorTest {
         mockMvc.perform(post("/api/animator/add/contest")
                         .contentType(APPLICATION_JSON)
                         .content("""
-			 {
-				"title": "fotografia",
-				"description": "fotografia più bella",
-				"reward": "€150",
-				"start": "2025-02-27T16:00:00",
-				"end": "2025-02-25T18:00:00"
-			}
-			"""))
+					 {
+						"title": "fotografia",
+						"description": "fotografia più bella",
+						"reward": "€150",
+						"start": "2025-02-27T16:00:00",
+						"end": "2025-02-25T18:00:00"
+					}
+					"""))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Inizio e Fine non conformi"));
     }
@@ -136,15 +136,15 @@ public class AnimatorTest {
 		mockMvc.perform(post("/api/animator/add/event")
 						.contentType(APPLICATION_JSON)
 						.content("""
-				 {
-					"title": "stelle cadenti",
-					"description": "osservazione stelle cadenti",
-					"reference": "torre velasca",
-					"start": "2025-02-20T20:00:00",
-					"end": "2025-02-21T03:00:00"
-				}
-				""")) // Corpo della richiesta
-				.andExpect(status().isUnauthorized()) //risposta HTTP 403 Unauthorized
+					 {
+						"title": "stelle cadenti",
+						"description": "osservazione stelle cadenti",
+						"reference": "torre velasca",
+						"start": "2025-02-20T20:00:00",
+						"end": "2025-02-21T03:00:00"
+					}
+					"""))
+				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
 	}
 
@@ -154,15 +154,15 @@ public class AnimatorTest {
 		mockMvc.perform(post("/api/animator/add/event")
 						.contentType(APPLICATION_JSON)
 						.content("""
-				 {
-					"title": "stelle cadenti",
-					"description": "osservazione stelle cadenti",
-					"reference": "torre velasca",
-					"start": "2025-02-20T20:00:00",
-					"end": "2025-02-21T03:00:00"
-				}
-				""")) // Corpo della richiesta
-				.andExpect(status().isUnauthorized()) //risposta HTTP 403 Unauthorized
+					 {
+						"title": "stelle cadenti",
+						"description": "osservazione stelle cadenti",
+						"reference": "torre velasca",
+						"start": "2025-02-20T20:00:00",
+						"end": "2025-02-21T03:00:00"
+					}
+					"""))
+				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
 	}
 
@@ -172,15 +172,15 @@ public class AnimatorTest {
 		mockMvc.perform(post("/api/animator/add/event")
 						.contentType(APPLICATION_JSON)
 						.content("""
-				 {
-					"title": "stelle cadenti",
-					"description": "osservazione stelle cadenti",
-					"reference": "torre velasca",
-					"start": "2025-02-20T20:00:00",
-					"end": "2025-02-21T03:00:00"
-				}
-				""")) // Corpo della richiesta
-				.andExpect(status().isUnauthorized()) //risposta HTTP 403 Unauthorized
+					 {
+						"title": "stelle cadenti",
+						"description": "osservazione stelle cadenti",
+						"reference": "torre velasca",
+						"start": "2025-02-20T20:00:00",
+						"end": "2025-02-21T03:00:00"
+					}
+					"""))
+				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
 	}
 
@@ -190,15 +190,15 @@ public class AnimatorTest {
 		mockMvc.perform(post("/api/animator/add/event")
 						.contentType(APPLICATION_JSON)
 						.content("""
-				 {
-					"title": "stelle cadenti",
-					"description": "osservazione stelle cadenti",
-					"reference": "torre velasca",
-					"start": "2025-02-20T20:00:00",
-					"end": "2025-02-21T03:00:00"
-				}
-				""")) // Corpo della richiesta
-				.andExpect(status().isUnauthorized()) //risposta HTTP 403 Unauthorized
+					 {
+						"title": "stelle cadenti",
+						"description": "osservazione stelle cadenti",
+						"reference": "torre velasca",
+						"start": "2025-02-20T20:00:00",
+						"end": "2025-02-21T03:00:00"
+					}
+					"""))
+				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
 	}
 
@@ -208,15 +208,15 @@ public class AnimatorTest {
 		mockMvc.perform(post("/api/animator/add/event")
 						.contentType(APPLICATION_JSON)
 						.content("""
-				 {
-					"title": "stelle cadenti",
-					"description": "osservazione stelle cadenti",
-					"reference": "torre velasca",
-					"start": "2025-02-20T20:00:00",
-					"end": "2025-02-21T03:00:00"
-				}
-				""")) // Corpo della richiesta
-				.andExpect(status().isUnauthorized()) //risposta HTTP 403 Unauthorized
+					 {
+						"title": "stelle cadenti",
+						"description": "osservazione stelle cadenti",
+						"reference": "torre velasca",
+						"start": "2025-02-20T20:00:00",
+						"end": "2025-02-21T03:00:00"
+					}
+					"""))
+				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
 	}
 
@@ -231,15 +231,15 @@ public class AnimatorTest {
 		mockMvc.perform(post("/api/animator/add/event")
 						.contentType(APPLICATION_JSON)
 						.content("""
-				 {
-					"title": "stelle cadenti",
-					"description": "osservazione stelle cadenti",
-					"reference": "torre velasca",
-					"start": "2025-02-20T20:00:00",
-					"end": "2025-02-21T03:00:00"
-				}
-				""")) // Corpo della richiesta
-				.andExpect(status().isUnauthorized()) //risposta HTTP 403 Unauthorized
+					 {
+						"title": "stelle cadenti",
+						"description": "osservazione stelle cadenti",
+						"reference": "torre velasca",
+						"start": "2025-02-20T20:00:00",
+						"end": "2025-02-21T03:00:00"
+					}
+					"""))
+				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
 	}
 

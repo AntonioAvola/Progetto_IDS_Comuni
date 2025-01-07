@@ -16,11 +16,6 @@ public class MediaService {
         this.mediaRepository.save(media);
     }
 
-    public Media getMedia(long mediaId) {
-        return this.mediaRepository.findById(mediaId);
-    }
-
-
     public void deleteMedias(List<Media> medias) {
         this.mediaRepository.deleteAll(medias);
     }

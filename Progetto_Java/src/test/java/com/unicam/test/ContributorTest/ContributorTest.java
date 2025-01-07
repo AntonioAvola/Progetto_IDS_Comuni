@@ -126,25 +126,25 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-				{
-					"title": "corsetta",
-					"description": "simpatico giro panoramico del comune",
-					"path": [1, 3]
-				}
-				""")) // Corpo della richiesta
-                .andExpect(status().isOk()) //risposta HTTP 200 OK
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 3]
+                    }
+                    """))
+                .andExpect(status().isOk())
                 .andExpect(content().string("Itinerario aggiunto con successo"));
 
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-				{
-					"title": "corsetta",
-					"description": "simpatico giro panoramico del comune",
-					"path": [1, 2]
-				}
-				""")) // Corpo della richiesta
-                .andExpect(status().isOk()) //risposta HTTP 200 OK
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 2]
+                    }
+                    """))
+                .andExpect(status().isOk())
                 .andExpect(content().string("Itinerario aggiunto con successo"));
     }
 
@@ -154,13 +154,13 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-				{
-					"title": "corsetta",
-					"description": "simpatico giro panoramico del comune",
-					"path": [1, 1]
-				}
-				""")) // Corpo della richiesta
-                .andExpect(status().isBadRequest()) //risposta HTTP 200 OK
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 1]
+                    }
+                    """))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Nella lista di punti di interesse sono presenti meno di due punti di interesse"));
     }
 
@@ -170,25 +170,25 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-				{
-					"title": "corsetta",
-					"description": "simpatico giro panoramico del comune",
-					"path": [1, 3]
-				}
-				""")) // Corpo della richiesta
-                .andExpect(status().isOk()) //risposta HTTP 200 OK
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 3]
+                    }
+                    """))
+                .andExpect(status().isOk())
                 .andExpect(content().string("Itinerario aggiunto con successo"));
 
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-				{
-					"title": "corsetta",
-					"description": "simpatico giro panoramico del comune",
-					"path": [1, 2]
-				}
-				""")) // Corpo della richiesta
-                .andExpect(status().isOk()) //risposta HTTP 200 OK
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 2]
+                    }
+                    """))
+                .andExpect(status().isOk())
                 .andExpect(content().string("Itinerario aggiunto con successo"));
     }
 
@@ -198,13 +198,13 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-				{
-					"title": "corsetta",
-					"description": "simpatico giro panoramico del comune",
-					"path": [1, 1]
-				}
-				""")) // Corpo della richiesta
-                .andExpect(status().isBadRequest()) //risposta HTTP 200 OK
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 1]
+                    }
+                    """))
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Nella lista di punti di interesse sono presenti meno di due punti di interesse"));
     }
 
@@ -231,14 +231,14 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
-                        .param("openHour", "00") // Ora di apertura
-                        .param("openMinute", "00") // Minuti di apertura
-                        .param("closeHour", "00") // Ora di chiusura
-                        .param("closeMinute", "00") // Minuti di chiusura
+                        .param("openHour", "00")
+                        .param("openMinute", "00")
+                        .param("closeHour", "00")
+                        .param("closeMinute", "00")
                         .param("title", "monumento")
                         .param("description", "monumento storico")
                         .param("reference", "teatro alla scala"))
-                .andExpect(status().isUnauthorized()) // Verifica che la risposta HTTP sia 409 Conflit
+                .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }
 
@@ -248,14 +248,14 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
-                        .param("openHour", "00") // Ora di apertura
-                        .param("openMinute", "00") // Minuti di apertura
-                        .param("closeHour", "00") // Ora di chiusura
-                        .param("closeMinute", "00") // Minuti di chiusura
+                        .param("openHour", "00")
+                        .param("openMinute", "00")
+                        .param("closeHour", "00")
+                        .param("closeMinute", "00")
                         .param("title", "monumento")
                         .param("description", "monumento storico")
                         .param("reference", "teatro alla scala"))
-                .andExpect(status().isUnauthorized()) // Verifica che la risposta HTTP sia 409 Conflit
+                .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }
 
@@ -265,14 +265,14 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
-                        .param("openHour", "00") // Ora di apertura
-                        .param("openMinute", "00") // Minuti di apertura
-                        .param("closeHour", "00") // Ora di chiusura
-                        .param("closeMinute", "00") // Minuti di chiusura
+                        .param("openHour", "00")
+                        .param("openMinute", "00")
+                        .param("closeHour", "00")
+                        .param("closeMinute", "00")
                         .param("title", "monumento")
                         .param("description", "monumento storico")
                         .param("reference", "teatro alla scala"))
-                .andExpect(status().isUnauthorized()) // Verifica che la risposta HTTP sia 409 Conflit
+                .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }
 
@@ -282,14 +282,14 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
-                        .param("openHour", "00") // Ora di apertura
-                        .param("openMinute", "00") // Minuti di apertura
-                        .param("closeHour", "00") // Ora di chiusura
-                        .param("closeMinute", "00") // Minuti di chiusura
+                        .param("openHour", "00")
+                        .param("openMinute", "00")
+                        .param("closeHour", "00")
+                        .param("closeMinute", "00")
                         .param("title", "monumento")
                         .param("description", "monumento storico")
                         .param("reference", "teatro alla scala"))
-                .andExpect(status().isUnauthorized()) // Verifica che la risposta HTTP sia 409 Conflit
+                .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }
 
@@ -304,14 +304,14 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/interestPoint")
                         .contentType(MULTIPART_FORM_DATA_VALUE)
                         .param("type", "SQUARE")
-                        .param("openHour", "00") // Ora di apertura
-                        .param("openMinute", "00") // Minuti di apertura
-                        .param("closeHour", "00") // Ora di chiusura
-                        .param("closeMinute", "00") // Minuti di chiusura
+                        .param("openHour", "00")
+                        .param("openMinute", "00")
+                        .param("closeHour", "00")
+                        .param("closeMinute", "00")
                         .param("title", "monumento")
                         .param("description", "monumento storico")
                         .param("reference", "teatro alla scala"))
-                .andExpect(status().isUnauthorized()) // Verifica che la risposta HTTP sia 409 Conflit
+                .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }
 
@@ -322,12 +322,12 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-			{
-				"title": "corsetta",
-				"description": "simpatico giro panoramico del comune",
-				"path": [1, 2]
-			}
-			""")) // Corpo della richiesta
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 2]
+                    }
+                    """))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }
@@ -338,12 +338,12 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-			{
-				"title": "corsetta",
-				"description": "simpatico giro panoramico del comune",
-				"path": [1, 2]
-			}
-			""")) // Corpo della richiesta
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 2]
+                    }
+                    """))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }
@@ -354,12 +354,12 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-			{
-				"title": "corsetta",
-				"description": "simpatico giro panoramico del comune",
-				"path": [1, 2]
-			}
-			""")) // Corpo della richiesta
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 2]
+                    }
+                    """))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }
@@ -370,12 +370,12 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-			{
-				"title": "corsetta",
-				"description": "simpatico giro panoramico del comune",
-				"path": [1, 2]
-			}
-			""")) // Corpo della richiesta
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 2]
+                    }
+                    """))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }
@@ -391,12 +391,12 @@ public class ContributorTest {
         mockMvc.perform(post("/api/contributor/add/itinerary")
                         .contentType(APPLICATION_JSON)
                         .content("""
-			{
-				"title": "corsetta",
-				"description": "simpatico giro panoramico del comune",
-				"path": [1, 2]
-			}
-			""")) // Corpo della richiesta
+                    {
+                        "title": "corsetta",
+                        "description": "simpatico giro panoramico del comune",
+                        "path": [1, 2]
+                    }
+                    """))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }

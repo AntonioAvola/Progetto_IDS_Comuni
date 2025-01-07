@@ -30,11 +30,6 @@ public class GeoPointService {
         return point;
     }
 
-    public boolean checkGeoPointAlreadyExists(String reference, String municipality) {
-        return this.repoGeo.existsByNameAndMunicipality(reference, municipality);
-    }
-
-
     public GeoPoint getById(long id) {
         return this.repoGeo.findById(id);
     }

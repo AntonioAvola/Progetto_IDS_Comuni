@@ -12,17 +12,11 @@ import java.util.List;
 @Repository
 public interface InterestPointRepository extends JpaRepository<InterestPoint, Long> {
 
-    List<InterestPoint> findByMunicipality(String municipality);
-
     InterestPoint findById(long idInterestPoint);
 
     List<InterestPoint> findAllByAuthor(User user);
 
     List<InterestPoint> findByMunicipalityAndStatus(String municipality, ContentStatus pending);
-
-    boolean existsByIdAndAuthor(long idPoint, User author);
-
-    boolean existsByIdAndMunicipality(long idContent, String municipality);
 
     boolean existsByMunicipalityAndReferenceAndStatus(String municipality, GeoPoint geoPoint, ContentStatus contentStatus);
 

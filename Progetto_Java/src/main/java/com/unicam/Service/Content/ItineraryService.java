@@ -31,17 +31,6 @@ public class ItineraryService {
         this.repoItinerary.delete(itinerary);
     }
 
-    private boolean exists(Itinerary itinerary) {
-        List<Itinerary> itineraries = this.repoItinerary.findByMunicipality(itinerary.getMunicipality());
-        for(Itinerary itineraryFound : itineraries){
-            if(itineraryFound.getPath().size() == itinerary.getPath().size()){
-                if(itineraryFound.getPath().containsAll(itinerary.getPath()))
-                    return true;
-            }
-        }
-        return false;
-    }
-
     public void addFavorite(long idItnerary, long idUser){
         Itinerary itinerary = this.repoItinerary.findById(idItnerary);
         if(itinerary.getIdUserFavorites().contains(idUser))
@@ -64,13 +53,6 @@ public class ItineraryService {
         }
     }
 
-    public boolean getAndRemoveItinerary(long idItinerary, User author) {
-        if(!this.repoItinerary.existsByIdAndAuthor(idItinerary, author))
-            return false;
-        this.removeItinerary(idItinerary);
-        return true;
-    }
-
     public void removeItineraryUser(User user) {
         List<Itinerary> itineraries = this.repoItinerary.findAllByAuthor(user);
         this.repoItinerary.deleteAll(itineraries);
@@ -81,13 +63,6 @@ public class ItineraryService {
             return true;
         return false;
     }
-
-//    private boolean checkNoDuplicatedPoints(List<String> path) {
-//        //l'hashset contiene tutti elementi univoci
-//        HashSet<String> set = new HashSet<>(path);
-//        //se il path ha la stessa lunghezza dell'hashset, allora non sono presenti punti di interesse duplicati
-//        return path.size() == set.size();
-//    }
 
     public List<ItineraryResponse> getItinerary(String municipality, ContentStatus status) {
         List<Itinerary> itineraries = this.repoItinerary.findByMunicipalityAndStatus(municipality, status);
@@ -137,11 +112,6 @@ public class ItineraryService {
         }
     }
 
-
-    public boolean checkMunicipality(long idContent, String municipality) {
-        return this.repoItinerary.existsByIdAndMunicipality(idContent, municipality);
-    }
-
     public List<ItineraryResponse> getByUser(User user) {
         List<Itinerary> itineraries = this.repoItinerary.findAllByAuthor(user);
         return convertResponse(itineraries);
@@ -151,16 +121,5 @@ public class ItineraryService {
         Itinerary itinerary = this.repoItinerary.findById(idContent);
         itinerary.setStatus(ContentStatus.REPORTED);
         this.repoItinerary.save(itinerary);
-    }
-
-    public boolean ItineraryAlreadyExists(List<InterestPoint> list, String municipality) {
-        List<Itinerary> itineraries = this.repoItinerary.findByMunicipalityAndStatus(municipality, ContentStatus.APPROVED);
-        itineraries.addAll(this.repoItinerary.findByMunicipalityAndStatus(municipality, ContentStatus.REPORTED));
-        for(Itinerary itinerary : itineraries){
-            if(itinerary.getPath().containsAll(list) && itinerary.getPath().size() == list.size()){
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -47,6 +48,9 @@ public class DataInizializer  implements CommandLineRunner {
 
     @Autowired
     private ContestRepository contestRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
 
     @Autowired
     private ProxyOSM proxy;
@@ -90,7 +94,34 @@ public class DataInizializer  implements CommandLineRunner {
                 i += 1;
             }
             createPromotionRequest();
+            System.out.println("----------------------------------------------------");
+            createReviewMilan();
         }
+    }
+
+    private void createReviewMilan() {
+        User user = this.userRepository.findUserById(9);
+        InterestPoint point = this.interestPointRepository.findById(2);
+
+        Review review1 = new Review();
+        review1.setTitle("passeggiata piacevole");
+        review1.setDescription("Passeggiata pomeridiana insieme alla mia famiglia. Le mie bambine hanno trovato il luogo molto di loro gradimento");
+        review1.setMunicipality("MILANO");
+        review1.setStatus(ContentStatus.APPROVED);
+        review1.setAuthor(user);
+        review1.setReference(point);
+        this.reviewRepository.save(review1);
+        System.out.println("MILANO" + "; " + point.getTitle() + ": recensione aggiunta con successo");
+
+        Review review2 = new Review();
+        review2.setTitle("bel paesaggio");
+        review2.setDescription("bellissimi monumenti. Ben collocati nello spazio");
+        review2.setMunicipality("MILANO");
+        review2.setStatus(ContentStatus.APPROVED);
+        review2.setAuthor(user);
+        review2.setReference(point);
+        this.reviewRepository.save(review2);
+        System.out.println("MILANO" + "; " + point.getTitle() + ": recensione aggiunta con successo");
     }
 
     private void createPromotionRequest() {

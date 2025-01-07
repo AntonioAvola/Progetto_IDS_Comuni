@@ -20,12 +20,6 @@ public class MunicipalityService {
         this.repoMunicipality.save(municipality);
     }
 
-    public void removeMunicipality(String nameMunicipality){
-        //TODO elimina tutti i contenuti inserenti al comune
-        Municipality municipality = this.repoMunicipality.findByName(nameMunicipality);
-        this.repoMunicipality.delete(municipality);
-    }
-
     public boolean exists(String name){
         return this.repoMunicipality.existsByName(name);
     }
@@ -41,11 +35,11 @@ public class MunicipalityService {
 
     public List<MunicipalityResponse> getMunicipalityRequests() {
         List<Municipality> municipalities = this.repoMunicipality.findAllByStatus(ContentStatus.PENDING);
-        return ConvertResponse(municipalities);
+        return convertResponse(municipalities);
     }
 
 
-    private List<MunicipalityResponse> ConvertResponse(List<Municipality> municipalities) {
+    private List<MunicipalityResponse> convertResponse(List<Municipality> municipalities) {
         List<MunicipalityResponse> municipalityResponses = new ArrayList<>();
         for(Municipality municipality : municipalities){
             municipalityResponses.add(new MunicipalityResponse(municipality.getId(), municipality.getName(), municipality.getDescription()));

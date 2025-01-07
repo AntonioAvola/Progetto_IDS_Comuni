@@ -42,7 +42,7 @@ public class AuthTest {
     @Test
     void testSingInSuccessful() throws Exception {
         mockMvc.perform(post("/api/auth/singIn")
-                        .contentType(APPLICATION_JSON) // Specifica il tipo di contenuto
+                        .contentType(APPLICATION_JSON)
                         .content("""
                         {
                             "username": "eli",

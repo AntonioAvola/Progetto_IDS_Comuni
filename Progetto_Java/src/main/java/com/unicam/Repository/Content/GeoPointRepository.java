@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GeoPointRepository extends JpaRepository<GeoPoint, Long> {
-    boolean existsByNameAndMunicipality(String name, String municipality);
 
     GeoPoint findByNameAndMunicipality(String reference, String municipality);
 

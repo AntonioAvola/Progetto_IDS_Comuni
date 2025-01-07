@@ -28,8 +28,6 @@ public class InterestPointService {
     @Autowired
     private ItineraryService serviceItinerary;
     @Autowired
-    private EventService serviceEvent;
-    @Autowired
     private MediaService mediaService;
     @Autowired
     private ReviewService reviewService;
@@ -44,17 +42,9 @@ public class InterestPointService {
 
     public void removeInterestPoint(long idPoint){
         InterestPoint point = this.repoInterest.findById(idPoint);
-        this.serviceEvent.checkEvent(point.getReference());
+        this.eventService.checkEvent(point.getReference());
         this.serviceItinerary.checkItinerary(point);
         this.removeInterestPointPending(point);
-    }
-
-    public boolean getAndRemoveInterestPoint(long idPoint, User author){
-        if(!this.repoInterest.existsByIdAndAuthor(idPoint, author)){
-            return false;
-        }
-        this.removeInterestPoint(idPoint);
-        return true;
     }
 
     public List<InterestPoint> getList(List<Long> path) {
@@ -123,15 +113,12 @@ public class InterestPointService {
 
     private void removeInterestPointPending(InterestPoint point) {
         List<Media> medias = new ArrayList<>(point.getMedias());
+        this.reviewService.deleteReviews(point);
         this.repoInterest.delete(point);
         if(this.repoInterest.findAllByReferenceAndStatus(point.getReference(), ContentStatus.PENDING).isEmpty()){
             this.serviceGeo.removeGeoPoint(point.getReference());
         }
         this.mediaService.deleteMedias(medias);
-    }
-
-    public boolean checkMunicipality(long idContent, String municipality) {
-        return this.repoInterest.existsByIdAndMunicipality(idContent, municipality);
     }
 
     public List<InterestPointResponse> getByUser(User user) {
@@ -143,10 +130,6 @@ public class InterestPointService {
         InterestPoint point = this.repoInterest.findById(idContent);
         point.setStatus(ContentStatus.REPORTED);
         this.repoInterest.save(point);
-    }
-
-    public InterestPoint GetSinglePoint(long idPoint) {
-        return this.repoInterest.findById(idPoint);
     }
 
     public boolean pointAlreadyApproved(String reference, String municipality) {

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-    boolean existsByTitleAndMunicipality(String title, String municipality);
 
     Event findById(long idEvent);
 
@@ -21,11 +20,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findByStatus(ContentStatus approved);
 
-    boolean existsByIdAndAuthor(long idEvent, User user);
-
     List<Event> findAllByReferenceAndStatus(GeoPoint reference, ContentStatus approved);
 
     List<Event> findByMunicipalityAndStatus(String municipality, ContentStatus pending);
-
-    boolean existsByIdAndMunicipality(long idContent, String municipality);
 }

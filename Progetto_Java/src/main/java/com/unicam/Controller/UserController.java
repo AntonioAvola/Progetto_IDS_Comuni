@@ -107,7 +107,7 @@ public class UserController {
             List <InterestPointResponse> ownPOI = this.interestPointService.getByUser(user);
             List <ItineraryResponse> ownItinerary = this.itineraryService.getByUser(user);
             if(!ownPOI.isEmpty()){
-                contents.put("interestPoint", ownPOI);
+                contents.put("interest point", ownPOI);
             }
             if(!ownItinerary.isEmpty()){
                 contents.put("itinerary", ownItinerary);
@@ -227,9 +227,12 @@ public class UserController {
 
         //TODO controllo ruolo
 
+        if((municipality.equals(visitedMunicipality) && role.equals(Role.ANIMATOR.name()) || role.equals(Role.ADMIN.name()) || role.equals(Role.MUNICIPALITY_MANAGER.name())))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
+
         this.contestService.updateActivityStatus(LocalDateTime.now());
         User user = this.userService.getUser(idUser);
-        List<ContestResponse> contestsAvailable = this.contestService.getContestAvailableNoPartecipated(municipality, user);
+        List<ContestResponse> contestsAvailable = this.contestService.getContestAvailableNoPartecipated(visitedMunicipality, user);
 
         return ResponseEntity.ok(contestsAvailable);
     }
@@ -347,7 +350,10 @@ public class UserController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        InterestPoint interestPoint = this.interestPointService.GetSinglePoint(idPoint);
+        if(role.equals(Role.ADMIN.name()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
+
+        InterestPoint interestPoint = this.interestPointService.getPointById(idPoint);
 
         List<ReviewPOIResponse> reviews = this.reviewService.GetReviewSinglePoint(interestPoint);
         ReviewPOI response = new ReviewPOI();
@@ -369,6 +375,9 @@ public class UserController {
         String role = userDetails.getRole();
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
+
+        if((municipality.equals(visitedMunicipality) && role.equals(Role.ANIMATOR.name()) || role.equals(Role.ADMIN.name()) || role.equals(Role.MUNICIPALITY_MANAGER.name())))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
         User user = this.userService.getUser(idUser);
         List<ContestProgress> response = this.contestService.getContestPartecipated(user);

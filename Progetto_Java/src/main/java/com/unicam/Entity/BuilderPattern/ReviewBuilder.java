@@ -52,7 +52,7 @@ public class ReviewBuilder implements Builder{
         for(MultipartFile file: fileUploaded){
             Media media = new Media(file.getOriginalFilename(), file.getBytes(), file.getContentType());
             this.mediaService.save(media);
-            this.review.setMedias(media); // Metodo per aggiungere contenuto all'entità
+            this.review.setMedias(media);
         }
     }
 

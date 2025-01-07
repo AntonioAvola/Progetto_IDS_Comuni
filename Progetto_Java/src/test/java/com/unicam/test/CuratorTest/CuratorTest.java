@@ -75,8 +75,8 @@ public class CuratorTest {
                 .andExpect(jsonPath("$.contents['itinerary']", hasSize(2)))
                 .andExpect(jsonPath("$.contents['itinerary'][0].id").value(4))
                 .andExpect(jsonPath("$.contents['itinerary'][1].id").value(5))
-                .andExpect(jsonPath("$.contents['interest point']", hasSize(3))) // Esattamente 2 elementi
-                .andExpect(jsonPath("$.contents['interest point'][0].id").value(5)) // Primo elemento ha id 1
+                .andExpect(jsonPath("$.contents['interest point']", hasSize(3)))
+                .andExpect(jsonPath("$.contents['interest point'][0].id").value(5))
                 .andExpect(jsonPath("$.contents['interest point'][1].id").value(6))
                 .andExpect(jsonPath("$.contents['interest point'][2].id").value(7));
     }

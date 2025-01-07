@@ -42,13 +42,6 @@ public class EventService {
         this.repoEvent.deleteAll(events);
     }
 
-    public boolean getAndRemoveEvent(long idEvent, User author) {
-        if(!this.repoEvent.existsByIdAndAuthor(idEvent, author))
-            return false;
-        this.removeEvent(idEvent);
-        return true;
-    }
-
     public void removeEventUser(User user) {
         List<Event> event = this.repoEvent.findAllByAuthor(user);
         this.repoEvent.deleteAll(event);

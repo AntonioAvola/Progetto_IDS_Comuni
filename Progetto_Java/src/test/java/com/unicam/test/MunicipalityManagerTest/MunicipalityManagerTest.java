@@ -425,4 +425,61 @@ public class MunicipalityManagerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
     }
+
+    @Test
+    @WithMockUserDetails(username = "manager1", idUser = 2, municipality = "MILANO", roles = "MUNICIPALITY_MANAGER", visitedMunicipality = "MILANO")
+    public void testGetAllPromotionRequestsSuccessfull() throws Exception {
+        mockMvc.perform(get("/api/municipalityManager/view/all/promotion/requests"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].promotionID").value(1))
+                .andExpect(jsonPath("$[1].promotionID").value(2));
+    }
+
+    @Test
+    @WithMockUserDetails(username = "admin", idUser = 1,  municipality = "", roles = "ADMIN", visitedMunicipality = "")
+    public void testGetAllPromotionRequestsUnauthorizedAdmin() throws Exception {
+        mockMvc.perform(get("/api/municipalityManager/view/all/promotion/requests"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
+    }
+
+    @Test
+    @WithMockUserDetails(username = "animator1", idUser = 4,  municipality = "MILANO", roles = "ANIMATOR", visitedMunicipality = "MILANO")
+    public void testGetAllPromotionRequestsUnauthorizedAnimator() throws Exception {
+        mockMvc.perform(get("/api/municipalityManager/view/all/promotion/requests"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
+    }
+
+    @Test
+    @WithMockUserDetails(username = "curator1", idUser = 3,  municipality = "MILANO", roles = "CURATOR", visitedMunicipality = "MILANO")
+    public void testGetAllPromotionRequestsUnauthorizedCurator() throws Exception {
+        mockMvc.perform(get("/api/municipalityManager/view/all/promotion/requests"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
+    }
+
+    @Test
+    @WithMockUserDetails(username = "contributor1", idUser = 5,  municipality = "MILANO", roles = "CONTRIBUTOR", visitedMunicipality = "MILANO")
+    public void testGetAllPromotionRequestsUnauthorizedContributor() throws Exception {
+        mockMvc.perform(get("/api/municipalityManager/view/all/promotion/requests"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
+    }
+
+    @Test
+    @WithMockUserDetails(username = "authorizedContributor1", idUser = 6,  municipality = "MILANO", roles = "AUTHORIZED_CONTRIBUTOR", visitedMunicipality = "MILANO")
+    public void testGetAllPromotionRequestsUnauthorizedContributorAuthorized() throws Exception {
+        mockMvc.perform(get("/api/municipalityManager/view/all/promotion/requests"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
+    }
+    @Test
+    @WithMockUserDetails(username = "curator2", idUser = 8,  municipality = "ROMA", roles = "CURATOR", visitedMunicipality = "ROMA")
+    public void testGetAllPromotionRequestsUnauthorizedTurist() throws Exception {
+        mockMvc.perform(get("/api/municipalityManager/view/all/promotion/requests"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("Non hai i permessi per eseguire l'operazione"));
+    }
 }
