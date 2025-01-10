@@ -25,21 +25,30 @@ Per accedere a Swagger e testare tutte le API, aprire il seguente URL nel browse
 
 ####Utenti già pronti per i test:
 --------------------------------------------------------------------------
-| RUOLO                  | USERNAME              | PASSWORD     | COMUNE |
-|------------------------|-----------------------|--------------|--------|
-| ADMIN                  | admin                 | Admin1!      |    //  |
-|------------------------|-----------------------|--------------|--------|
-| CONTRIBUTOR AUTORIZZATO| authorizedContributor1| Authorized1! | MILANO |
-| CURATORE               | curator1              | Curator1!    | MILANO |
-| ANIMATORE              | animator1             | Animator1!   | MILANO |
-| CONTRIBUTOR            | contributor1          | Contributor1!| MILANO |
-|------------------------|-----------------------|--------------|--------|
-| CONTRIBUTOR AUTORIZZATO| authorizedContributor2| Authorized1! | ROMA   |
-| CURATORE               | curator2              | Curator1!    | ROMA   |
-| ANIMATORE              | animator2             | Animator1!   | ROMA   |
-| CONTRIBUTOR            | contributor2          | Contributor1!| ROMA   |
-|------------------------|-----------------------|--------------|--------|
-| CONTRIBUTOR AUTORIZZATO| authorizedContributor3| Authorized1! | NAPOLI |
-| CURATORE               | curator3              | Curator1!    | NAPOLI |
-| ANIMATORE              | animator3             | Animator1!   | NAPOLI |
-| CONTRIBUTOR            | contributor3          | Contributor1!| NAPOLI |
+| RUOLO                  | USERNAME              | PASSWORD     | COMUNE  |
+|------------------------|-----------------------|--------------|---------|
+| ADMIN                  | admin                 | Admin1!      |    //   |
+|------------------------|-----------------------|--------------|---------|
+| MANAGER                | manager1              | Manager1!    | MILANO  |
+| CONTRIBUTOR AUTORIZZATO| authorizedContributor1| Authorized1! | MILANO  |
+| CURATORE               | curator1              | Curator1!    | MILANO  |
+| ANIMATORE              | animator1             | Animator1!   | MILANO  |
+| CONTRIBUTOR            | contributor1          | Contributor1!| MILANO  |
+|------------------------|-----------------------|--------------|---------|
+| MANAGER                | manager2              | Manager1!    | ROMA    |
+| CONTRIBUTOR AUTORIZZATO| authorizedContributor2| Authorized1! | ROMA    |
+| CURATORE               | curator2              | Curator1!    | ROMA    |
+| ANIMATORE              | animator2             | Animator1!   | ROMA    |
+| CONTRIBUTOR            | contributor2          | Contributor1!| ROMA    |
+|------------------------|-----------------------|--------------|---------|
+| MANAGER                | manager3              | Manager1!    | NAPOLI  |
+| CONTRIBUTOR AUTORIZZATO| authorizedContributor3| Authorized1! | NAPOLI  |
+| CURATORE               | curator3              | Curator1!    | NAPOLI  |
+| ANIMATORE              | animator3             | Animator1!   | NAPOLI  |
+| CONTRIBUTOR            | contributor3          | Contributor1!| NAPOLI  |
+|------------------------|-----------------------|--------------|---------|
+| MANAGER                | manager4              | Manager1!    | FIRENZE |
+| CONTRIBUTOR AUTORIZZATO| authorizedContributor4| Authorized1! | FIRENZE |
+| CURATORE               | curator4              | Curator1!    | FIRENZE |
+| ANIMATORE              | animator4             | Animator1!   | FIRENZE |
+| CONTRIBUTOR            | contributor4          | Contributor1!| FIRENZE |
