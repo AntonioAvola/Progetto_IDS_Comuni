@@ -92,8 +92,8 @@ public class AnimatorTest {
 						"title": "stelle cadenti",
 						"description": "osservazione stelle cadenti",
 						"idReference": 3,
-						"start": "2025-01-08T20:00:00",
-						"end": "2025-01-15T03:00:00"
+						"start": "2025-02-24T20:00:00",
+						"end": "2025-02-27T03:00:00"
 					}
 					"""))
                 .andExpect(status().isConflict())

@@ -226,8 +226,8 @@ public class DataInizializer  implements CommandLineRunner {
         event2.setMunicipality(name);
         event2.setAuthor(animator);
         event2.setStatus(ContentStatus.APPROVED);
-        event2.setDuration(new Time(LocalDateTime.parse("2025-01-02T12:00:00"), LocalDateTime.parse("2025-01-10T15:00:00")));
-        event2.setActivityStatus(ActivityStatus.STARTED);
+        event2.setDuration(new Time(LocalDateTime.parse("2025-02-26T12:00:00"), LocalDateTime.parse("2025-02-28T15:00:00")));
+        event2.setActivityStatus(ActivityStatus.WAITING);
         this.eventRepository.save(event2);
         System.out.println(name + ": evento " + event2.getTitle() + " aggiunto con successo");
 
