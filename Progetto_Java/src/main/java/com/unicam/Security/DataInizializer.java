@@ -168,7 +168,7 @@ public class DataInizializer  implements CommandLineRunner {
         contest2.setReward("€100");
         contest2.setMunicipality(name);
         contest2.setStatus(ContentStatus.APPROVED);
-        contest2.setDuration(new Time(LocalDateTime.parse("2025-01-15T12:00:00"), LocalDateTime.parse("2025-01-20T21:00:00")));
+        contest2.setDuration(new Time(LocalDateTime.parse("2025-03-12T12:00:00"), LocalDateTime.parse("2025-03-13T21:00:00")));
         contest2.setActivityStatus(ActivityStatus.WAITING);
         this.contestRepository.save(contest2);
         System.out.println(name + ": contest " + contest2.getTitle() + " aggiunto con successo");
