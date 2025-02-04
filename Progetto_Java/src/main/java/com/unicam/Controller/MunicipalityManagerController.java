@@ -58,11 +58,6 @@ public class MunicipalityManagerController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        //TODO controllo ruolo
         if(!municipality.equals(visitedMunicipality) || !role.equals(Role.MUNICIPALITY_MANAGER.name()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
@@ -91,11 +86,6 @@ public class MunicipalityManagerController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        //TODO controllo ruolo
         if(!municipality.equals(visitedMunicipality) || !role.equals(Role.MUNICIPALITY_MANAGER.name()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
@@ -137,11 +127,6 @@ public class MunicipalityManagerController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        //TODO controllo ruolo
         if(!municipality.equals(visitedMunicipality) || !role.equals(Role.MUNICIPALITY_MANAGER.name()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 

@@ -86,15 +86,9 @@ public class ContributorController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
 
         ContentStatus status;
-        //TODO controllo ruolo:
-        // se CONTRIBUTOR allora status = PENDING;
-        // se CONTRIBUTOR AUTORIZZATO allora status = APPROVED;
-        // se qualsiasi altri ruolo, allora eccezione
+
 
         if(municipality.equals(visitedMunicipality) && role.equals(Role.CONTRIBUTOR.name()))
             status = ContentStatus.PENDING;
@@ -110,7 +104,7 @@ public class ContributorController {
         address = URLEncoder.encode(address, StandardCharsets.UTF_8.toString());
         List<Double> coordinates = proxy.getCoordinates(address + "," + currentMunicipality);
 
-        //TODO controlla se esiste già il punto geolocalizzato, se esiste, lancia l'eccezione
+
         if(this.interestPointService.pointAlreadyApproved(request.getReference(), municipality))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Esiste già un punto di interesse per questo determinato punto geolocalizzato"); //errore 409 Conflict
 
@@ -154,15 +148,7 @@ public class ContributorController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
         ContentStatus status;
-        //TODO controllo ruolo:
-        // se CONTRIBUTOR allora status = PENDING;
-        // se CONTRIBUTOR AUTORIZZATO allora status = APPROVED;
-        // se qualsiasi altri ruolo, allora eccezione
 
         if(municipality.equals(visitedMunicipality) && role.equals(Role.CONTRIBUTOR.name()))
             status = ContentStatus.PENDING;

@@ -29,7 +29,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private  JwtUserDetailsService userDetailsService;
 
-    // Costruttore per l'iniezione delle dipendenze
     public JwtRequestFilter(JwtTokenProvider jwtUtils, JwtUserDetailsService userDetailsService) {
         this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
@@ -50,18 +49,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 String visitedMunicipality = claims.get("visitedMunicipality", String.class);
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    // Carica i dettagli dell'utente
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                     if (jwtUtils.validateToken(jwtToken)) {
-                        // Costruisci l'oggetto UserCustomDetails o utilizza i dettagli utente standard
                         UserCustomDetails userCustomDetails = new UserCustomDetails(username,claims.get("id").toString(), municipality, role, visitedMunicipality);
 
-                        // Imposta le authorities per l'utente
                         List<GrantedAuthority> authorities = new ArrayList<>();
                         authorities.add(new SimpleGrantedAuthority(role));
 
-                        // Setta il contesto di sicurezza
                         setAuthentication(userCustomDetails, authorities, request);
                     }
                 }

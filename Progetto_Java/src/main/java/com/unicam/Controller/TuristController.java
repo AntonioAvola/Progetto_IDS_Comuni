@@ -129,7 +129,6 @@ public class TuristController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo che i due comuni siano differenti (essere turista)
         if(municipality.equals(visitedMunicipality))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 

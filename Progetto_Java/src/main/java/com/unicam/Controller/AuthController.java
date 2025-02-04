@@ -21,7 +21,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password){
         String token = userService.login(username, password);
-        //viene restituito il token dell'account
         return ResponseEntity.ok(token);
     }
 
@@ -33,7 +32,6 @@ public class AuthController {
                             "AUTHORIZED_CONTRIBUTOR", "CONTRIBUTOR"}))
             @RequestParam(defaultValue = "CONTRIBUTOR") Role role){
         String token = userService.singIn(request, role);
-        //viene restituito il token dell'account
         return ResponseEntity.ok(token);
     }
 }

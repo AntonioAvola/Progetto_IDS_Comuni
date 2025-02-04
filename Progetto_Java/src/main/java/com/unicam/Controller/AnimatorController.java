@@ -42,8 +42,6 @@ public class AnimatorController {
     @Autowired
     private UserService userService;
 
-    //TODO rivedere per il punto geolocalizzzato; se usare direttamente l'ID e quindi
-    // creare una API di visualizzazione di tutti i punti geolocalizzati che hanno un punto di interesse approvato
     @PostMapping("/add/event")
     @Operation(summary = "Proponi un evento")
     public ResponseEntity<String> Addevent(@RequestBody EventRequest request){
@@ -58,11 +56,6 @@ public class AnimatorController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        //TODO controllo ruolo
         if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
@@ -73,10 +66,6 @@ public class AnimatorController {
         if(!this.eventService.checkDuration(request.getStart(), request.getEnd(), now))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Inizio e Fine non conformi");
 
-        /**
-         * controllare che sullo stesso punto non ci sia un evento già approvato
-         * con cui si andrebbero ad accavallare quello proposto
-         */
         if(this.eventService.checkOverlapDuration(request.getStart(), request.getEnd(), reference))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Sovrapposizione durata con un evento già approvato per questo riferimento");
 
@@ -101,11 +90,6 @@ public class AnimatorController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        //TODO controllo ruolo
         if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
@@ -136,11 +120,6 @@ public class AnimatorController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        //TODO controllo ruolo
         if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
@@ -169,11 +148,6 @@ public class AnimatorController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        //TODO controllo ruolo
         if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
@@ -201,11 +175,6 @@ public class AnimatorController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        //TODO controllo ruolo
         if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
@@ -231,11 +200,6 @@ public class AnimatorController {
         String municipality = userDetails.getMunicipality();
         String visitedMunicipality = this.userService.getUser(idUser).getVisitedMunicipality();
 
-        //TODO controllo comune:
-        // se comune visitato è lo stesso del proprio comune allora proseguire;
-        // altrimenti eccezione
-
-        //TODO controllo ruolo
         if(!municipality.equals(visitedMunicipality) || !role.equals(Role.ANIMATOR.name()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Non hai i permessi per eseguire l'operazione");
 
